@@ -1,0 +1,1 @@
+To build our system, simply enter "dune build" in the terminal. To start our game, enter "dune exec bin/main.exe." 
