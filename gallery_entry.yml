@@ -1,0 +1,29 @@
+---
+# Members of your group.
+group:
+  - name: Amelia Zheng
+    netid: ayz23
+  - name: Nicole Qiu
+    netid: nfq2
+  - name: Catherine Yang
+    netid: cyy7
+  - name: Jenny Lee
+    netid: sl2854
+# Your PM.
+pm:
+  name: Anant Shyam
+  netid: ais64
+# Set to false if you don't want your gallery entry to be public.
+publish: true
+# Pithy title
+title: "Battleship: Battles of Ships"
+# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+git-repo: "https://github.com/ameliazhengg/final_proj_3110"
+# If you have no demo screencast, replace the url string with an empty string ""
+demo-video-url: ""
+# Write a short, attention-grabbing description of your project.
+desc: >
+  Our project is a terminal-supported Battleship. It supports standard
+  gameplay like bombing, placing ships, winning, and losing. The interface is
+  in the form of a matrix, where players can place ships and attack opponents
+  by choosing certain matrix cells.
