@@ -1,82 +1,56 @@
 open Final_proj_3110.Ships
+open Final_proj_3110.Board
 
 let welcome () =
   print_newline ();
   let () = print_string "Please enter your name: " in
   let the_input = read_line () in
-  print_endline ("Welcome to Battleship, " ^ the_input)
-
-(** Define constants *)
-
-let column_labels = [| "A"; "B"; "C"; "D"; "E"; "F"; "G"; "H"; "I"; "J" |]
-let row_labels = [| "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9"; "10" |]
+  print_endline ("Welcome to Battleship, " ^ the_input ^ "!")
 
 (** Function to print a single row *)
-let print_row () =
+let print_row board i =
   print_string "  ";
-  for _ = 1 to 10 do
-    print_string "|   "
+  for x = 0 to 9 do
+    print_string "|";
+    print_string (get_board_element board i x)
   done;
   print_string "|\n";
-  print_endline "\n     -----------------------------------------"
+  print_endline "      -----------------------------------------"
 
 (** Function to print column labels *)
 let print_column_labels () =
   print_string "     ";
-  Array.iter (fun label -> print_string (label ^ "   ")) column_labels;
+  Array.iter
+    (fun label -> print_string ("   " ^ String.make 1 label))
+    column_labels;
   print_endline ""
 
 (** Function to print the entire grid *)
-let print_grid () =
+let print_grid board =
   print_column_labels ();
-  print_endline "\n     -----------------------------------------";
-
-  for i = 1 to 10 do
-    print_string (row_labels.(i - 1) ^ " ");
-    print_row ()
+  print_endline "      -----------------------------------------";
+  for i = 0 to 9 do
+    print_string (row_labels.(i) ^ " ");
+    print_row board i
   done
 
-(** [is_valid_row_input] requires [input] to be None or Some. Returns: true if
-    input is an integer within 1-10, and false otherwise. *)
-let is_valid_row_input input =
-  let row_num = int_of_string_opt input in
-  match row_num with
-  | Some num -> num >= 1 && num <= 10
-  | None -> false
-
-(** [is_valid_col_input] requires [input] to be None or Some. Returns: true if
-    input is a uppercase string between A-J, and false otherwise. *)
-let is_valid_col_input input =
-  match String.length input with
-  | 1 ->
-      let char_code = Char.code (String.get input 0) in
-      char_code >= Char.code 'A' && char_code <= Char.code 'J'
-  | _ -> false
-
 let create_coord_array coordinates row_input col_input row2_input col2_input =
-  if int_of_string row_input = int_of_string row2_input then
-    (* horizontally placed *)
+  if row_input = row2_input then
+    (* Horizontally placed *)
     let cols =
-      let start_col = int_of_char col_input.[0] in
-      let end_col = int_of_char col2_input.[0] in
       List.init
-        (end_col - start_col + 1)
-        (fun i ->
-          ( Char.escaped (Char.uppercase_ascii (char_of_int (start_col + i))),
-            row_input ))
+        (col2_input - col_input + 1)
+        (fun i -> (char_of_int (col_input + i), row_input))
     in
     List.fold_left
       (fun coords (col, row) -> coord_add coords row col)
       coordinates cols
   else
-    (* vertically placed *)
+    (* Vertically placed *)
     let rows =
-      let start_row = int_of_string row_input in
-      let end_row = int_of_string row2_input in
       List.init
-        (end_row - start_row + 1)
-        (fun _ ->
-          (row_input, Char.escaped (Char.uppercase_ascii col_input.[0])))
+        (row2_input - row_input + 1)
+        (fun i -> (row_input + i, char_of_int col_input))
     in
     List.fold_left
       (fun coords (row, col) -> coord_add coords row col)
@@ -85,9 +59,9 @@ let create_coord_array coordinates row_input col_input row2_input col2_input =
 (** [get_coords] prompts user for row and column value. Checks if coordinate is
     valid. If invalid, reprompts the user for a new coordiante. Otherwise,
     prints coordinate. *)
-let get_coords coordinates =
+let get_coords nums =
   let rec first_row_coord () =
-    print_endline "Enter the first coordinate of your ship: ";
+    print_endline ("Enter the first coordinate of your " ^ nums ^ " ship: ");
     print_string "Row number (1-10): ";
     let row_input = read_line () in
     if is_valid_row_input row_input then row_input
@@ -108,7 +82,7 @@ let get_coords coordinates =
   in
 
   let rec last_row_coord () =
-    print_endline "Enter the last coordinate of your ship: ";
+    print_endline ("Enter the last coordinate of your " ^ nums ^ " ship: ");
     print_string "Row number (1-10): ";
     let row_input = read_line () in
     if is_valid_row_input row_input then row_input
@@ -134,34 +108,54 @@ let get_coords coordinates =
   let col2_input = last_col_coord () in
 
   (*if its just the two space ship then add the two coordinates to the ship*)
-  create_coord_array coordinates row_input col_input row2_input col2_input
+  create_coord_array [] (int_of_string row_input)
+    (int_of_char col_input.[0])
+    (int_of_string row2_input)
+    (int_of_char col2_input.[0])
 
 let print_ship_coordinates coordinates =
   print_endline "Ship Coordinates:";
   List.iter
-    (fun (row, col) -> print_endline ("(" ^ row ^ ", " ^ col ^ ")"))
+    (fun (row, col) ->
+      print_endline ("(" ^ string_of_int row ^ ", " ^ String.make 1 col ^ ")"))
     coordinates
 
 (** Starts game and asks for name *)
 let () =
   welcome ();
   print_endline "Your Battleship Board";
-  print_grid ();
+  let user_board = create_user_board () in
+  print_grid user_board;
   print_endline "Now please choose the coordinates of your two ships. ";
   print_newline ();
-  let two_coord = get_coords [] in
+  let two_coord = get_coords "two" in
   let two_ship = create_ship "two ship" 2 two_coord in
-  let three_coord_1 = get_coords [] in
+  let three_coord_1 = get_coords "three" in
   let three_ship_1 = create_ship "three ship" 3 three_coord_1 in
-  let three_coord_2 = get_coords [] in
+  let three_coord_2 = get_coords "three" in
   let three_ship_2 = create_ship "three ship" 3 three_coord_2 in
-  let four_coord = get_coords [] in
+  let four_coord = get_coords "four" in
   let four_ship = create_ship "four ship" 4 four_coord in
-  let five_coord = get_coords [] in
-  let five_ship = create_ship "four ship" 5 five_coord in
+  let five_coord = get_coords "five" in
+  let five_ship = create_ship "five ship" 5 five_coord in
   print_ship_coordinates two_ship.coordinates;
   print_ship_coordinates three_ship_1.coordinates;
   print_ship_coordinates three_ship_2.coordinates;
   print_ship_coordinates four_ship.coordinates;
   print_ship_coordinates five_ship.coordinates;
+  set_board user_board (List.map (fun (x, y) -> (x, int_of_char y)) two_coord) 2;
+  set_board user_board
+    (List.map (fun (x, y) -> (x, int_of_char y)) three_coord_1)
+    31;
+  set_board user_board
+    (List.map (fun (x, y) -> (x, int_of_char y)) three_coord_2)
+    32;
+  set_board user_board
+    (List.map (fun (x, y) -> (x, int_of_char y)) four_coord)
+    4;
+  set_board user_board
+    (List.map (fun (x, y) -> (x, int_of_char y)) five_coord)
+    5;
+  print_grid user_board;
+
   print_endline "Thanks for playing. Goodbye!"
