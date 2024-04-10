@@ -1,5 +1,6 @@
 open Final_proj_3110.Ships
 open Final_proj_3110.Board
+open Final_proj_3110.Logic
 
 let welcome () =
   print_newline ();
@@ -7,7 +8,7 @@ let welcome () =
   let the_input = read_line () in
   print_endline ("Welcome to Battleship, " ^ the_input ^ "!")
 
-(** Function to print a single row *)
+(** prints row with the battleships *)
 let print_row board i =
   print_string "  ";
   for x = 0 to 9 do
@@ -17,7 +18,7 @@ let print_row board i =
   print_string "|\n";
   print_endline "      -----------------------------------------"
 
-(** Function to print column labels *)
+(** print column labels *)
 let print_column_labels () =
   print_string "     ";
   Array.iter
@@ -25,7 +26,7 @@ let print_column_labels () =
     column_labels;
   print_endline ""
 
-(** Function to print the entire grid *)
+(** print the entire grid *)
 let print_grid board =
   print_column_labels ();
   print_endline "      -----------------------------------------";
@@ -34,9 +35,10 @@ let print_grid board =
     print_row board i
   done
 
+(** creates a list of coordinates of the ship*)
 let create_coord_array coordinates row_input col_input row2_input col2_input =
   if row_input = row2_input then
-    (* Horizontally placed *)
+    (* Horizontally placed ship *)
     let cols =
       List.init
         (col2_input - col_input + 1)
@@ -46,7 +48,7 @@ let create_coord_array coordinates row_input col_input row2_input col2_input =
       (fun coords (col, row) -> coord_add coords row col)
       coordinates cols
   else
-    (* Vertically placed *)
+    (* Vertically placed ship*)
     let rows =
       List.init
         (row2_input - row_input + 1)
@@ -57,8 +59,8 @@ let create_coord_array coordinates row_input col_input row2_input col2_input =
       coordinates rows
 
 (** [get_coords] prompts user for row and column value. Checks if coordinate is
-    valid. If invalid, reprompts the user for a new coordiante. Otherwise,
-    prints coordinate. *)
+    valid. If invalid, reprompts the user for a new coordiante. Otherwise,adds
+    coord to a list . *)
 let get_coords nums =
   let rec first_row_coord () =
     print_endline ("Enter the first coordinate of your " ^ nums ^ " ship: ");
@@ -107,12 +109,13 @@ let get_coords nums =
   let row2_input = last_row_coord () in
   let col2_input = last_col_coord () in
 
-  (*if its just the two space ship then add the two coordinates to the ship*)
+  (*create the list of coords using this function*)
   create_coord_array [] (int_of_string row_input)
     (int_of_char col_input.[0])
     (int_of_string row2_input)
     (int_of_char col2_input.[0])
 
+(* just for printing purposes*)
 let print_ship_coordinates coordinates =
   print_endline "Ship Coordinates:";
   List.iter
