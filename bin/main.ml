@@ -35,85 +35,65 @@ let print_grid board =
     print_row board i
   done
 
-(** creates a list of coordinates of the ship*)
-let create_coord_array coordinates row_input col_input row2_input col2_input =
-  if row_input = row2_input then
-    (* Horizontally placed ship *)
-    let cols =
-      List.init
-        (col2_input - col_input + 1)
-        (fun i -> (char_of_int (col_input + i), row_input))
-    in
-    List.fold_left
-      (fun coords (col, row) -> coord_add coords row col)
-      coordinates cols
-  else
-    (* Vertically placed ship*)
-    let rows =
-      List.init
-        (row2_input - row_input + 1)
-        (fun i -> (row_input + i, char_of_int col_input))
-    in
-    List.fold_left
-      (fun coords (row, col) -> coord_add coords row col)
-      coordinates rows
-
 (** [get_coords] prompts user for row and column value. Checks if coordinate is
     valid. If invalid, reprompts the user for a new coordiante. Otherwise,adds
     coord to a list . *)
-let get_coords nums =
-  let rec first_row_coord () =
-    print_endline ("Enter the first coordinate of your " ^ nums ^ " ship: ");
-    print_string "Row number (1-10): ";
-    let row_input = read_line () in
-    if is_valid_row_input row_input then row_input
-    else begin
-      print_endline "Invalid row input. Please enter a valid row number.";
-      first_row_coord ()
-    end
-  in
-
-  let rec first_col_coord () =
-    print_string "Column letter (A-J): ";
-    let col_input = read_line () in
-    if is_valid_col_input col_input then col_input
-    else begin
-      print_endline "Invalid column input. Please enter a valid column letter.";
-      first_col_coord ()
-    end
-  in
-
-  let rec last_row_coord () =
-    print_endline ("Enter the last coordinate of your " ^ nums ^ " ship: ");
-    print_string "Row number (1-10): ";
-    let row_input = read_line () in
-    if is_valid_row_input row_input then row_input
-    else begin
-      print_endline "Invalid row input. Please enter a valid row number.";
-      last_row_coord ()
-    end
-  in
-
-  let rec last_col_coord () =
-    print_string "Column letter (A-J): ";
-    let col_input = read_line () in
-    if is_valid_col_input col_input then col_input
-    else begin
-      print_endline "Invalid column input. Please enter a valid column letter.";
-      last_col_coord ()
-    end
-  in
-
-  let row_input = first_row_coord () in
-  let col_input = first_col_coord () in
-  let row2_input = last_row_coord () in
-  let col2_input = last_col_coord () in
-
-  (*create the list of coords using this function*)
-  create_coord_array [] (int_of_string row_input)
-    (int_of_char col_input.[0])
-    (int_of_string row2_input)
-    (int_of_char col2_input.[0])
+    let get_coords nums =
+      let rec first_row_coord () =
+        print_endline ("Enter the first coordinate of your " ^ nums ^ " ship: ");
+        print_string "Row number (1-10): ";
+        let row_input = read_line () in
+        if is_valid_row_input row_input then row_input
+        else begin
+          print_endline "Invalid row input. Please enter a valid row number.";
+          first_row_coord ()
+        end
+      in
+    
+      let rec first_col_coord () =
+        print_string "Column letter (A-J): ";
+        let col_input = read_line () in
+        if is_valid_col_input col_input then col_input
+        else begin
+          print_endline "Invalid column input. Please enter a valid column letter.";
+          first_col_coord ()
+        end
+      in
+      let row_input = int_of_string (first_row_coord ()) in
+      let col_input = first_col_coord () in
+    
+      let rec get_orientation () =
+        print_endline "Orientation: up, down, left, right";
+        let user_input = read_line() in
+          match user_input with
+            | "left" -> if check_orientation (-) ((int_of_char ( col_input.[0])) - 65 ) nums then
+            get_orientation ()
+              else "This orientation doesn't work with your coordinates"
+          | "right" -> if check_orientation (+) (int_of_char (col_input.[0]) - 65) nums then
+    get_orientation ()
+               else "This orientation doesn't work with your coordinates"
+          | "up" -> if check_orientation (-) row_input nums then
+    get_orientation ()
+            else "This orientation doesn't work with your coordinates"
+            | "down" -> if check_orientation (+) row_input nums then
+    get_orientation ()
+              else "This orientation doesn't work with your coordinates"
+              | _ -> print_endline "Invalid orientation. Please enter 'up', 'down', 'left', or 'right'.";
+          get_orientation ()
+      in
+      let orientation = get_orientation () in
+      (* Now you can call create_coord_array function with the validated inputs *)
+      let rec get_valid_input () =
+        match create_coord_array [] orientation (int_of_string row_input) (int_of_char col_input.[0]) [] with
+        | false ->
+          (* If create_coord_array returns false, prompt the user to enter another coordinate *)
+          print_endline "Some coordinates are already in use. Please enter another value.";
+          get_valid_input ()
+        | coordinates -> coordinates (* Return the coordinates when valid input is received *)
+      in
+    
+      get_valid_input ()
+  
 
 (* just for printing purposes*)
 let print_ship_coordinates coordinates =
