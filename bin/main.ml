@@ -141,6 +141,7 @@ let () =
   let four_ship = create_ship "four ship" 4 four_coord in
   let five_coord = get_coords "five" in
   let five_ship = create_ship "five ship" 5 five_coord in
+  (** just for printing the coordinates to see if it works*)
   print_ship_coordinates two_ship.coordinates;
   print_ship_coordinates three_ship_1.coordinates;
   print_ship_coordinates three_ship_2.coordinates;
