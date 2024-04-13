@@ -40,7 +40,7 @@ let print_grid board =
     coord to a list . *)
     let get_coords nums =
       let rec first_row_coord () =
-        print_endline ("Enter the first coordinate of your " ^ nums ^ " ship: ");
+        print_endline ("Enter the first coordinate of your " ^ string_of_int nums ^ " ship: ");
         print_string "Row number (1-10): ";
         let row_input = read_line () in
         if is_valid_row_input row_input then row_input
@@ -66,16 +66,16 @@ let print_grid board =
         print_endline "Orientation: up, down, left, right";
         let user_input = read_line() in
           match user_input with
-            | "left" -> if check_orientation (-) ((int_of_char ( col_input.[0])) - 65 ) nums then
+            | "left" -> if check_orientation (-) ((int_of_char ( col_input.[0])) - 65 ) ( nums) then
             get_orientation ()
               else "This orientation doesn't work with your coordinates"
-          | "right" -> if check_orientation (+) (int_of_char (col_input.[0]) - 65) nums then
+          | "right" -> if check_orientation (+) (int_of_char (col_input.[0]) - 65) (nums) then
     get_orientation ()
                else "This orientation doesn't work with your coordinates"
-          | "up" -> if check_orientation (-) row_input nums then
+          | "up" -> if check_orientation (-) row_input ( nums) then
     get_orientation ()
             else "This orientation doesn't work with your coordinates"
-            | "down" -> if check_orientation (+) row_input nums then
+            | "down" -> if check_orientation (+) row_input ( nums) then
     get_orientation ()
               else "This orientation doesn't work with your coordinates"
               | _ -> print_endline "Invalid orientation. Please enter 'up', 'down', 'left', or 'right'.";
@@ -84,13 +84,14 @@ let print_grid board =
       let orientation = get_orientation () in
       (* Now you can call create_coord_array function with the validated inputs *)
       let rec get_valid_input () =
-        match create_coord_array [] orientation (int_of_string row_input) (int_of_char col_input.[0]) [] with
-        | false ->
-          (* If create_coord_array returns false, prompt the user to enter another coordinate *)
-          print_endline "Some coordinates are already in use. Please enter another value.";
-          get_valid_input ()
-        | coordinates -> coordinates (* Return the coordinates when valid input is received *)
+        match create_coord_array [] orientation (row_input) (col_input.[0]) nums [] with
+                  
+        Some updated_coords ->
+          create_ship "three ship" 3 three_coord_1
+      | None ->
+          print_endline "Cannot add coordinates due to overlap." ;  get_valid_input ()
       in
+
     
       get_valid_input ()
   
@@ -111,15 +112,15 @@ let () =
   print_grid user_board;
   print_endline "Now please choose the coordinates of your two ships. ";
   print_newline ();
-  let two_coord = get_coords "two" in
+  let two_coord = get_coords 2 in
   let two_ship = create_ship "two ship" 2 two_coord in
-  let three_coord_1 = get_coords "three" in
+  let three_coord_1 = get_coords 3 in
   let three_ship_1 = create_ship "three ship" 3 three_coord_1 in
-  let three_coord_2 = get_coords "three" in
+  let three_coord_2 = get_coords 3 in
   let three_ship_2 = create_ship "three ship" 3 three_coord_2 in
-  let four_coord = get_coords "four" in
+  let four_coord = get_coords 4 in
   let four_ship = create_ship "four ship" 4 four_coord in
-  let five_coord = get_coords "five" in
+  let five_coord = get_coords 5 in
   let five_ship = create_ship "five ship" 5 five_coord in
   (** just for printing the coordinates to see if it works*)
   print_ship_coordinates two_ship.coordinates;
