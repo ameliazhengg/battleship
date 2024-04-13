@@ -13,21 +13,28 @@ let create_user_board () = Array.make_matrix 10 10 "   "
 (** check_orientation chekcs if the orientation is allowed given the coordinate
     the user has inputted *)
 let check_orientation orientation coord num =
-  if coord orientation num < 0 || coord orientation num > 10 then false
+  if orientation coord num < 0 || orientation coord num > 10 then false
   else true
 
 (** checks if the coordinates of the ship are coordinates of a ship that has
     already been initiated *)
-let check_ships_coord lst coords ship_coords =
-  if List.for_all (fun coord -> not (List.mem coord lst)) coords then
-    (* If all coordinates are not in the list, add them to the list and return
-       true *)
-    Some (coord_add coords ship_coords)
-  else (* If any coordinate is already in the list, return false *)
-    None
+let check_ships_coord all_ship_coords coords ship_coords =
+  (* if the potential ship coordinates are not in the list of all ship
+     coordinates then add them and create the array representing the ships
+     coordinates as well*)
+  if List.for_all (fun coord -> not (List.mem coord all_ship_coords)) coords
+  then
+    (* add them to the list and return true *)
+    (let new_ship_coords = coord_add ship_coords coords in
+     fun (x, y) -> (x, y) :: all_ship_coords)
+      coords new_ship_coords
+  else
+    (* If any coordinate is already in the list, return false *)
+    (None, fun _ -> all_ship_coords)
 
 (** Creates a list of coordinates of the ship *)
-let create_coord_array ship_coords orientation row_input col_input nums lst =
+let create_coord_array ship_coords orientation row_input col_input nums
+    all_ship_coords =
   let rec generate_coords acc n =
     if n < 0 then acc
     else
@@ -49,7 +56,10 @@ let create_coord_array ship_coords orientation row_input col_input nums lst =
       | _ -> failwith "Invalid orientation"
   in
   let coordinates = generate_coords [] nums in
-  check_ships_coord lst coordinates ship_coords
+  check_ships_coord all_ship_coords coordinates ship_coords
+(** all ship coords - coords of all the ships in the board, coordiantes = the
+    potential coordinates of the new ship, ship_coords is empty until the next
+    function that gets filled*)
 
 (* gets the first element in a tuple in our lists of coordinates ie the row
    number*)
