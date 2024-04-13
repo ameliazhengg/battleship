@@ -14,7 +14,3 @@ let is_valid_col_input input =
       let char_code = Char.code (String.get input 0) in
       char_code >= Char.code 'A' && char_code <= Char.code 'J'
   | _ -> false
-
-(* checks if the guess is valid, checks if its valid input and then check if its
-   already been guessed*)
-let is_valid_guess row col = is_valid_row_input row && is_valid_col_input col
