@@ -1,3 +1,5 @@
+open Ships
+
 type board = string array array
 
 let column_labels = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
@@ -5,10 +7,10 @@ let column_labels = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 let row_labels =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
-let ship_coords = ref []
+let user_ship_coords = ref []
 
 (* create the board size *)
-let create_user_board () = Array.make_matrix 10 10 "   "
+let create_board () = Array.make_matrix 10 10 "   "
 
 (* gets the element at the specific row and col in our board*)
 let get_board_element board row col = board.(row).(col)
@@ -26,10 +28,10 @@ let get_second_element lst index =
   snd tuple
 
 (* add coordinates to ship_coords list *)
-let add_to_ship_coords coords = ship_coords := coords @ !ship_coords
+let add_coords coords = user_ship_coords := coords @ !user_ship_coords
 
 (* Check if a guess is valid *)
-let valid_guess row col = not (List.mem (row, col) !ship_coords)
+let valid_guess row col = not (List.mem (row, col) !user_ship_coords)
 
 (* icon representing the different ships on our board*)
 let match_ship n =
@@ -70,8 +72,10 @@ let check_ships_coord board lst name_ship length_ship =
   let all_empty = check_coords lst in
   if all_empty then begin
     List.iter (fun (a, b) -> Printf.printf "(%d, %d)\n" a b) lst;
-    add_to_ship_coords lst;
+    (*get rid of later*)
+    add_coords lst;
     set_board board lst name_ship length_ship;
+    add_user_ship name_ship length_ship lst;
     true
   end
   else false

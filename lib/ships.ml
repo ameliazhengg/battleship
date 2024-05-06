@@ -1,14 +1,21 @@
 type ship = {
-  name : string;
+  name : int;
   length : int;
-  coordinates : (int * char) list;
+  coordinates : (int * int) list;
   hits : int;
 }
 
-(* type of guesses*)
-type guesses = (int * char) list
+let user_ships = ref []
+let computer_ships = ref []
 
-let coord_add coord lst = lst :: coord
-let create_ship name length a = { name; length; coordinates = a; hits = 0 }
+let add_computer_ship name length coordinates =
+  computer_ships := { name; length; coordinates; hits = 0 } :: !computer_ships
 
-(**let output match_emoji = function | true -> "❌" | false -> "⚪️" **)
+let add_user_ship name length coordinates =
+  user_ships := { name; length; coordinates; hits = 0 } :: !user_ships
+
+(* check if ship is sunk *)
+let is_sunk ship = ship.hits >= List.length ship.coordinates
+let find_ship ships name = List.find_opt (fun ship -> ship.name = name) !ships
+
+(*let output match_emoji = function | true -> "❌" | false -> "⚪️" *)

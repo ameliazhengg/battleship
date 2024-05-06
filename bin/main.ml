@@ -1,5 +1,6 @@
 open Final_proj_3110.Board
 open Final_proj_3110.Logic
+open Final_proj_3110.Computer
 
 let welcome () =
   print_newline ();
@@ -117,9 +118,9 @@ let rec get_coords name_ship board =
 let () =
   welcome ();
   print_endline "Your Battleship Board";
-  let user_board = create_user_board () in
+  let user_board = create_board () in
   print_grid user_board;
-  print_endline "Now please choose the coordinates of your two ships ";
+  print_endline "Now please choose the coordinates of your ships ";
   print_newline ();
   get_coords 2 user_board;
   get_coords 3 user_board;
@@ -127,7 +128,9 @@ let () =
   (* had to do this because there are two ships of length 3 *)
   get_coords 4 user_board;
   get_coords 5 user_board;
-
   print_grid user_board;
-
+  print_newline ();
+  print_endline "Computer Board";
+  let computer_board = create_computer_board () in
+  print_grid computer_board;
   print_endline "Thanks for playing. Goodbye!"
