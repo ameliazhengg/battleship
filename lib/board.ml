@@ -5,6 +5,8 @@ let column_labels = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 let row_labels =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
+let ship_coords = ref []
+
 (* create the board size *)
 let create_user_board () = Array.make_matrix 10 10 "   "
 
@@ -23,6 +25,12 @@ let get_second_element lst index =
   let tuple = List.nth lst index in
   snd tuple
 
+(* add coordinates to ship_coords list *)
+let add_to_ship_coords coords = ship_coords := coords @ !ship_coords
+
+(* Check if a guess is valid *)
+let valid_guess row col = not (List.mem (row, col) !ship_coords)
+
 (* icon representing the different ships on our board*)
 let match_ship n =
   match n with
@@ -34,7 +42,6 @@ let match_ship n =
   | _ -> "  "
 
 (* sets the positions of the user ships*)
-
 let set_board board lst name_ship length_ship =
   let n = if name_ship = 31 then 6 else length_ship in
   for i = 0 to List.length lst - 1 do
@@ -45,7 +52,7 @@ let set_board board lst name_ship length_ship =
   done
 
 (** check_orientation chekcs if the orientation is allowed given the coordinate
-    the user has inputted *)
+    the user has inputed *)
 let check_orientation orientation coord num =
   if orientation coord num < 0 || orientation coord num > 10 then false
   else true
@@ -57,13 +64,13 @@ let check_ships_coord board lst name_ship length_ship =
     match lst with
     | [] -> true (* All coordinates are empty, return true *)
     | (row, col) :: rest ->
-        if get_board_element board row col = "   " then check_coords rest
+        if valid_guess row col then check_coords rest
         else false (* Coordinate already occupied, return false *)
   in
   let all_empty = check_coords lst in
   if all_empty then begin
     List.iter (fun (a, b) -> Printf.printf "(%d, %d)\n" a b) lst;
-
+    add_to_ship_coords lst;
     set_board board lst name_ship length_ship;
     true
   end
@@ -73,25 +80,23 @@ let check_ships_coord board lst name_ship length_ship =
 let create_coord_array orientation row_input col_input name_ship length_ship
     board =
   let rec generate_coords acc n =
-    if n < 0 then acc
+    if n <= 0 then acc
     else
       match orientation with
       | "left" ->
-          let col = col_input - n in
-          (* Adjusting column index directly *)
+          let col = col_input - n + 1 in
           let coord = (row_input, col) in
           generate_coords (coord :: acc) (n - 1)
       | "right" ->
-          let col = col_input + n in
-          (* Adjusting column index directly *)
+          let col = col_input + n - 1 in
           let coord = (row_input, col) in
           generate_coords (coord :: acc) (n - 1)
       | "up" ->
-          let row = row_input + n in
+          let row = row_input - n + 1 in
           let coord = (row, col_input) in
           generate_coords (coord :: acc) (n - 1)
       | "down" ->
-          let row = row_input - n in
+          let row = row_input + n - 1 in
           let coord = (row, col_input) in
           generate_coords (coord :: acc) (n - 1)
       | _ -> failwith "Invalid orientation"

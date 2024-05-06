@@ -110,8 +110,8 @@ let rec get_coords name_ship board =
   with
   | true -> ()
   | false ->
-      print_endline "Cannot add coordinates due to overlap.";
-      get_coords length_ship board
+      print_endline "Cannot add coordinates due to overlap";
+      get_coords name_ship board
 
 (** Starts game and asks for name *)
 let () =
@@ -119,11 +119,12 @@ let () =
   print_endline "Your Battleship Board";
   let user_board = create_user_board () in
   print_grid user_board;
-  print_endline "Now please choose the coordinates of your two ships. ";
+  print_endline "Now please choose the coordinates of your two ships ";
   print_newline ();
   get_coords 2 user_board;
   get_coords 3 user_board;
   get_coords 31 user_board;
+  (* had to do this because there are two ships of length 3 *)
   get_coords 4 user_board;
   get_coords 5 user_board;
 
