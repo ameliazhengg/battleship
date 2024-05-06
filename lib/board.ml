@@ -74,8 +74,12 @@ let check_ships_coord board lst name_ship length_ship =
     List.iter (fun (a, b) -> Printf.printf "(%d, %d)\n" a b) lst;
     (*get rid of later*)
     add_coords lst;
+    (* add to full list of coordinates*)
     set_board board lst name_ship length_ship;
+    (* sets the board with the coordinates*)
     add_user_ship name_ship length_ship lst;
+    (* creates a ship item that contains the list of cooridnates for the
+       specific given ship*)
     true
   end
   else false
