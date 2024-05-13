@@ -117,9 +117,17 @@ let rec get_coords name_ship board =
 (** Starts game and asks for name *)
 let () =
   welcome ();
+  print_endline "Computer Board";
+  print_endline string_comp_ships;
+  print_endline string_occ_coord;
+
+  add_coords;
+  let computer_board = create_computer_board () in
+  print_grid (random_board computer_board);
   print_endline "Your Battleship Board";
   let user_board = create_board () in
-  print_grid user_board;
+  print_endline "";
+  (* user_board; *)
   print_endline "Now please choose the coordinates of your ships ";
   print_newline ();
   get_coords 2 user_board;
@@ -130,7 +138,4 @@ let () =
   get_coords 5 user_board;
   print_grid user_board;
   print_newline ();
-  print_endline "Computer Board";
-  let computer_board = create_computer_board () in
-  print_grid computer_board;
   print_endline "Thanks for playing. Goodbye!"
