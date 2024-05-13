@@ -1,6 +1,7 @@
 open Ships
 
 type board = string array array
+type coord_list = (int * int) list
 
 let column_labels = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 
@@ -8,16 +9,17 @@ let row_labels =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
 let user_ship_coords = ref []
+let board_array board = board
 
 (* create the board size *)
-let create_board () = Array.make_matrix 10 10 "   "
+let create_board _ = Array.make_matrix 10 10 "   "
 
 (* gets the element at the specific row and col in our board*)
 let get_board_element board row col = board.(row).(col)
 
 (* gets the first element in a tuple in our lists of coordinates ie the row
    number*)
-let get_first_element lst index =
+let get_first_element (lst : coord_list) index =
   let tuple = List.nth lst index in
   fst tuple
 

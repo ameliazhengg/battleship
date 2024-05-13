@@ -1,3 +1,7 @@
+open Board
+open Ships
+open Computer
+
 (** [is_valid_row_input] requires [input] to be None or Some. Returns: true if
     input is an integer within 1-10, and false otherwise. *)
 let is_valid_row_input input =
