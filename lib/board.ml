@@ -32,7 +32,8 @@ let get_second_element lst index =
 (* add coordinates to ship_coords list *)
 let add_coords coords = user_ship_coords := coords @ !user_ship_coords
 
-(* Check if a guess is valid *)
+(* Check if a guess is valid meaning check if the guess is in the ship
+   coordinates *)
 let valid_guess row col = not (List.mem (row, col) !user_ship_coords)
 
 (* icon representing the different ships on our board*)

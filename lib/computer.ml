@@ -9,6 +9,8 @@ let columns = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 let rows =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
+type coord = int * int
+
 let comp_ship_coords = ref []
 let occupied_coords = ref []
 

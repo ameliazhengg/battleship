@@ -1,6 +1,16 @@
-open Board
-open Ships
-open Computer
+let user_guesses : (int * int) list ref = ref []
+let computer_guesses : (int * int) list ref = ref []
+let add_user_guess (row, col) = user_guesses := (row, col) :: !user_guesses
+
+let add_computer_guess (row, col) =
+  computer_guesses := (row, col) :: !computer_guesses
+
+(* check if user has already guessed this coord before*)
+let valid_guess_user row col = List.mem (row, col) !user_guesses
+
+(* check if computer has already guessed this coord before*)
+let valid_guess_computer row col = List.mem (row, col) !computer_guesses
+let mark_on_board board (row, col) symbol = board.(row).(col) <- symbol
 
 (** [is_valid_row_input] requires [input] to be None or Some. Returns: true if
     input is an integer within 1-10, and false otherwise. *)

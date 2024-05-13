@@ -1,6 +1,7 @@
 open Final_proj_3110.Board
 open Final_proj_3110.Logic
 open Final_proj_3110.Computer
+open Final_proj_3110.Ships
 
 let welcome () =
   print_newline ();
@@ -112,6 +113,38 @@ let rec get_coords name_ship board =
       print_endline "Cannot add coordinates due to overlap";
       get_coords name_ship board
 
+let rec user_turn computer_board =
+  let computer_ships = get_occupied_coords () in
+  print_endline "Your turn!";
+  let row_input = get_row_coord () in
+  let col_input =
+    Char.code (String.get (get_col_coord ()) 0) - Char.code 'A' + 1
+  in
+  if not (valid_guess_user row_input col_input) then begin
+    print_endline "You have already guessed this spot. Try again.";
+    user_turn computer_board
+  end
+  else begin
+    add_user_guess (row_input, col_input);
+    if not (check_in_comp_shi_coords row_input col_input) then begin
+      print_endline "You missed";
+      mark_on_board computer_board (row_input, col_input) "O"
+    end
+    else begin
+      print_endline "Hit!";
+      let ship = get_board_element computer_board row_input col_input in
+      let ship_name = find_ship_name ship in
+      mark_on_board computer_board (row_input, col_input) "X";
+      (* Mark a hit *)
+      let ship = find_ship_in_list computer_ships ship_name in
+      update_ship_hit computer_ships ship_name;
+      (* Update the hits on the ship *)
+      if is_sunk ship then
+        print_endline
+          ("You sank the computers ship of length " ^ get_length ship ^ "!")
+    end
+  end
+
 (** Starts game and asks for name *)
 let () =
   welcome ();
@@ -135,4 +168,5 @@ let () =
   get_coords 5 user_board;
   print_grid (board_array user_board);
   print_newline ();
+  user_turn computer_board;
   print_endline "Thanks for playing. Goodbye!"
