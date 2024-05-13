@@ -65,7 +65,7 @@ let rec get_orientation col_input row_input length_ship =
       if check_orientation ( - ) (int_of_char col_input.[0] - 65) length_ship
       then "left"
       else begin
-        print_endline "This orientation doesn't work with your coordinates.";
+        print_endline "This\n   orientation doesn't work with your coordinates.";
         get_orientation col_input row_input length_ship
       end
   | "right" ->
@@ -114,13 +114,13 @@ let rec get_coords name_ship board =
       get_coords name_ship board
 
 let rec user_turn computer_board =
-  let computer_ships = get_occupied_coords () in
+  let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
   let row_input = get_row_coord () in
   let col_input =
     Char.code (String.get (get_col_coord ()) 0) - Char.code 'A' + 1
   in
-  if not (valid_guess_user row_input col_input) then begin
+  if valid_guess_user row_input col_input then begin
     print_endline "You have already guessed this spot. Try again.";
     user_turn computer_board
   end
@@ -128,20 +128,37 @@ let rec user_turn computer_board =
     add_user_guess (row_input, col_input);
     if not (check_in_comp_shi_coords row_input col_input) then begin
       print_endline "You missed";
-      mark_on_board computer_board (row_input, col_input) "O"
+      mark_on_board computer_board (row_input, col_input) " O ";
+      print_grid computer_board;
+      user_turn computer_board
     end
     else begin
       print_endline "Hit!";
-      let ship = get_board_element computer_board row_input col_input in
+      let ship =
+        get_board_element computer_board (row_input - 1) (col_input - 1)
+      in
       let ship_name = find_ship_name ship in
-      mark_on_board computer_board (row_input, col_input) "X";
+      mark_on_board computer_board (row_input, col_input) " X ";
       (* Mark a hit *)
-      let ship = find_ship_in_list computer_ships ship_name in
+      let ship = find_ship_in_list !computer_ships ship_name in
       update_ship_hit computer_ships ship_name;
+      print_endline (ship_to_string ship);
+      print_endline (string_of_int (get_comp_hits ()));
       (* Update the hits on the ship *)
-      if is_sunk ship then
+      if is_sunk ship then begin
+        print_grid computer_board;
         print_endline
-          ("You sank the computers ship of length " ^ get_length ship ^ "!")
+          ("You sank the computers ship of length " ^ get_length ship ^ "!");
+        if get_comp_hits () >= 17 then print_endline "Congrats hoe you won!"
+        else begin
+          print_grid computer_board;
+          user_turn computer_board
+        end
+      end
+      else begin
+        print_grid computer_board;
+        user_turn computer_board
+      end
     end
   end
 

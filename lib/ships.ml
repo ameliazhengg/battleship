@@ -18,7 +18,7 @@ let add_user_ship name length (coordinates : coord_list) =
   user_ships := { name; length; coordinates; hits = 0 } :: !user_ships
 
 (* check if ship is sunk *)
-let is_sunk ship = ship.hits >= ship.length
+let is_sunk ship = ship.hits >= ship.length - 1
 
 (* Update the hit count of a ship and return updated list of ships *)
 let update_ship_hit ships name =
@@ -39,4 +39,14 @@ let find_ship_name n =
   | _ -> 5
 
 let find_ship_in_list ships name =
-  List.find (fun ship -> ship.name = name) !ships
+  List.find (fun ship -> ship.name = name) ships
+
+let get_comp_ships () = computer_ships
+
+let get_comp_hits () =
+  List.fold_left (fun acc x -> acc + x.hits) 0 !computer_ships
+
+let ship_to_string ship =
+  "name: " ^ string_of_int ship.name ^ " | " ^ "length: "
+  ^ string_of_int ship.length ^ " | " ^ "hits: " ^ string_of_int ship.hits
+  ^ " | "

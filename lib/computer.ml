@@ -79,21 +79,15 @@ let valid_placement start_cord dir len lst =
 
 (* [random_coord] is a random number between 1 and 100 inclusive representing
    the coordinate in a 10x10 grid *)
-let rec random_coord occupied_coords_lst =
+let random_coord _ =
   let coord = 1 + Random.int 100 in
-  (* Generate a random integer from 1 to 100 *)
-  if
-    (not (List.mem coord !occupied_coords_lst))
-    && List.length !occupied_coords = 0
-  then begin
-    occupied_coords := !occupied_coords @ [ coord ];
-    coord
-  end
-  else if not (List.mem coord !occupied_coords_lst) then coord
-  else begin
-    random_coord
-      occupied_coords_lst (* If the coord is already occupied, try again *)
-  end
+  coord
+(* Generate a random integer from 1 to 100 *)
+(* if (not (List.mem coord !occupied_coords_lst)) && List.length
+   !occupied_coords = 0 then begin occupied_coords := !occupied_coords @ [ coord
+   ]; coord end else if not (List.mem coord !occupied_coords_lst) then coord
+   else begin random_coord occupied_coords_lst (* If the coord is already
+   occupied, try again *) end *)
 
 let rec add_ship_to_lst name start dir len lst =
   if len = 0 then add_computer_ship name (List.length lst) lst
@@ -164,3 +158,17 @@ let rec occ_lst_to_string lst =
 let string_comp_ships = com_lst_to_string !comp_ship_coords
 let string_occ_coord = occ_lst_to_string !occupied_coords
 let string_row_col = row_col_to_string !comp_ship_coords
+
+let rec make_occupied_coords coord_lst lst =
+  match lst with
+  | [] -> coord_lst
+  | h :: t ->
+      let row = (h / 10) + 1 in
+      let col = if h / 10 = 10 then 9 else h mod 10 in
+      let new_lst = (row, col) :: coord_lst in
+      make_occupied_coords new_lst t
+
+let get_occupied_coords _ = make_occupied_coords [] !occupied_coords
+
+let check_in_comp_shi_coords row col =
+  if List.mem (((row - 1) * 10) + col) !occupied_coords then true else false
