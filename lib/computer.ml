@@ -28,20 +28,6 @@ let match_ship n =
 (*let computer_ship_coords = ref []*)
 let create_computer_board () = Array.make_matrix 10 10 "   "
 let get_board_element board row col = board.(row).(col)
-let orientation = [| "up"; "down"; "left"; "right" |]
-let random_row _ = 1 + Random.int (Array.length rows)
-let random_col _ = Array.get columns (1 + Random.int (Array.length columns))
-
-(* [random_dir] is a random number betwen 0 and 3 inclusive, 0 represent down, 1
-   represent up, 2 represent left, 3 represents right *)
-(* let random_dir start = match start with | x when x = 1 -> Random.int 2 * 3 |
-   x when x = 10 -> Random.int 2 * 2 | x when x = 91 -> if Random.bool () then 1
-   else 3 | x when x = 100 -> if Random.bool () then 1 else 2 | _ -> 5 *)
-
-(* let random_dir start = match start with | x when x = 1 -> 3 * Random.int 2 |
-   x when x = 10 -> 2 * Random.int 2 | x when x = 91 -> if Random.bool () then 1
-   else 3 | x when x = 100 -> if Random.bool () then 1 else 2 | _ -> 5 *)
-
 let random_dir _ = Random.int 4
 
 (* [check_contains] is true if the coordinates of a potential ship are already
@@ -49,47 +35,47 @@ let random_dir _ = Random.int 4
 let rec check_contains start_cord dir len lst =
   match dir with
   | 0 ->
-      if len = 0 then false
+      if len = 0 then true
       else
-        List.mem start_cord lst
-        || check_contains (start_cord + 10) dir (len - 1) lst
+        (not (List.mem start_cord lst))
+        && check_contains (start_cord + 10) dir (len - 1) lst
   | 1 ->
-      if len = 0 then false
+      if len = 0 then true
       else
-        List.mem start_cord lst
-        || check_contains (start_cord - 10) dir (len - 1) lst
+        (not (List.mem start_cord lst))
+        && check_contains (start_cord - 10) dir (len - 1) lst
   | 2 ->
-      if len = 0 then false
+      if len = 0 then true
       else
-        List.mem start_cord lst
-        || check_contains (start_cord - 1) dir (len - 1) lst
+        (not (List.mem start_cord lst))
+        && check_contains (start_cord - 1) dir (len - 1) lst
   | 3 ->
-      if len = 0 then false
+      if len = 0 then true
       else
-        List.mem start_cord lst
-        || check_contains (start_cord + 1) dir (len - 1) lst
+        (not (List.mem start_cord lst))
+        && check_contains (start_cord + 1) dir (len - 1) lst
   | _ -> true
 
 (* [valid_placement] is true if a ship with [start_coord] [dir] and [len] can be
    placed there otherwise false *)
-let valid_placement start_cord dir len =
+let valid_placement start_cord dir len lst =
   match dir with
   | 0 ->
       if start_cord >= 91 then false
       else if (start_cord / 10) + len > 10 then false
-      else check_contains start_cord dir len !occupied_coords
+      else check_contains start_cord dir len lst
   | 1 ->
       if start_cord <= 10 then false
       else if (start_cord / 10) - len < 0 then false
-      else check_contains start_cord dir len !occupied_coords
+      else check_contains start_cord dir len lst
   | 2 ->
       if start_cord mod 10 = 1 then false
       else if (start_cord mod 10) - len < 0 then false
-      else check_contains start_cord dir len !occupied_coords
+      else check_contains start_cord dir len lst
   | 3 ->
       if start_cord mod 10 = 0 then false
       else if (start_cord mod 10) + len > 10 then false
-      else check_contains start_cord dir len !occupied_coords
+      else check_contains start_cord dir len lst
   | _ -> false
 
 (* [random_coord] is a random number between 1 and 100 inclusive representing
@@ -97,20 +83,25 @@ let valid_placement start_cord dir len =
 let rec random_coord occupied_coords_lst =
   let coord = 1 + Random.int 100 in
   (* Generate a random integer from 1 to 100 *)
-  if List.mem coord !occupied_coords_lst then
-    random_coord
-      occupied_coords_lst (* If the coord is already occupied, try again *)
-  else begin
+  if
+    (not (List.mem coord !occupied_coords_lst))
+    && List.length !occupied_coords = 0
+  then begin
     occupied_coords := !occupied_coords @ [ coord ];
     coord
+  end
+  else if not (List.mem coord !occupied_coords_lst) then coord
+  else begin
+    random_coord
+      occupied_coords_lst (* If the coord is already occupied, try again *)
   end
 
 let rec add_ship_to_lst name start dir len lst =
   if len = 0 then add_computer_ship name (List.length lst) lst
   else begin
+    occupied_coords := !occupied_coords @ [ start ];
     comp_ship_coords := !comp_ship_coords @ [ (name, start) ];
     (* if List.mem start !occupied_coords then () else *)
-    occupied_coords := !occupied_coords @ [ start ];
     let lst = lst @ [ (start / 10, start mod 10) ] in
     match dir with
     | 0 -> add_ship_to_lst name (start + 10) 0 (len - 1) lst
@@ -122,7 +113,7 @@ let rec add_ship_to_lst name start dir len lst =
 
 let rec new_ship_coord start dir len name =
   if len = 6 then new_ship_coord start dir 3 31
-  else if valid_placement start dir len = true then
+  else if valid_placement start dir len !occupied_coords = true then
     add_ship_to_lst name start dir len []
   else
     let new_start = random_coord occupied_coords in
@@ -134,11 +125,20 @@ let add_coords =
     new_ship_coord new_rand (random_dir new_rand) i i
   done
 
+let rec row_col_to_string lst =
+  match lst with
+  | [] -> ""
+  | h :: t ->
+      string_of_int ((snd h - 1) / 10)
+      ^ ", "
+      ^ string_of_int ((snd h - 1) mod 10)
+      ^ " | " ^ row_col_to_string t
+
 let random_board board =
   List.iter
     (fun (name, coord) ->
-      let row = coord / 10 in
-      let col = (coord mod 10) - 1 in
+      let row = if coord = 100 then 9 else coord / 10 in
+      let col = (coord - 1) mod 10 in
       let icon = match_ship name in
       board.(row).(col) <- icon)
     !comp_ship_coords;
@@ -163,3 +163,4 @@ let rec occ_lst_to_string lst =
 
 let string_comp_ships = com_lst_to_string !comp_ship_coords
 let string_occ_coord = occ_lst_to_string !occupied_coords
+let string_row_col = row_col_to_string !comp_ship_coords

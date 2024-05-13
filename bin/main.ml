@@ -120,7 +120,7 @@ let () =
   print_endline "Computer Board";
   print_endline string_comp_ships;
   print_endline string_occ_coord;
-
+  print_endline string_row_col;
   add_coords;
   let computer_board = create_computer_board () in
   print_grid (random_board computer_board);
