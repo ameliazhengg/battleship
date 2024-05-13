@@ -2,9 +2,6 @@ open Ships
 
 let () = Random.self_init ()
 
-exception Foo of string
-exception Bar of string
-
 type board = string array array
 
 let columns = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
@@ -135,6 +132,7 @@ let rec row_col_to_string lst =
       ^ " | " ^ row_col_to_string t
 
 let random_board board =
+  add_coords;
   List.iter
     (fun (name, coord) ->
       let row = if coord = 100 then 9 else coord / 10 in

@@ -1,2 +1,3 @@
 (test
- (name test_final_proj_3110))
+ (name test_final_proj_3110)
+ (libraries final_proj_3110 ounit2 qcheck))
