@@ -1,5 +1,5 @@
-type board
-type coord_list
+type board = string array array
+type coord_list = (int * int) list
 
 val column_labels : char array
 val row_labels : string array

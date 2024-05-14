@@ -62,7 +62,7 @@ let rec get_orientation col_input row_input length_ship =
   let user_input = read_line () in
   match user_input with
   | "left" ->
-      if check_orientation ( - ) (int_of_char col_input.[0] - 65) length_ship
+      if check_orientation ( - ) (int_of_char col_input.[0]) length_ship
       then "left"
       else begin
         print_endline "This\n   orientation doesn't work with your coordinates.";

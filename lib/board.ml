@@ -56,7 +56,7 @@ let set_board board lst name_ship length_ship =
     board.(row - 1).(col) <- icon
   done
 
-(** check_orientation chekcs if the orientation is allowed given the coordinate
+(** check_orientation checks if the orientation is allowed given the coordinate
     the user has inputed *)
 let check_orientation orientation coord num =
   if orientation coord num < 0 || orientation coord num > 11 then false
@@ -81,7 +81,7 @@ let check_ships_coord board lst name_ship length_ship =
     set_board board lst name_ship length_ship;
     (* sets the board with the coordinates*)
     add_user_ship name_ship length_ship lst;
-    (* creates a ship item that contains the list of cooridnates for the
+    (* creates a ship item that contains the list of coordinates for the
        specific given ship*)
     true
   end
