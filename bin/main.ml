@@ -36,24 +36,46 @@ let print_grid board =
     print_row board i
   done
 
-(* gets the users input for row *)
-let rec get_row_coord () =
-  print_string "Enter the row number (1-10): ";
+let rec get_guess_row_coord () =
+  print_string "Enter the row number for your guess (1-10): ";
   let row_input = read_line () in
   if is_valid_row_input row_input then int_of_string row_input
   else begin
     print_endline "Invalid row input. Please enter a valid row number.";
-    get_row_coord ()
+    get_guess_row_coord ()
+  end
+
+(* gets the users input for row *)
+let rec get_row_coord length_ship =
+  print_string
+    ("Enter the row number for your " ^ string_of_int length_ship
+   ^ "-length ship (1-10): ");
+  let row_input = read_line () in
+  if is_valid_row_input row_input then int_of_string row_input
+  else begin
+    print_endline "Invalid row input. Please enter a valid row number.";
+    get_row_coord length_ship
   end
 
 (*gets user input for col*)
-let rec get_col_coord () =
-  print_string "Enter the column letter (A-J): ";
+let rec get_col_coord length_ship =
+  print_string
+    ("Enter the column letter for your " ^ string_of_int length_ship
+   ^ "-length ship (A-J): ");
   let col_input = read_line () in
   if is_valid_col_input col_input then col_input
   else begin
     print_endline "Invalid column input. Please enter a valid column letter.";
-    get_col_coord ()
+    get_col_coord length_ship
+  end
+
+let rec get_guess_col_coord () =
+  print_string "Enter the column letter for your guess (A-J): ";
+  let col_input = read_line () in
+  if is_valid_col_input col_input then col_input
+  else begin
+    print_endline "Invalid column input. Please enter a valid column letter.";
+    get_guess_col_coord ()
   end
 
 (*gets user input for orientation*)
@@ -62,14 +84,14 @@ let rec get_orientation col_input row_input length_ship =
   let user_input = read_line () in
   match user_input with
   | "left" ->
-      if check_orientation ( - ) (int_of_char col_input.[0] - 65) length_ship
+      if check_orientation ( - ) (int_of_char col_input.[0] - 64) length_ship
       then "left"
       else begin
-        print_endline "This\n   orientation doesn't work with your coordinates.";
+        print_endline "This orientation doesn't work with your coordinates.";
         get_orientation col_input row_input length_ship
       end
   | "right" ->
-      if check_orientation ( + ) (int_of_char col_input.[0] - 65) length_ship
+      if check_orientation ( + ) (int_of_char col_input.[0] - 64) length_ship
       then "right"
       else begin
         print_endline "This orientation doesn't work with your coordinates.";
@@ -97,13 +119,13 @@ let rec get_orientation col_input row_input length_ship =
     coord to a list . *)
 let rec get_coords name_ship board =
   let length_ship = if name_ship = 31 then 3 else name_ship in
-  let row_input = get_row_coord () in
-  let col_input = String.uppercase_ascii (get_col_coord ()) in
+  let row_input = get_row_coord length_ship in
+  let col_input = String.uppercase_ascii (get_col_coord length_ship) in
   let orientation = get_orientation col_input row_input length_ship in
 
   match
     create_coord_array orientation row_input
-      (int_of_char col_input.[0] - 65)
+      (int_of_char col_input.[0] - 64)
       name_ship length_ship board
     (* nums is the name of the ship 1,2,3,31,4,5 and n is just the length of
        ship*)
@@ -116,9 +138,9 @@ let rec get_coords name_ship board =
 let rec user_turn computer_board =
   let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
-  let row_input = get_row_coord () in
+  let row_input = get_guess_row_coord () in
   let col_input =
-    Char.code (String.get (get_col_coord ()) 0) - Char.code 'A' + 1
+    Char.code (String.get (get_guess_col_coord ()) 0) - Char.code 'A' + 1
   in
   if valid_guess_user row_input col_input then begin
     print_endline "You have already guessed this spot. Try again.";

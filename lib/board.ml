@@ -53,7 +53,7 @@ let set_board board lst name_ship length_ship =
     let icon = match_ship n in
     let row = get_first_element lst i in
     let col = get_second_element lst i in
-    board.(row - 1).(col) <- icon
+    board.(row - 1).(col - 1) <- icon
   done
 
 (** check_orientation checks if the orientation is allowed given the coordinate
