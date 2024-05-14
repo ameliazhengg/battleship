@@ -1,9 +1,39 @@
-(* open OUnit2 open QCheck2 open Final_proj_3110.Computer
+open OUnit2 
+(*open QCheck2 
+open Final_proj_3110.Computer*)
+open Final_proj_3110.Board
 
-   let new_random_board = random_board (create_computer_board ())
+   (*let new_random_board = random_board (create_computer_board ()) 
+   let generator = QCheck2.Gen.((0 -- 8))
+   let generator2 = QCheck2.Gen.(1-- 9) *)
+   let test_orientation_left(col) = check_orientation (-) col 2 
+
+   let test_orientation_right(col) = check_orientation (+) col 2 
+
+   let test_orientation_down(row) = check_orientation (+) row 2
+
+   let test_orientation_up(row) = check_orientation (-) row 2
+
+   let test_left =
+      QCheck2.Test.make ~count:100 ~name:"randomly generated orientations" QCheck2.Gen.(2--10)  test_orientation_left
+
+   let test_right =
+      QCheck2.Test.make ~count:100 ~name:"randomly generated orientations" QCheck2.Gen.(0--8)  test_orientation_right
+   let test_down =
+      QCheck2.Test.make ~count:100 ~name:"randomly generated orientations" QCheck2.Gen.(1--9) test_orientation_down
+   let test_up =
+      QCheck2.Test.make ~count:100 ~name:"randomly generated orientations" QCheck2.Gen.(2-- 10)test_orientation_up
+    
+    let ounit_test_left = QCheck_runner.to_ounit2_test test_left
+    let ounit_test_right = QCheck_runner.to_ounit2_test test_right
+
+    let ounit_test_down = QCheck_runner.to_ounit2_test test_down
+    let ounit_test_up = QCheck_runner.to_ounit2_test test_up
+
+    (*let board = create_board () in let lst = [(row, col)] in let set = set_board board lst 3 3 in let Garden.num_rows garden = l && Array.length (Garden.get_row 0 garden) = w *)
 
    (* [plant_generator] generates a random plant at a random stage in life *)
-   let board_generator = let open Final_proj_3110.Computer in Gen.oneofl [
+   (*let board_generator = let open Final_proj_3110.Computer in Gen.oneofl [
    new_random_board; new_random_board; new_random_board; new_random_board;
    new_random_board; new_random_board; new_random_board; new_random_board;
    new_random_board; new_random_board; new_random_board; new_random_board;
@@ -53,9 +83,16 @@
 
    (* checks if garden dies properly *) let test_plant_death = "tests
    incr_garden" >:: fun _ -> assert_equal ~printer:(fun x -> x) " " (to_string
-   death_garden 2 2)
+   death_garden 2 2) *)
 
-   (*all ounit tests*) let suite = "set test suite" >::: [ ounit_random_test;
-   test_to_string_empty; test_incr_garden_2; test_plant_death; ]
+   let test_orientation  =
+      "test suite for orientation"
+      >::: [
+              ounit_test_left;
+              ounit_test_right;
+              ounit_test_down;
+              ounit_test_up;
+           ]
 
-   let _ = run_test_tt_main suite *)
+
+   let _ = run_test_tt_main test_orientation
