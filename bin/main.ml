@@ -98,7 +98,7 @@ let rec get_orientation col_input row_input length_ship =
 let rec get_coords name_ship board =
   let length_ship = if name_ship = 31 then 3 else name_ship in
   let row_input = get_row_coord () in
-  let col_input = get_col_coord () in
+  let col_input = String.uppercase_ascii (get_col_coord ()) in
   let orientation = get_orientation col_input row_input length_ship in
 
   match

@@ -59,7 +59,7 @@ let set_board board lst name_ship length_ship =
 (** check_orientation chekcs if the orientation is allowed given the coordinate
     the user has inputed *)
 let check_orientation orientation coord num =
-  if orientation coord num < 0 || orientation coord num > 10 then false
+  if orientation coord num < 0 || orientation coord num > 11 then false
   else true
 
 (** checks if the coordinates of the ship are coordinates of a ship that has
