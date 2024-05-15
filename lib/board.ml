@@ -88,32 +88,32 @@ let check_ships_coord board lst name_ship length_ship =
   else false
 
 (** Creates a list of coordinates of the ship *)
+let rec generate_coords acc n orientation row_input col_input=
+  if n <= 0 then acc
+  else
+    match orientation with
+    | "left" ->
+        let col = col_input - n + 1 in
+        let coord = (row_input, col) in
+        generate_coords (coord :: acc) (n - 1) orientation row_input col_input
+    | "right" ->
+        let col = col_input + n - 1 in
+        let coord = (row_input, col) in
+        generate_coords (coord :: acc) (n - 1) orientation row_input col_input
+    | "up" ->
+        let row = row_input - n + 1 in
+        let coord = (row, col_input) in
+        generate_coords (coord :: acc) (n - 1) orientation row_input col_input
+    | "down" ->
+        let row = row_input + n - 1 in
+        let coord = (row, col_input) in
+        generate_coords (coord :: acc) (n - 1) orientation row_input col_input
+    | _ -> failwith "Invalid orientation"
+    
 let create_coord_array orientation row_input col_input name_ship length_ship
-    board =
-  let rec generate_coords acc n =
-    if n <= 0 then acc
-    else
-      match orientation with
-      | "left" ->
-          let col = col_input - n + 1 in
-          let coord = (row_input, col) in
-          generate_coords (coord :: acc) (n - 1)
-      | "right" ->
-          let col = col_input + n - 1 in
-          let coord = (row_input, col) in
-          generate_coords (coord :: acc) (n - 1)
-      | "up" ->
-          let row = row_input - n + 1 in
-          let coord = (row, col_input) in
-          generate_coords (coord :: acc) (n - 1)
-      | "down" ->
-          let row = row_input + n - 1 in
-          let coord = (row, col_input) in
-          generate_coords (coord :: acc) (n - 1)
-      | _ -> failwith "Invalid orientation"
-  in
-  let coordinates = generate_coords [] length_ship in
+    board = let coordinates = generate_coords [] length_ship orientation row_input col_input in
   check_ships_coord board coordinates name_ship length_ship
+
 
 (** all ship coords - coords of all the ships in the board, coordiantes = the
     potential coordinates of the new ship, ship_coords is empty until the next
