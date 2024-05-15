@@ -87,7 +87,7 @@ let check_ships_coord board lst name_ship length_ship =
   end
   else false
 
-(** Creates a list of coordinates of the ship *)
+(*generate a list of coordinates*)
 let rec generate_coords acc n orientation row_input col_input=
   if n <= 0 then acc
   else
@@ -109,7 +109,8 @@ let rec generate_coords acc n orientation row_input col_input=
         let coord = (row, col_input) in
         generate_coords (coord :: acc) (n - 1) orientation row_input col_input
     | _ -> failwith "Invalid orientation"
-    
+
+(** Creates a list of coordinates of the ship and checks if it is valid*)
 let create_coord_array orientation row_input col_input name_ship length_ship
     board = let coordinates = generate_coords [] length_ship orientation row_input col_input in
   check_ships_coord board coordinates name_ship length_ship
