@@ -29,7 +29,7 @@ let get_second_element lst index =
   let tuple = List.nth lst index in
   snd tuple
 
-(* add coordinates to ship_coords list *)
+(* add coordinates to user_ship_coords list *)
 let add_coords coords = user_ship_coords := coords @ !user_ship_coords
 
 (* Check if a guess is valid meaning check if the guess is in the ship
