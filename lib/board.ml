@@ -44,7 +44,7 @@ let match_ship n =
   | 6 -> " c "
   | 4 -> " d "
   | 5 -> " e "
-  | _ -> "  "
+  | _ -> "   "
 
 (* sets the positions of the user ships*)
 let set_board board lst name_ship length_ship =

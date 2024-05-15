@@ -1,7 +1,7 @@
 open OUnit2
 
 (*open QCheck2 *)
-(*open Final_proj_3110.Computer*)
+open Final_proj_3110.Computer
 open Final_proj_3110.Board
 
 (*check orientation tests*)
@@ -40,6 +40,10 @@ let ounit_test_left = QCheck_runner.to_ounit2_test test_left
 let ounit_test_right = QCheck_runner.to_ounit2_test test_right
 let ounit_test_down = QCheck_runner.to_ounit2_test test_down
 let ounit_test_up = QCheck_runner.to_ounit2_test test_up
+
+let test_orientation =
+   "test suite for orientation"
+   >::: [ ounit_test_left; ounit_test_right; ounit_test_down; ounit_test_up ]
 
 (*let board = create_board () in let lst = [(row, col)] in let set = set_board
   board lst 3 3 in let Garden.num_rows garden = l && Array.length
@@ -97,9 +101,6 @@ let ounit_test_up = QCheck_runner.to_ounit2_test test_up
   incr_garden" >:: fun _ -> assert_equal ~printer:(fun x -> x) " " (to_string
   death_garden 2 2) *)
 
-let test_orientation =
-  "test suite for orientation"
-  >::: [ ounit_test_left; ounit_test_right; ounit_test_down; ounit_test_up ]
 
 (*check ships coords and add_coords tests*)
 
@@ -119,6 +120,10 @@ let test_check_ship_coord =
          ( "check that coords are added if they do not exist" >:: fun _ ->
            assert_equal true (List.mem (8, 8) !user_ship_coords) );
        ]
+
+(*add_user_ship test*)
+let a_ship:ship = {name = 2; length = 2; coordinates = [(8,8); (8,9)]; hits = 0}
+let test_add_user_ship = !user_ships
 
 (*set board and match ship tests*)
 
@@ -154,8 +159,9 @@ let test_set_board =
             assert_equal " e " (get_board_element new_board 7 1) );
          ( "check that coords are set on the board for ship type e end" >:: fun _ ->
             assert_equal " e " (get_board_element new_board 7 5) );
+         ( "check that other oords are set on the board are empty" >:: fun _ ->
+            assert_equal "   " (get_board_element new_board 5 5) );
        ]
-
 
 let _ = run_test_tt_main test_orientation
 let _ = run_test_tt_main test_check_ship_coord
