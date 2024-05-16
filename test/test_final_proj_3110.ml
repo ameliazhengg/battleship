@@ -586,6 +586,59 @@ let _ = run_test_tt_main test_valid_placement
 let _ = run_test_tt_main test_computer_logic
 let _ = run_test_tt_main test_generate_coords
 
+(* tests generate hard guess *)
+let rows = [| 1;2;3;4;5;6;7;8;9;10|]
+let columns = [| 1;2;3;4;5;6;7;8;9;10|]
+let recommended = ref [ (2, 2); (3, 3) ]
+
+let test_easy_mode _ =
+  let row, col = generate_random_guess "easy" in
+  assert_bool "Valid row" (row >= 1 && row <= Array.length rows);
+  assert_bool "Valid column" (col >= 1 && col <= Array.length columns)
+
+let () = let r, c = generate_random_guess "easy" in print_endline (string_of_int r ^ string_of_int c )
+
+let test_hard_no_recommendations _ =
+  recommended := [];
+  let row, col = generate_random_guess "hard" in
+  assert_bool "Valid row" (row >= 1 && row <= Array.length rows);
+  assert_bool "Valid column" (col >= 1 && col < Array.length columns)
+
+ (*let hard_test_with_recommendations _ =
+  let recs = !rec_guesses in
+  let expected = List.hd !recommended in
+  let result = generate_random_guess "hard" in
+  assert_equal expected result ~printer:(fun (r, c) ->
+      Printf.sprintf "(%d, %d)" r c);
+  assert_bool "Recommendation not removed"
+    (not (List.mem expected !rec_guesses)) *)
+
+(*let test_medium_with_recommendations _ =
+  recommended := [ (1, 1); (4, 4) ];
+  (* Assume these are strategic spots for medium mode *)
+  let result = generate_random_guess "medium" in
+  assert_bool "Invalid selection for medium mode with recommendations"
+    (List.mem result !recommended) *)
+
+let test_medium_no_recommendations _ =
+  recommended := [];
+  (* No recommendations available *)
+  let row, col = generate_random_guess "medium" in
+  assert_bool "Valid row" (row >= 1 && row <= 10);
+  assert_bool "Valid column" (if row mod 2 = 0 then col >= 1 && col <=9 + 1 else col >= 2 && col <= 10)
+
+let suite =
+  "Test Suite for generate_random_guess across modes"
+  >::: [
+         "test_easy_no_recommendations" >:: test_easy_mode;
+         "test_hard_no_recommendations" >:: test_hard_no_recommendations;
+         (*"test_hard_with_recommendations" >:: hard_test_with_recommendations;
+         "test_medium_with_recommendations" >:: test_medium_with_recommendations; *)
+         "test_medium_no_recommendations" >:: test_medium_no_recommendations;
+       ]
+
+let () = run_test_tt_main suite
+
 (*test getting first and second function*)
 
 let sample_list = [ (1, 2); (3, 4); (5, 6) ]
