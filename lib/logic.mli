@@ -23,7 +23,13 @@ val valid_guess_computer : int * int -> bool
     guessed; [false] otherwise. *)
 
 val correct_user_guess : (int * int) list ref
+(** [correct_user_guess] is the list of the guesses that the users guessed
+    correctly *)
+
 val add_user_correct_guess : int * int -> unit
+(** [add_user_correct_guess] adds a new guess to the list of
+    [correct_user_guess]*)
+
 val get_correct_user_guess : unit -> (int * int) list
 val incorrect_user_guess : (int * int) list ref
 val add_user_incorrect_guess : int * int -> unit
