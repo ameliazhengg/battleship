@@ -62,60 +62,6 @@ let themes_list =
     (* Khaotic *)
   ]
 
-let checker =
-  [|
-    (1, 2);
-    (1, 4);
-    (1, 6);
-    (1, 8);
-    (1, 10);
-    (2, 1);
-    (2, 3);
-    (2, 5);
-    (2, 7);
-    (2, 9);
-    (3, 2);
-    (3, 4);
-    (3, 6);
-    (3, 8);
-    (3, 10);
-    (4, 1);
-    (4, 3);
-    (4, 5);
-    (4, 7);
-    (4, 9);
-    (5, 2);
-    (5, 4);
-    (5, 6);
-    (5, 8);
-    (5, 10);
-    (6, 1);
-    (6, 3);
-    (6, 5);
-    (6, 7);
-    (6, 9);
-    (7, 2);
-    (7, 4);
-    (7, 6);
-    (7, 8);
-    (7, 10);
-    (8, 1);
-    (8, 3);
-    (8, 5);
-    (8, 7);
-    (8, 9);
-    (9, 2);
-    (9, 4);
-    (9, 6);
-    (9, 8);
-    (10, 10);
-    (10, 1);
-    (10, 3);
-    (10, 5);
-    (10, 7);
-    (10, 9);
-  |]
-
 let comp_ship_coords = ref []
 let occupied_coords = ref []
 let theme = List.nth themes_list (Random.int 5)
@@ -275,6 +221,9 @@ let get_hard_guesses () =
     guess
   end
 
+let medium_gen row =
+  if row mod 2 = 0 then (2 * Random.int 5) + 1 else (2 * Random.int 5) + 2
+
 let generate_random_guess mode =
   match mode with
   | "easy" -> begin
@@ -282,7 +231,10 @@ let generate_random_guess mode =
       let random_col = 1 + Random.int (Array.length columns) in
       (random_row, random_col)
     end
-  | "medium" -> checker.(Random.int 49)
+  | "medium" ->
+      let row = 1 + Random.int 10 in
+      let col = medium_gen row in
+      (row, col)
   | _ -> get_hard_guesses ()
 
 let create_concealed_board () = Array.make_matrix 10 10 "   "

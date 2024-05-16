@@ -77,3 +77,7 @@ val create_concealed_board : unit -> string array array
 val populate_concealed_board : board -> board
 (** [populate_concealed_board] only shows the coordinates that the user already
     guessed *)
+
+val medium_gen : int -> int
+(* [medium_gen] is a randomly generated column number given a certain row
+   number *)
