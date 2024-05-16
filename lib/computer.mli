@@ -54,3 +54,5 @@ val add_ship_to_lst : int -> int -> int -> int -> (int * int) list -> unit
 val new_ship_coord : int -> int -> int -> int -> unit
 
 val add_coords : unit 
+
+val ship_match : int -> string
