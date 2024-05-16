@@ -3,11 +3,25 @@ open Final_proj_3110.Logic
 open Final_proj_3110.Computer
 open Final_proj_3110.Ships
 
+let instructions () =
+  print_endline "How to play battleship:";
+  print_endline
+    "You have five ships consisting of lengths 2,3,3,4 and 5. These will be \
+     represented on your board as 'a', 'b', 'c', 'd', and 'e', respectively";
+  print_endline
+    "To initiate your board, you will be prompted to enter a coordinate for \
+     your ship and an orientation."
+(* FINISH LATER*)
+
 let welcome () =
   print_newline ();
-  let () = print_string "Please enter your name: " in
-  let the_input = read_line () in
-  print_endline ("Welcome to Battleship, " ^ the_input ^ "!")
+  print_string "Please enter your name: ";
+  let player_name = read_line () in
+  print_endline ("Welcome to Battleship, " ^ player_name ^ "!");
+  print_string "\nWould you like to read how to play battleship? (yes or no): ";
+  let input = read_line () in
+  if String.uppercase_ascii input = "YES" then instructions ()
+  else print_endline "The game begins now."
 
 (** prints row with the battleships *)
 let print_row board i =
@@ -135,58 +149,103 @@ let rec get_coords name_ship board =
       print_endline "Cannot add coordinates due to overlap";
       get_coords name_ship board
 
-let rec user_turn computer_board =
+let rec user_turn computer_board user_board =
   let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
   let row_input = get_guess_row_coord () in
   let col_input =
     Char.code (String.get (get_guess_col_coord ()) 0) - Char.code 'A' + 1
   in
-  if valid_guess_user row_input col_input then begin
+  if not (valid_guess_user row_input col_input) then begin
     print_endline "You have already guessed this spot. Try again.";
-    user_turn computer_board
+    user_turn computer_board user_board
   end
   else begin
     add_user_guess (row_input, col_input);
-    if not (check_in_comp_shi_coords row_input col_input) then begin
+    if not (in_comp_shi_coords row_input col_input) then begin
       print_endline "You missed";
       mark_on_board computer_board (row_input, col_input) " O ";
       print_grid computer_board;
-      user_turn computer_board
+      computer_turn user_board computer_board
     end
     else begin
       print_endline "Hit!";
-      let ship =
-        get_board_element computer_board (row_input - 1) (col_input - 1)
-      in
-      let ship_name = find_ship_name ship in
-      mark_on_board computer_board (row_input, col_input) " X ";
-      (* Mark a hit *)
-      let ship = find_ship_in_list !computer_ships ship_name in
-      update_ship_hit computer_ships ship_name;
-      print_endline (ship_to_string ship);
       print_endline (string_of_int (get_comp_hits ()));
+      mark_on_board computer_board (row_input, col_input) " X ";
+      let ship_rep =
+        get_comp_board_element computer_board (row_input - 1) (col_input - 1)
+      in
+      let ship = get_ship_update ship_rep computer_ships in
+      print_endline (ship_to_string ship);
       (* Update the hits on the ship *)
       if is_sunk ship then begin
         print_grid computer_board;
+        print_endline "is_sunk ran";
         print_endline
           ("You sank the computers ship of length " ^ get_length ship ^ "!");
-        if get_comp_hits () >= 17 then print_endline "Congrats hoe you won!"
+        if check_all_hit computer_ships then print_endline "Congrats, you won!"
         else begin
           print_grid computer_board;
-          user_turn computer_board
+          computer_turn user_board computer_board
         end
       end
       else begin
         print_grid computer_board;
-        user_turn computer_board
+        computer_turn user_board computer_board
       end
     end
   end
 
+and computer_turn user_board computer_board =
+  let user_ships = get_user_ships () in
+  print_endline "Now the computer will take\n   a guess!";
+  Unix.sleepf 1.;
+  let guess = generate_random_guess () in
+  if valid_guess_computer guess then begin
+    add_computer_guess guess;
+    let row, col = guess in
+    let row_str = string_of_int row in
+    let col_str = Char.escaped (char_of_int (col + int_of_char 'A' - 1)) in
+    if not (in_user_ship_coords guess) then begin
+      Printf.printf "The computer guessed %s%s and missed :(\n" row_str col_str;
+      mark_on_board (user_board_array user_board) guess " O ";
+      (* Mark miss on the board *)
+      print_grid user_board;
+      user_turn computer_board user_board (* Print the updated board *)
+    end
+    else begin
+      Printf.printf "The computer guessed %s%s and hit!\n" row_str col_str;
+      mark_on_board (user_board_array user_board) guess " X ";
+      (* Mark hit on the board *)
+      let ship_rep = get_user_board_element user_board row col in
+      let ship = get_ship_update ship_rep user_ships in
+      if is_sunk ship then begin
+        print_endline
+          ("The computer has sank your ship of length " ^ get_length ship ^ "!");
+        if check_all_hit user_ships then begin
+          print_endline "Aw no, the computer won!";
+          print_grid user_board
+        end
+        else begin
+          print_grid user_board;
+          user_turn computer_board user_board
+        end
+      end
+      else begin
+        print_grid user_board;
+        user_turn computer_board user_board
+      end
+    end
+  end
+  else computer_turn user_board computer_board
+(* Retry the turn if the guess was not valid *)
+
+(* Start the game with initial calls to user_turn and computer_turn as needed *)
+
 (** Starts game and asks for name *)
 let () =
   welcome ();
+
   print_endline "Computer Board";
   print_endline string_comp_ships;
   print_endline string_occ_coord;
@@ -205,7 +264,7 @@ let () =
   (* had to do this because there are two ships of length 3 *)
   get_coords 4 user_board;
   get_coords 5 user_board;
-  print_grid (board_array user_board);
+  print_grid (user_board_array user_board);
   print_newline ();
-  user_turn computer_board;
+  user_turn computer_board user_board;
   print_endline "Thanks for playing. Goodbye!"

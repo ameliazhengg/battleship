@@ -9,12 +9,16 @@ let row_labels =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
 let user_ship_coords = ref []
-let board_array board = board
+
+let in_user_ship_coords guess =
+  if List.mem guess !user_ship_coords then true else false
 
 (* create the board size *)
 let create_board _ = Array.make_matrix 10 10 "   "
+let user_board_array board = board
 
 (* gets the element at the specific row and col in our board*)
+let get_user_board_element board row col = board.(row).(col)
 let get_board_element board row col = board.(row).(col)
 
 (* gets the first element in a tuple in our lists of coordinates ie the row
@@ -88,7 +92,7 @@ let check_ships_coord board lst name_ship length_ship =
   else false
 
 (*generate a list of coordinates*)
-let rec generate_coords acc n orientation row_input col_input=
+let rec generate_coords acc n orientation row_input col_input =
   if n <= 0 then acc
   else
     match orientation with
@@ -112,9 +116,11 @@ let rec generate_coords acc n orientation row_input col_input=
 
 (** Creates a list of coordinates of the ship and checks if it is valid*)
 let create_coord_array orientation row_input col_input name_ship length_ship
-    board = let coordinates = generate_coords [] length_ship orientation row_input col_input in
+    board =
+  let coordinates =
+    generate_coords [] length_ship orientation row_input col_input
+  in
   check_ships_coord board coordinates name_ship length_ship
-
 
 (** all ship coords - coords of all the ships in the board, coordiantes = the
     potential coordinates of the new ship, ship_coords is empty until the next

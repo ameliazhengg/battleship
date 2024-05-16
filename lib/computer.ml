@@ -9,8 +9,6 @@ let columns = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 let rows =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
-type coord = int * int
-
 let comp_ship_coords = ref []
 let occupied_coords = ref []
 
@@ -26,7 +24,7 @@ let match_ship n =
 
 (*let computer_ship_coords = ref []*)
 let create_computer_board () = Array.make_matrix 10 10 "   "
-let get_board_element board row col = board.(row).(col)
+let get_comp_board_element board row col = board.(row).(col)
 let random_dir _ = Random.int 4
 
 (* [check_contains] is true if the coordinates of a potential ship are already
@@ -82,13 +80,9 @@ let valid_placement start_cord dir len lst =
 let random_coord _ =
   let coord = 1 + Random.int 100 in
   coord
-(* Generate a random integer from 1 to 100 *)
-(* if (not (List.mem coord !occupied_coords_lst)) && List.length
-   !occupied_coords = 0 then begin occupied_coords := !occupied_coords @ [ coord
-   ]; coord end else if not (List.mem coord !occupied_coords_lst) then coord
-   else begin random_coord occupied_coords_lst (* If the coord is already
-   occupied, try again *) end *)
 
+(* [add_ship_to_lst] takes a new ship and adds it to [occupied_coords] and
+   [comp_ship_coords] and creates a new [ship] *)
 let rec add_ship_to_lst name start dir len lst =
   if len = 0 then add_computer_ship name (List.length lst) lst
   else begin
@@ -139,7 +133,7 @@ let random_board board =
   board
 
 (* let random_board board = board *)
-let get_comp_lst_size = List.length !comp_ship_coords
+let get_comp_lst_size () = List.length !comp_ship_coords
 
 let rec com_lst_to_string lst =
   match lst with
@@ -170,5 +164,12 @@ let rec make_occupied_coords coord_lst lst =
 
 let get_occupied_coords _ = make_occupied_coords [] !occupied_coords
 
-let check_in_comp_shi_coords row col =
+(* checks if the guessed (row, col) is occupied by a ship from the computer*)
+let in_comp_shi_coords row col =
   if List.mem (((row - 1) * 10) + col) !occupied_coords then true else false
+
+(* generates random guess *)
+let generate_random_guess () =
+  let random_row = 1 + Random.int (Array.length rows) in
+  let random_col = 1 + Random.int (Array.length columns - 1) in
+  (random_row, random_col)
