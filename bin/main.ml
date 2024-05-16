@@ -169,7 +169,7 @@ let if_user_hit computer_board row_input col_input =
     ship
   end
 
-let user_sunk_ship =
+let user_sunk_ship computer_board ship =
   begin
     print_grid computer_board;
     (* print_endline "is_sunk ran"; *)
