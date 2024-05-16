@@ -617,6 +617,79 @@ let test_second_element_valid _ =
 let test_second_element_invalid _ =
   assert_raises (Failure "nth") (fun () -> get_second_element sample_list 3)
 
+let ships_logic =
+  "test suite for Ships and Logic"
+  >::: [
+         ( "test_create_computer_board" >:: fun _ ->
+           let board = create_computer_board () in
+           assert_equal (Array.length board) 10;
+           assert_equal (Array.length board.(0)) 10;
+           assert_equal board.(0).(0) "   " );
+         ( "test_get_comp_board_element" >:: fun _ ->
+           let board = create_computer_board () in
+           assert_equal (get_comp_board_element board 0 0) "   " );
+         ( "test_ship_match" >:: fun _ ->
+           let theme = List.nth themes_list 0 in
+           assert_equal (ship_match 2) (List.nth theme 0 ^ " a " ^ "\x1b[0m");
+           assert_equal (ship_match 5) (List.nth theme 4 ^ " e " ^ "\x1b[0m");
+           assert_equal (ship_match 0) "  " );
+         ( "test_check_contains" >:: fun _ ->
+           let lst = [ 12; 13; 14 ] in
+           assert_equal (check_contains 15 2 2 lst) true;
+           assert_equal (check_contains 12 2 2 lst) false );
+         ( "test_valid_placement" >:: fun _ ->
+           let lst = [ 12; 13; 14 ] in
+           assert_equal (valid_placement 11 2 2 lst) true;
+           assert_equal (valid_placement 12 2 2 lst) false );
+         ( "test_random_coord" >:: fun _ ->
+           let coord = random_coord () in
+           assert_bool "Coordinate is within bounds" (coord >= 1 && coord <= 100)
+         );
+         ( "test_add_ship_to_lst" >:: fun _ ->
+           occupied_coords := [];
+           comp_ship_coords := [];
+           add_ship_to_lst 2 11 2 2 [];
+           assert_equal !occupied_coords [ 11; 1 ];
+           assert_equal !comp_ship_coords [ (2, 11); (2, 1) ] );
+         ( "test_new_ship_coord" >:: fun _ ->
+           occupied_coords := [];
+           comp_ship_coords := [];
+           new_ship_coord 11 2 2 2;
+           assert_equal (List.length !comp_ship_coords) 2 );
+         ( "test_in_comp_shi_coords" >:: fun _ ->
+           occupied_coords := [ 12; 14 ];
+           assert_equal (in_comp_shi_coords 2 2) true;
+           assert_equal (in_comp_shi_coords 3 3) false );
+         ( "test_generate_random_guess_easy" >:: fun _ ->
+           let row, col = generate_random_guess "easy" in
+           assert_bool "Row is within bounds" (row >= 1 && row <= 10);
+           assert_bool "Column is within bounds" (col >= 1 && col <= 10) );
+         ( "test_generate_random_guess_medium" >:: fun _ ->
+           let row, col = generate_random_guess "medium" in
+           assert_bool "Row is within bounds" (row >= 1 && row <= 10);
+           assert_bool "Column is within bounds" (col >= 1 && col <= 10) );
+         ( "test_generate_random_guess_hard" >:: fun _ ->
+           rec_guesses := [ (2, 2) ];
+           let row, col = generate_random_guess "hard" in
+           assert_equal (row, col) (2, 2) );
+         ( "test_create_concealed_board" >:: fun _ ->
+           let board = create_concealed_board () in
+           assert_equal (Array.length board) 10;
+           assert_equal (Array.length board.(0)) 10;
+           assert_equal board.(0).(0) "   " );
+         ( "test_populate_concealed_board" >:: fun _ ->
+           let board = create_concealed_board () in
+           correct_user_guess := [ (1, 1); (2, 2) ];
+           incorrect_user_guess := [ (3, 3); (4, 4) ];
+           let board = populate_concealed_board board in
+           assert_equal board.(0).(0) " X ";
+           assert_equal board.(1).(1) " X ";
+           assert_equal board.(2).(2) " O ";
+           assert_equal board.(3).(3) " O " );
+       ]
+
+let () = run_test_tt_main ships_logic
+
 let suite =
   "Test Suite for List Elements "
   >::: [
