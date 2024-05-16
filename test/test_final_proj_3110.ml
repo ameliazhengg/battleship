@@ -65,7 +65,7 @@ let test_orientation =
 
 let new_board = create_board ()
 let lst_exist = [ (1, 2); (8, 8) ] (*list for checking existing coords*)
-let lst_nexist = [ (4, 4); (7, 7) ] (*list for checking not existing coords*)
+let lst_nexist = [ (4, 5); (7, 7) ] (*list for checking not existing coords*)
 let lst_a = [ (8, 8); (8, 9) ] (*list of existing coords*)
 let _ = check_ships_coord new_board lst_a 2 2
 
@@ -85,7 +85,7 @@ let a_ship =
   { name = 2; length = 2; coordinates = [ (8, 8); (8, 9) ]; hits = 0 }
 
 let b_ship =
-  { name = 3; length = 3; coordinates = [ (4, 4); (5, 4); (6, 4) ]; hits = 0 }
+  { name = 3; length = 3; coordinates = [ (4, 4); (5, 4); (6, 4) ]; hits = 3 }
 
 let test_add_user_ship =
   "test add_user_ship"
@@ -199,9 +199,26 @@ let test_create_coord_array =
            print tl
    in print !user_ship_coords *)
 
+
+(*Ship tests*)
+let _ = check_ships_coord new_board lst_b 3 3
+let _ = update_ship_hit user_ships 3 
+let test_ships = "test suite for Ships" >::: [
+    ("get_length test" >:: fun _ -> assert_equal "3" (get_length b_ship));
+    ("is_sunk test true" >:: fun _ -> assert_equal true (is_sunk b_ship));
+    ("is_sunk test false" >:: fun _ -> assert_equal false (is_sunk a_ship));
+    ("update_ship_hit ship b" >:: fun _ -> assert_equal 1 (List.nth !user_ships 0).hits); 
+    ("find_ship_name a" >:: fun _ -> assert_equal 2 (find_ship_name " a "));
+    ("find_ship_name b" >:: fun _ -> assert_equal 3 (find_ship_name " b "));
+    ("find_ship_name c" >:: fun _ -> assert_equal 31 (find_ship_name " c "));
+    ("find_ship_name d" >:: fun _ -> assert_equal 4 (find_ship_name " d "));
+ 
+ ]
+
 let _ = run_test_tt_main test_orientation
 let _ = run_test_tt_main test_check_ship_coord
 let _ = run_test_tt_main test_add_user_ship
 let _ = run_test_tt_main test_set_board
 let _ = run_test_tt_main test_generate_coords
 let _ = run_test_tt_main test_create_coord_array 
+let _ = run_test_tt_main test_ships
