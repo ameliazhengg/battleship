@@ -76,7 +76,7 @@ let rec get_col_coord length_ship =
   print_string
     ("Enter the column letter for your " ^ string_of_int length_ship
    ^ "-length ship (A-J): ");
-  let col_input = read_line () in
+  let col_input = String.uppercase_ascii (read_line ()) in
   if is_valid_col_input col_input then col_input
   else begin
     print_endline "Invalid column input. Please enter a valid column letter.";
@@ -85,7 +85,7 @@ let rec get_col_coord length_ship =
 
 let rec get_guess_col_coord () =
   print_string "Enter the column letter for your guess (A-J): ";
-  let col_input = read_line () in
+  let col_input = String.uppercase_ascii (read_line ()) in
   if is_valid_col_input col_input then col_input
   else begin
     print_endline "Invalid column input. Please enter a valid column letter.";
@@ -134,7 +134,7 @@ let rec get_orientation col_input row_input length_ship =
 let rec get_coords name_ship board =
   let length_ship = if name_ship = 31 then 3 else name_ship in
   let row_input = get_row_coord length_ship in
-  let col_input = String.uppercase_ascii (get_col_coord length_ship) in
+  let col_input = get_col_coord length_ship in
   let orientation = get_orientation col_input row_input length_ship in
 
   match
@@ -171,12 +171,12 @@ let rec user_turn computer_board user_board =
     else begin
       print_endline "Hit!";
       print_endline (string_of_int (get_comp_hits ()));
-      mark_on_board computer_board (row_input, col_input) " X ";
       let ship_rep =
         get_comp_board_element computer_board (row_input - 1) (col_input - 1)
       in
       let ship = get_ship_update ship_rep computer_ships in
       print_endline (ship_to_string ship);
+      mark_on_board computer_board (row_input, col_input) " X ";
       (* Update the hits on the ship *)
       if is_sunk ship then begin
         print_grid computer_board;
@@ -215,9 +215,10 @@ and computer_turn user_board computer_board =
     end
     else begin
       Printf.printf "The computer guessed %s%s and hit!\n" row_str col_str;
-      mark_on_board (user_board_array user_board) guess " X ";
       (* Mark hit on the board *)
       let ship_rep = get_user_board_element user_board row col in
+      mark_on_board (user_board_array user_board) guess " X ";
+
       let ship = get_ship_update ship_rep user_ships in
       if is_sunk ship then begin
         print_endline
