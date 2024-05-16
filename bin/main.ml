@@ -403,9 +403,6 @@ and computer_turn user_board computer_board mode conceal =
   Unix.sleepf 1.;
   let guess = generate_random_guess mode in
   if valid_guess_computer guess then begin
-    print_endline mode;
-    print_endline
-      (string_of_int (fst guess) ^ " " ^ string_of_int (snd guess) ^ "|");
     add_computer_guess guess;
     let row, col = guess in
     let row_str = string_of_int row in
@@ -482,13 +479,10 @@ let () =
   pick_theme ();
   let mode = pick_mode () in
   let conceal = pick_conceal () in
+  print_newline ();
   print_endline "Computer Board";
-  print_endline string_comp_ships;
-  print_endline string_occ_coord;
-  print_endline string_row_col;
   let computer_board = create_computer_board () in
   print_grid (random_board computer_board);
-  print_endline "Your Battleship Board";
   let user_board = create_board () in
   print_endline "";
   print_endline "Now please choose the coordinates of your ships ";
@@ -498,6 +492,8 @@ let () =
   get_coords 31 user_board;
   get_coords 4 user_board;
   get_coords 5 user_board;
+  print_endline "Your Battleship Board";
+
   print_grid (user_board_array user_board);
   print_newline ();
   user_turn computer_board user_board mode conceal
