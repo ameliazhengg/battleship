@@ -1,0 +1,698 @@
+commit 6e5b3dee910207921edd749de40aac0c4754951b
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Thu May 16 09:38:02 2024 -0400
+
+    test updates
+
+    - finish testing for all functions 
+
+commit feb2adc193153330d23106eefaf8e4f811cf5fd7
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 09:37:02 2024 -0400
+
+    computer.ml
+    
+    - simplified long array
+
+commit 47e95189f929ecdb413ddcd64cc739a5328a9de0
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 09:19:46 2024 -0400
+
+    main.ml
+    
+    - added specs to main
+
+commit 6a978f64608f04c34a17a59f4c0bf23bce453af7
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Thu May 16 09:12:44 2024 -0400
+
+    edit the spcs in mli files 
+
+    - make more concise and clear 
+
+commit 3e7ef634105b64d5db8bb09edd35bee8225c713a
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Thu May 16 09:05:49 2024 -0400
+
+    implement cheating 
+
+    - allows users to now chose whether they want to cheat or not 
+    - implemented logic in logic.ml for this 
+
+commit e5fd60dd63cec1de2f9432fb2ef26505bb31cb62
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 08:17:08 2024 -0400
+
+    test.ml
+    
+    - added more tests
+
+commit b786598ef809b0756a0bc715aba045df38f77b3b
+Merge: 8122f79 a36b62f
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 08:07:54 2024 -0400
+
+    Merge branch 'main' of https://github.com/ameliazhengg/final_proj_3110
+
+commit 8122f79c8111c8ce4c7b40db76b345efbd3dc97b
+Merge: 6f968a8 277e4b2
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 07:18:56 2024 -0400
+
+    Merge branch 'main' of https://github.com/ameliazhengg/final_proj_3110
+
+commit 6f968a814ebb8c91aee298e145b78fabaadd189b
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 07:18:35 2024 -0400
+
+    logic.mli
+    
+    - finished specs for logic.mli.
+
+commit 277e4b2a35e5b11194dec2a75ef5bad9aa3e3cb4
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Thu May 16 07:13:02 2024 -0400
+
+    get rid of comments in testing
+
+commit 3fe29e880dab6f5454124ef08020bcd7e8d00c05
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 07:11:56 2024 -0400
+
+    logic.mli
+    
+    - added specs to logic.mli
+
+commit d8b821bd8204c6186222a681a6bab94e8bc2e109
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Thu May 16 07:11:09 2024 -0400
+
+    minor changes to main.ml
+
+    - fixed formatting isseus 
+
+commit ce147716b9d127315e721ef8c8417dad862f3d6a
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 06:59:03 2024 -0400
+
+    main.ml
+    
+    - fixed coloring issues again
+
+commit 78d9b34df00114d146fd2c3b0911f2294affe2a3
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 05:21:35 2024 -0400
+
+    main.ml
+    
+    - added more colors and themes
+
+commit d42aaae9bb7d7a0ae0125ada0a9e422c221c8316
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Thu May 16 05:07:17 2024 -0400
+
+    Finished tests for computer logic
+
+commit b2e5c7715032b3993ad98b7a7390bb04fc90d9ef
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 03:53:43 2024 -0400
+
+    computer.ml
+    
+    - checks that the random board is accurate 
+
+commit 780999cc5ab88d15673e6590c14e2f2d11dd0dbb
+Merge: fb50ff1 7675b2c
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 03:39:42 2024 -0400
+
+    Merge branch 'main' of https://github.com/ameliazhengg/final_proj_3110
+
+commit fb50ff1b943a02449b402e3a462066126346acf4
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 03:38:55 2024 -0400
+
+    computer.ml
+    
+    - fixed bug where generates same random board
+
+commit 7675b2c6a9cdcd06288f83488e15f96c8bdd02cf
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Thu May 16 03:32:39 2024 -0400
+
+    Computer tests for computer.ml
+    
+    - match_ship
+    - create_computer_board
+    - get_comp_board_element
+    - check_contains
+    - random_coord
+
+commit bbc8323721f44561fa2b27c35dcfcb5a151707e2
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Thu May 16 02:24:25 2024 -0400
+
+    new tests
+
+    - added tests for computer.ml and board.ml 
+
+commit e349e4b8b7251a66d9a996379ba50988ad515827
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 02:23:32 2024 -0400
+
+    main.ml
+    
+    - added difficulty levels
+    - added themes
+    - added ascii art
+    - added recommended coordinates for user
+
+commit 5740fb7c8d542197ad0bfde07f3e6388c58ff7ab
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Thu May 16 01:47:45 2024 -0400
+
+    Tests for Logic
+    
+    - updated is_valid_row_input in logic.ml
+    - updated logic.mli
+
+commit 7a10b572d8bc607ecf511c4778b7af597b103b9c
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 00:26:06 2024 -0400
+
+    main.ml
+    
+    - added instructions for game
+    - added coloring and different themes for the board
+
+commit 8aae7d8385cd383182cfdb2ca56db8220492a3b9
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 00:22:28 2024 -0400
+
+    modes 
+
+    - start implementing logic behind the diffferent modes 
+    - adding in logic.ml to make different levels of the game
+
+commit 7d07c39143c17ab5ff5be98c98bdf623d2778eb5
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Thu May 16 00:21:07 2024 -0400
+
+    main.ml
+    
+    - shrink functions in main.ml, to make sure the code is more readable
+
+commit 5a562d1d100fe110df7c667b33aa02949e1a2fb9
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed May 15 23:53:39 2024 -0400
+
+    Ship tests
+    
+    - implemented tests for more ship functions
+
+commit ac84a1c35021248258aba52c240b2a58c6a3e5b2
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Wed May 15 23:22:44 2024 -0400
+
+    main.ml
+    
+    - completed user and computer guess loop
+
+commit ce8eeef82865487fb09b9437a138406000d33185
+Merge: 137ad06 c94fc43
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Wed May 15 22:54:35 2024 -0400
+
+    merge
+
+    - finish the merge conflict 
+
+commit 137ad067bd206946e355cbad0bdab51bf578cb56
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Wed May 15 22:53:49 2024 -0400
+
+    merge
+
+    - merge conflict 
+
+commit fa281caa28f3ac9bbf11b41539e9484c2ee0a198
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Wed May 15 22:49:49 2024 -0400
+
+    main.ml
+    
+    made computer and user turn alternate
+
+commit c94fc43830439d8ab31c5bafed360171d03157c0
+Merge: 8e6298b 770562e
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Wed May 15 21:14:01 2024 -0400
+
+    Merge pull request #16 from ameliazhengg/testing
+    
+    Wrote tests for Ships
+
+commit ed8bc11bba9fe928df963543e34eefaaeb24e4ff
+Merge: 0e97774 8e6298b
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Wed May 15 21:12:47 2024 -0400
+
+    Merge remote-tracking branch 'refs/remotes/origin/main'
+
+
+commit 770562ee7d0ea00cd4da68fffeaa625d265e8afc
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed May 15 21:09:30 2024 -0400
+
+    Wrote tests for Ships
+
+    - wrote Ounit tests for functionalities in ships.ml
+
+commit 7ddb76e1816885fea75ed0d77dd808da25a84cbe
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Wed May 15 20:55:06 2024 -0400
+
+    minor change
+
+    - fix the bug with the types in ships and boards
+    - implement mli files for all ml files 
+
+commit 6b08ee7bfe14f26418d8740e5f7aafdb3fcc77a2
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Wed May 15 20:54:41 2024 -0400
+
+    merge changes
+
+    - resolve merge conflicts 
+
+commit 50f03dcfca67b0b6c41c865e82b084b0c63615ef
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Wed May 15 20:24:28 2024 -0400
+
+    computer logic
+    
+    - start the logic for computer guessing a coordinate 
+    - started to implement modes 
+
+commit acee62d82d3427cfffc492b2ca8eaa11cfe985cb
+Merge: 533220f d1cc202
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Wed May 15 20:12:05 2024 -0400
+
+    Merge pull request #15 from ameliazhengg/testing
+    
+    Finished board tests
+
+commit d1cc2025eb5e575cb694501933d89d7793bb2cc2
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed May 15 20:11:15 2024 -0400
+
+    Finished board tests
+    
+    - added tests for create_coord_array
+    - added tests for generate_coords
+
+commit 533220f549b47fd190cb75607845b75fb6442235
+Merge: cbf39a8 f51086f
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Wed May 15 17:49:10 2024 -0400
+
+    Merge pull request #14 from ameliazhengg/testing
+    
+    refactoring
+
+commit f51086f944c0ec18c063baea5a4cb0bb3b414b0a
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed May 15 17:48:44 2024 -0400
+
+    refactoring
+
+commit cbf39a85e30f673c790add3ad92a3abf76530c55
+Merge: 5b2bafe 5750da7
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Wed May 15 17:47:39 2024 -0400
+
+    Merge pull request #13 from ameliazhengg/testing
+    
+    refactoring
+
+commit 5750da7bceef4ae3a49e0ec72f73f8722e8e5688
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed May 15 17:46:57 2024 -0400
+
+    refactoring
+
+commit 5b2bafe2802177546ffc908da305c89cd19b9aae
+Merge: a3577b0 8b0db1c
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Wed May 15 17:19:05 2024 -0400
+
+    Merge pull request #12 from ameliazhengg/testing
+    
+    merge branch
+
+
+commit a3577b0c2b5e26bafc218fdc9829e3d21619d600
+Merge: a18b0c3 f014aa5
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Wed May 15 16:54:21 2024 -0400
+
+    Merge pull request #11 from ameliazhengg/testing
+    
+    - Added tests for board.ml
+
+commit f014aa541ca87150bb1f48a917a360a8643e3349
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed May 15 16:53:49 2024 -0400
+
+    Added tests for board.ml
+    
+    - test_check_ship_coord
+    - test_set_board
+
+commit a18b0c3e1cfb00162e26b30b2f4aab6940a1a638
+Merge: b53946e 642baa7
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Tue May 14 10:42:23 2024 -0400
+
+    Merge pull request #10 from ameliazhengg/testing
+    
+    Testing
+
+commit 642baa7b3e287aabe3f54155df7c585a0c1665a4
+Merge: 7ab0f9f b53946e
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Tue May 14 10:40:56 2024 -0400
+
+    Merge remote-tracking branch 'origin/main' into testing
+
+commit 2a814b4a7c0235ad30d62ba0f3768dbbcb20d644
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Tue May 14 10:07:40 2024 -0400
+
+    test
+
+    - wrote test cases for orientation
+ 
+
+commit 1bc67fbdbf80ed44ee86bd9b958fb25d6dfa1c5d
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Tue May 14 10:06:19 2024 -0400
+
+    minor changes
+
+    - fix the bug with the coordinates system in main.ml 
+
+commit 33b8dd832c1e67f7071c08baa22e988f7ce668cd
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Mon May 13 22:42:42 2024 -0400
+
+    minors fixes to logic for checking coordinates
+
+    - fix logic.ml 
+
+commit cc94ab57db5eca06940943500f1e9db1a882621e
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Mon May 13 19:48:34 2024 -0400
+
+    main.ml
+    
+    - Added user game play. 
+    - Shows user the computer's board, notifies them when they've hit a ship 
+    - Ends game when user sinks all ships.
+
+commit 02b9fecda217e74a46830112802c258c536b5956
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Mon May 13 14:31:16 2024 -0400
+
+    start the game logic between user and computer
+
+    - starting logic.ml 
+    - implement guessing between user and computer 
+    - implement computer randomly guessing 
+
+commit 292a9a50b57b289ba73e84ff6cc815dd6dfef016
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Mon May 13 13:05:41 2024 -0400
+
+    modifications
+    
+    - add ship.mli and board.mli files
+    - split up functions into smaller blocks for clarity
+    - fix type issue with board
+
+commit b96d944339196156a9c66c75179977bb0b49ff6e
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Mon May 13 10:49:09 2024 -0400
+
+    test.ml
+    
+    - added random testing for random computer board generation.
+
+commit 95714d14f447b648d75ee3e365ca26195db1b948
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Mon May 13 10:26:10 2024 -0400
+
+    computer.ml
+    
+    - Fixed bug where ships will overlap. Ships no longer overlap.
+
+commit 48ce51e4e1122103e01aaf763c68a1156d52ea89
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Mon May 13 05:24:16 2024 -0400
+
+    - computer.ml
+    
+    Generates random board filled with ships for computer player.
+
+commit 9ca9c2cbe9ff8b00cd057cda04bab195914c8e45
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Mon May 6 00:13:13 2024 -0400
+
+    add comments
+
+    - add comments for clarity 
+
+commit 7b1265dcc4ba7b1448ef028b082148c59ce563e3
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Mon May 6 00:08:30 2024 -0400
+
+    added more indivdual ship functionality
+
+    - for the user and the computer each has a ship record 
+    - ship record contains ship name, length, coordinates the amount of hits 
+
+commit 17b2a39cfc25e2db74d62a01208e50aa23d1540e
+Merge: 1d7d993 f488323
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Sun May 5 23:03:41 2024 -0400
+
+    Merge pull request #8 from ameliazhengg/computer_logic
+    
+    Computer logic
+
+commit 1d7d993637ff7ba838de8ef6a329bbb6af48dccc
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Sun May 5 23:02:51 2024 -0400
+
+    fix the user board
+
+    - change it so that the user inputs a direction
+
+commit 6bd3d2f107ad0dbee62c228ee801732eb2ca3c28
+Merge: 9984b0e 107704a
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Sun May 5 22:33:59 2024 -0400
+
+    Merge pull request #7 from ameliazhengg/board_logic
+    
+    Merge pull request #6 from ameliazhengg/main
+
+commit 107704aa80e7f093a3dd3b5376160168df148925
+Merge: 3a5dc67 9984b0e
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Sun May 5 22:29:38 2024 -0400
+
+    Merge pull request #6 from ameliazhengg/main
+    
+    Merge pull request #5 from ameliazhengg/board_logic
+
+commit 9984b0e9003f344771a7597ea15fe540bb67e1b8
+Merge: 62637c4 3a5dc67
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Sun Apr 21 15:41:30 2024 -0400
+
+    Merge pull request #5 from ameliazhengg/board_logic
+    
+    Board logic
+
+commit 3a5dc67b12af1056d867b28bbd46354664e9112b
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Sun Apr 21 15:40:46 2024 -0400
+
+    Fix main
+    
+    - fixed the coordinate system so it prints out the ships in the correct orientation
+
+commit 8b47fc923164cbcab74ff74f2611bec46c8ae004
+Merge: bd5325e 62637c4
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Sat Apr 13 02:35:33 2024 -0400
+
+    Merge pull request #4 from ameliazhengg/main
+    
+    Merge pull request #3 from ameliazhengg/board_logic
+
+commit 62637c4a16ffbb146256275873e35c2996c8792e
+Merge: 0c1d25f bd5325e
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Sat Apr 13 02:33:55 2024 -0400
+
+    Merge pull request #3 from ameliazhengg/board_logic
+    
+    Board logic
+
+commit bd5325e6ef3f4d77e130ee223179bb0fa54001cb
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Sat Apr 13 02:33:08 2024 -0400
+
+    debugging board logic
+    
+    - compiles and runs
+
+commit f01c23b294721d2f7531d89ce1028c27b09a9884
+Author: Jenny Lee <sl2854@cornell.edu>
+Date:   Fri Apr 12 22:23:18 2024 -0400
+
+    Computer board logic
+
+    - start implementing the computer board logic
+    - randomly creates a board of size 10 x 10 and randomly generates ships
+
+commit 98d661c72ae6f3af7e7e36231cbebccef30ccc1d
+Merge: 83e2b05 0c1d25f
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Fri Apr 12 22:22:41 2024 -0400
+
+    Merge pull request #2 from ameliazhengg/main
+    
+
+commit 0c1d25f134c86d675c30442d7679961da894f05f
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Fri Apr 12 21:45:36 2024 -0400
+
+    dubugging
+
+    - fixing the logic with board
+
+commit e1179a38ca0ed2334a60448a4325f8b9f1435132
+Merge: d652620 83e2b05
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Fri Apr 12 17:18:47 2024 -0400
+
+    Merge pull request #1 from ameliazhengg/board_logic
+    
+    Change the user input coordinates to make it easier for the user
+
+commit 83e2b0504775d4fafe6f7b030230b0f8e66290c2
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Fri Apr 12 17:16:20 2024 -0400
+
+    Change the user input coordinates to make it easier for the user
+    
+    - implemented functionality for allowing the user to chose the orientation
+
+commit 5a909df56caf4a2b63b078904f20e66d4c87faed
+Author: Jenny Lee <sl2854@cornell.edu>
+Date:   Fri Apr 12 16:57:40 2024 -0400
+
+    start computer logic
+
+    - implement basic user input for coordinates
+
+commit 01e560ed49a844ff0d49eb69533d35065f4636ab
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Tue Apr 9 20:45:00 2024 -0400
+
+    Implement inital board functions
+    
+    - implement functions to allow users to choose the positions of their five ships
+    - print out the board with the users chosen ship coordinates
+
+commit c65f513225fb6de7cbacdcf37b5bbf9be50e7a1a
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Tue Apr 9 02:10:27 2024 -0400
+
+    Implemented coordinate system
+    
+    - creates a list made of tuples for the coordinates of the 5 ships
+
+commit 7e606784f60f35edfba6bd09f63fb537251effd1
+Author: Jenny Lee <sl2854@cornell.edu>
+Date:   Wed Mar 27 03:24:06 2024 -0400
+
+    YAML File Added
+
+commit 48b6f469cf1cc2b0d2f37cdc36dae563004d35b1
+Author: Nicole Qiu <nfq2@cornell.edu>
+Date:   Wed Mar 27 01:20:09 2024 -0400
+
+    Added functionality for prompting a user for a coordinate
+    
+    - Verifies if coordinate is valid. 
+    - If invalid, reprompts user for valid coordinate. 
+   -  Otherwise, prints out coordinate.
+
+commit c435a018dd8ba20c26e501fc7fc3ebb518771412
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Wed Mar 27 00:45:01 2024 -0400
+
+    Created INSTALL.txt
+    
+    - outlines how to instlal and build the system
+
+commit 43c86a7b2fb8b14d51600e554d0f9f24bed66224
+Author: Catherine Yang <your_netif@cornell.edu>
+Date:   Tue Mar 26 23:51:11 2024 -0400
+
+    Implemented basic functionalities
+    
+    - Asks for user's name
+    - prints out and displays the board
+
+commit f32111a03c2688a5ee4ba8a1c981f4f9a0f7774f
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Tue Mar 12 20:28:44 2024 -0400
+
+    Update README.md
+
+
+commit 6d80625e65a32607205745e05a6407f1a0984040
+Author: yangcatherine <63884914+yangcatherine@users.noreply.github.com>
+Date:   Tue Mar 12 15:37:04 2024 -0400
+
+    Update README.md
+
+commit 062bc011c0ec903432a01e81e06313b5df5a9418
+Author: Amelia Zheng <147289250+ameliazhengg@users.noreply.github.com>
+Date:   Mon Mar 11 21:46:09 2024 -0400
+
+    Update README.md
+
+commit 99ae4d0a6d4c14e0d218d1c694d2770b08c28782
+Author: Nicole Qiu <152471190+nfq2@users.noreply.github.com>
+Date:   Mon Mar 11 19:31:18 2024 -0400
+
+    Update README.md
+
+commit 257ca768c81fdc51f9893d7a9d275f2ab6e9f6bf
+Author: JennyLeee <147289250+sl2854@users.noreply.github.com>
+Date:   Mon Mar 11 18:31:19 2024 -0400
+
+    Create README.md
+
+commit d4c6f4aff194df3a4ddd07fe926463f6b649e4a6
+Author: Amelia Zheng <ayz23@cornell.edu>
+Date:   Mon Mar 11 18:14:43 2024 -0400
+
+    initial commit
