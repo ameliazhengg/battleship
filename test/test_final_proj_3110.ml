@@ -73,6 +73,17 @@ let a_ship =
 let b_ship =
   { name = 3; length = 3; coordinates = [ (4, 4); (5, 4); (6, 4) ]; hits = 3 }
 
+let e_ship =
+  { name = 2; length = 2; coordinates = [ (1, 3); (3, 3) ]; hits = 0 }
+
+let d_ship =
+  {
+    name = 5;
+    length = 5;
+    coordinates = [ (4, 4); (2, 2); (2, 2); (2, 2); (2, 2) ];
+    hits = 4;
+  }
+
 let test_add_user_ship =
   "test add_user_ship"
   >::: [
@@ -80,6 +91,10 @@ let test_add_user_ship =
            assert_equal true (List.mem a_ship !user_ships) );
          ( "a ship is not in the list" >:: fun _ ->
            assert_equal false (List.mem b_ship !user_ships) );
+         ( "a ship is in the list" >:: fun _ ->
+           assert_equal false (List.mem e_ship !user_ships) );
+         ( "a ship is not in the list" >:: fun _ ->
+           assert_equal false (List.mem d_ship !user_ships) );
        ]
 
 (*set board and match ship tests*)
@@ -457,7 +472,7 @@ let test_create_computer_board _ =
 
 let test_get_comp_board_element _ =
   let board = create_computer_board () in
-  board.(0).(0) <- " a "; 
+  board.(0).(0) <- " a ";
   assert_equal " a " (get_comp_board_element board 0 0);
   let board1 = create_computer_board () in
   board1.(0).(0) <- " b ";
@@ -581,10 +596,20 @@ let suite =
            assert_equal false (" d " = ship_match 4) );
          ( "test_match_ship e" >:: fun _ ->
            assert_equal false (" e " = ship_match 5) );
+         ( "test_match_ship a" >:: fun _ ->
+           assert_equal false ("  " = ship_match 2) );
+         ( "test_match_ship b" >:: fun _ ->
+           assert_equal false ("  " = ship_match 3) );
+         ( "test_match_ship c" >:: fun _ ->
+           assert_equal false ("  " = ship_match 31) );
+         ( "test_match_ship d" >:: fun _ ->
+           assert_equal false ("  " = ship_match 4) );
+         ( "test_match_ship e" >:: fun _ ->
+           assert_equal false ("  " = ship_match 5) );
          ( "test_match_ship anything else" >:: fun _ ->
            assert_equal "  " (ship_match 0) );
          "test_create_computer_board" >:: test_create_computer_board;
-         "test_get_comp_board_element" >:: test_get_comp_board_element; 
+         "test_get_comp_board_element" >:: test_get_comp_board_element;
          "test_check_contains" >:: test_check_contains;
          "test_random_coord" >:: test_random_coord;
          (*"test_add_ship_to_lst" >:: test_add_ship_to_lst; *)

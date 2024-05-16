@@ -79,5 +79,5 @@ val populate_concealed_board : board -> board
     guessed *)
 
 val medium_gen : int -> int
-(* [medium_gen] is a randomly generated column number given a certain row
+(** [medium_gen] is a randomly generated column number given a certain row
    number *)
