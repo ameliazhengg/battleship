@@ -205,3 +205,4 @@ let _ = run_test_tt_main test_add_user_ship
 let _ = run_test_tt_main test_set_board
 let _ = run_test_tt_main test_generate_coords
 let _ = run_test_tt_main test_create_coord_array
+

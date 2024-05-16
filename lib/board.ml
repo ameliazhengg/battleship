@@ -9,15 +9,16 @@ let row_labels =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
 let user_ship_coords = ref []
-let board_array board = board
 
 let in_user_ship_coords guess =
   if List.mem guess !user_ship_coords then true else false
 
 (* create the board size *)
 let create_board _ = Array.make_matrix 10 10 "   "
+let user_board_array board = board
 
 (* gets the element at the specific row and col in our board*)
+let get_user_board_element board row col = board.(row).(col)
 let get_board_element board row col = board.(row).(col)
 
 (* gets the first element in a tuple in our lists of coordinates ie the row

@@ -149,7 +149,7 @@ let rec get_coords name_ship board =
       print_endline "Cannot add coordinates due to overlap";
       get_coords name_ship board
 
-let rec user_turn computer_board =
+let rec user_turn computer_board user_board =
   let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
   let row_input = get_guess_row_coord () in
@@ -158,73 +158,89 @@ let rec user_turn computer_board =
   in
   if not (valid_guess_user row_input col_input) then begin
     print_endline "You have already guessed this spot. Try again.";
-    user_turn computer_board
+    user_turn computer_board user_board
   end
   else begin
     add_user_guess (row_input, col_input);
     if not (in_comp_shi_coords row_input col_input) then begin
       print_endline "You missed";
       mark_on_board computer_board (row_input, col_input) " O ";
-      print_grid computer_board
+      print_grid computer_board;
+      computer_turn user_board computer_board
     end
     else begin
       print_endline "Hit!";
+      print_endline (string_of_int (get_comp_hits ()));
       mark_on_board computer_board (row_input, col_input) " X ";
-
-      let ship = get_ship_update computer_board row_input col_input computer_ships in 
+      let ship_rep =
+        get_comp_board_element computer_board (row_input - 1) (col_input - 1)
+      in
+      let ship = get_ship_update ship_rep computer_ships in
       print_endline (ship_to_string ship);
       (* Update the hits on the ship *)
       if is_sunk ship then begin
         print_grid computer_board;
+        print_endline "is_sunk ran";
         print_endline
           ("You sank the computers ship of length " ^ get_length ship ^ "!");
-        if check_all_hit computer_ships then
-          print_endline "Congrats hoe you won!"
+        if check_all_hit computer_ships then print_endline "Congrats, you won!"
         else begin
-          print_grid computer_board
+          print_grid computer_board;
+          computer_turn user_board computer_board
         end
       end
       else begin
-        print_grid computer_board
+        print_grid computer_board;
+        computer_turn user_board computer_board
       end
     end
   end
 
-let rec computer_turn user_board =
-  print_endline "Now the computer will take a guess!";
+and computer_turn user_board computer_board =
+  let user_ships = get_user_ships () in
+  print_endline "Now the computer will take\n   a guess!";
   Unix.sleepf 1.;
   let guess = generate_random_guess () in
   if valid_guess_computer guess then begin
     add_computer_guess guess;
-    match guess with
-    | row, col ->
-        let row_str = string_of_int row in
-        let col_str = Char.escaped (char_of_int (col + int_of_char 'A' - 1)) in
-        if not (in_user_ship_coords guess) then begin
-          (* Check if the guess hits a ship *)
-          Printf.printf "The computer guessed %s%s and missed :(\n" row_str
-            col_str;
-          mark_on_board user_board guess " O ";
-          (* Mark miss on the board *)
+    let row, col = guess in
+    let row_str = string_of_int row in
+    let col_str = Char.escaped (char_of_int (col + int_of_char 'A' - 1)) in
+    if not (in_user_ship_coords guess) then begin
+      Printf.printf "The computer guessed %s%s and missed :(\n" row_str col_str;
+      mark_on_board (user_board_array user_board) guess " O ";
+      (* Mark miss on the board *)
+      print_grid user_board;
+      user_turn computer_board user_board (* Print the updated board *)
+    end
+    else begin
+      Printf.printf "The computer guessed %s%s and hit!\n" row_str col_str;
+      mark_on_board (user_board_array user_board) guess " X ";
+      (* Mark hit on the board *)
+      let ship_rep = get_user_board_element user_board row col in
+      let ship = get_ship_update ship_rep user_ships in
+      if is_sunk ship then begin
+        print_endline
+          ("The computer has sank your ship of length " ^ get_length ship ^ "!");
+        if check_all_hit user_ships then begin
+          print_endline "Aw no, the computer won!";
           print_grid user_board
-          (* Print the updated board *)
         end
         else begin
-          Printf.printf "The computer guessed %s%s and hit\n" row_str col_str;
-
-          mark_on_board user_board guess " X ";
-          (* Mark hit on the board *)
-
-          let ship = get_ship_update user_board row col user_ships 
-
-
-          print_grid user_board
-          (* Print the updated board *)
+          print_grid user_board;
+          user_turn computer_board user_board
         end
+      end
+      else begin
+        print_grid user_board;
+        user_turn computer_board user_board
+      end
+    end
   end
-  else begin
-    computer_turn user_board
-  end
+  else computer_turn user_board computer_board
+(* Retry the turn if the guess was not valid *)
+
+(* Start the game with initial calls to user_turn and computer_turn as needed *)
 
 (** Starts game and asks for name *)
 let () =
@@ -248,8 +264,7 @@ let () =
   (* had to do this because there are two ships of length 3 *)
   get_coords 4 user_board;
   get_coords 5 user_board;
-  print_grid (board_array user_board);
+  print_grid (user_board_array user_board);
   print_newline ();
-  user_turn computer_board;
-  computer_turn user_board;
+  user_turn computer_board user_board;
   print_endline "Thanks for playing. Goodbye!"

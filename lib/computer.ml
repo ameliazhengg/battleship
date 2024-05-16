@@ -9,8 +9,6 @@ let columns = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 let rows =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
-type coord = int * int
-
 let comp_ship_coords = ref []
 let occupied_coords = ref []
 
@@ -26,7 +24,7 @@ let match_ship n =
 
 (*let computer_ship_coords = ref []*)
 let create_computer_board () = Array.make_matrix 10 10 "   "
-let get_board_element board row col = board.(row).(col)
+let get_comp_board_element board row col = board.(row).(col)
 let random_dir _ = Random.int 4
 
 (* [check_contains] is true if the coordinates of a potential ship are already
@@ -135,7 +133,7 @@ let random_board board =
   board
 
 (* let random_board board = board *)
-let get_comp_lst_size = List.length !comp_ship_coords
+let get_comp_lst_size () = List.length !comp_ship_coords
 
 let rec com_lst_to_string lst =
   match lst with
@@ -172,6 +170,6 @@ let in_comp_shi_coords row col =
 
 (* generates random guess *)
 let generate_random_guess () =
-  let random_row = Random.int (Array.length rows) in
-  let random_col = Random.int (Array.length columns - 1) in
+  let random_row = 1 + Random.int (Array.length rows) in
+  let random_col = 1 + Random.int (Array.length columns - 1) in
   (random_row, random_col)

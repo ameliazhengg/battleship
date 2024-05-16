@@ -16,4 +16,7 @@ val update_ship_hit : ship list ref -> int -> unit
 val find_ship_name : string -> int
 val find_ship_in_list : ship list -> int -> ship
 val get_comp_ships : unit -> ship list ref
+val get_user_ships : unit -> ship list ref
 val ship_to_string : ship -> string
+val get_ship_update : string -> ship list ref -> ship
+val get_comp_hits : unit -> int
