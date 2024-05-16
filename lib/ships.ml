@@ -1,3 +1,5 @@
+open Board
+
 type ship = {
   name : int;
   length : int;
@@ -51,3 +53,12 @@ let ship_to_string ship =
   "name: " ^ string_of_int ship.name ^ " | " ^ "length: "
   ^ string_of_int ship.length ^ " | " ^ "hits: " ^ string_of_int ship.hits
   ^ " | "
+
+(* find the ship that was hit and increase the hit count by 1*)
+
+let get_ship_update board row col ships =
+  let ship_rep = get_board_element board (row - 1) (col - 1) in
+  let ship_name = find_ship_name ship_rep in
+  let ship = find_ship_in_list !ships ship_name in
+  update_ship_hit ships ship_name;
+  ship

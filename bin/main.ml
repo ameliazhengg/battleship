@@ -169,14 +169,9 @@ let rec user_turn computer_board =
     end
     else begin
       print_endline "Hit!";
-      let ship =
-        get_board_element computer_board (row_input - 1) (col_input - 1)
-      in
-      let ship_name = find_ship_name ship in
       mark_on_board computer_board (row_input, col_input) " X ";
-      (* Mark a hit *)
-      let ship = find_ship_in_list !computer_ships ship_name in
-      update_ship_hit computer_ships ship_name;
+
+      let ship = get_ship_update computer_board row_input col_input computer_ships in 
       print_endline (ship_to_string ship);
       (* Update the hits on the ship *)
       if is_sunk ship then begin
@@ -217,15 +212,12 @@ let rec computer_turn user_board =
         else begin
           Printf.printf "The computer guessed %s%s and hit\n" row_str col_str;
 
-          (* find the ship and then increase hit by 1*)
-          let ship = get_board_element user_board (row_str -1) (col_str -1) in 
-          let 
-
-
-
-
           mark_on_board user_board guess " X ";
           (* Mark hit on the board *)
+
+          let ship = get_ship_update user_board row col user_ships 
+
+
           print_grid user_board
           (* Print the updated board *)
         end
