@@ -49,21 +49,6 @@ let test_orientation =
   "test suite for orientation"
   >::: [ ounit_test_left; ounit_test_right; ounit_test_down; ounit_test_up ]
 
-(*let board = create_board () in let lst = [(row, col)] in let set = set_board
-  board lst 3 3 in let Garden.num_rows garden = l && Array.length
-  (Garden.get_row 0 garden) = w *)
-
-(* [plant_generator] generates a random plant at a random stage in life *)
-(*let board_generator = let open Final_proj_3110.Computer in Gen.oneofl [
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; ] *)
-
-(*check ships coords and add_coords tests*)
-
 let new_board = create_board ()
 let lst_exist = [ (1, 2); (8, 8) ] (*list for checking existing coords*)
 let lst_nexist = [ (4, 5); (7, 7) ] (*list for checking not existing coords*)
@@ -192,9 +177,6 @@ let test_create_coord_array =
          ( "check invalid ship" >:: fun _ ->
            assert_equal false (create_coord_array "down" 7 8 3 3 new_board) );
        ]
-
-(*let () = let rec print = function | [] -> () | (a,b) :: tl -> print_endline
-  (string_of_int a ^ string_of_int b); print tl in print !user_ship_coords *)
 
 (*Ship tests*)
 let _ = check_ships_coord new_board lst_b 3 3
