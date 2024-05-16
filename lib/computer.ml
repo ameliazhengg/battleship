@@ -82,13 +82,9 @@ let valid_placement start_cord dir len lst =
 let random_coord _ =
   let coord = 1 + Random.int 100 in
   coord
-(* Generate a random integer from 1 to 100 *)
-(* if (not (List.mem coord !occupied_coords_lst)) && List.length
-   !occupied_coords = 0 then begin occupied_coords := !occupied_coords @ [ coord
-   ]; coord end else if not (List.mem coord !occupied_coords_lst) then coord
-   else begin random_coord occupied_coords_lst (* If the coord is already
-   occupied, try again *) end *)
 
+(* [add_ship_to_lst] takes a new ship and adds it to [occupied_coords] and
+   [comp_ship_coords] and creates a new [ship] *)
 let rec add_ship_to_lst name start dir len lst =
   if len = 0 then add_computer_ship name (List.length lst) lst
   else begin
