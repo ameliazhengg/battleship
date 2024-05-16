@@ -205,8 +205,30 @@ let rec computer_turn user_board =
     | row, col ->
         let row_str = string_of_int row in
         let col_str = Char.escaped (char_of_int (col + int_of_char 'A' - 1)) in
-        Printf.printf "Guessed: %s%s\n" row_str col_str;
-        print_grid user_board
+        if not (in_user_ship_coords guess) then begin
+          (* Check if the guess hits a ship *)
+          Printf.printf "The computer guessed %s%s and missed :(\n" row_str
+            col_str;
+          mark_on_board user_board guess " O ";
+          (* Mark miss on the board *)
+          print_grid user_board
+          (* Print the updated board *)
+        end
+        else begin
+          Printf.printf "The computer guessed %s%s and hit\n" row_str col_str;
+
+          (* find the ship and then increase hit by 1*)
+          let ship = get_board_element user_board (row_str -1) (col_str -1) in 
+          let 
+
+
+
+
+          mark_on_board user_board guess " X ";
+          (* Mark hit on the board *)
+          print_grid user_board
+          (* Print the updated board *)
+        end
   end
   else begin
     computer_turn user_board

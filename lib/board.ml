@@ -11,6 +11,9 @@ let row_labels =
 let user_ship_coords = ref []
 let board_array board = board
 
+let in_user_ship_coords guess =
+  if List.mem guess !user_ship_coords then true else false
+
 (* create the board size *)
 let create_board _ = Array.make_matrix 10 10 "   "
 
