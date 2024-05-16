@@ -1,5 +1,8 @@
 (library
  (inline_tests)
  (name final_proj_3110)
+ (instrumentation
+  (backend bisect_ppx))
  (preprocess
-  (pps ppx_inline_test)))
+  (pps ppx_inline_test)
+   ))

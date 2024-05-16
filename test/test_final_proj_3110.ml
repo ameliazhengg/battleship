@@ -49,19 +49,6 @@ let test_orientation =
   "test suite for orientation"
   >::: [ ounit_test_left; ounit_test_right; ounit_test_down; ounit_test_up ]
 
-(*let board = create_board () in let lst = [(row, col)] in let set = set_board
-  board lst 3 3 in let Garden.num_rows garden = l && Array.length
-  (Garden.get_row 0 garden) = w *)
-
-(* [plant_generator] generates a random plant at a random stage in life *)
-(*let board_generator = let open Final_proj_3110.Computer in Gen.oneofl [
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; ] *)
-
 (*check ships coords and add_coords tests*)
 
 let new_board = create_board 1
@@ -213,9 +200,6 @@ let test_create_coord_array =
            assert_equal false (create_coord_array "down" 7 8 3 3 new_board) );
        ]
 
-(*let () = let rec print = function | [] -> () | (a,b) :: tl -> print_endline
-  (string_of_int a ^ string_of_int b); print tl in print !user_ship_coords *)
-
 (*Ship tests*)
 let _ = check_ships_coord new_board lst_b 3 3
 let _ = update_ship_hit user_ships 3
@@ -283,6 +267,8 @@ let test_ships =
 
 (*Logic Tests*)
 let _ = add_user_guess (1, 1)
+let _ = add_user_guess (9, 10)
+let _ = add_user_guess (10, 9)
 let _ = add_computer_guess (2, 2)
 let _ = mark_on_board new_board (10, 10) " O "
 
@@ -322,6 +308,79 @@ let test_logic =
          ( "is_valid_col_input when input is invalid" >:: fun _ ->
            assert_equal false (is_valid_col_input "z") );
        ]
+
+let test_computer_logic =
+  "test Logic for computer logic functions"
+  >::: [
+         ( "convert_coords_to_game_format" >:: fun _ ->
+           assert_equal
+             [ (1, 'A'); (4, 'E') ]
+             (convert_coords_to_game_format [ (1, 1); (4, 5) ]) );
+         ( "string_of_list_coords" >:: fun _ ->
+           assert_equal "1,A; 4,E" (string_of_list_coords [ (1, 1); (4, 5) ]) );
+         ( "is_on_board_edge first row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 1 8) );
+         ( "is_on_board_edge first row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 1 10) );
+         ( "is_on_board_edge last row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 10 8) );
+         ( "is_on_board_edge last row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 10 1) );
+         ( "is_on_board_edge first column" >:: fun _ ->
+           assert_equal true (is_on_board_edge 5 1) );
+         ( "is_on_board_edge first square" >:: fun _ ->
+           assert_equal true (is_on_board_edge 1 1) );
+         ( "is_on_board_edge last column" >:: fun _ ->
+           assert_equal true (is_on_board_edge 5 10) );
+         ( "is_on_board_edge last square" >:: fun _ ->
+           assert_equal true (is_on_board_edge 10 10) );
+         ( "is_on_board_edge false" >:: fun _ ->
+           assert_equal false (is_on_board_edge 5 5) );
+         ( "filter_valid_coords" >:: fun _ ->
+           assert_equal
+             [ (1, 2); (2, 2) ]
+             (filter_valid_coords [ (1, 2); (2, 2); (1, 1) ]) );
+         ( "get_corner_coords top left corner" >:: fun _ ->
+           assert_equal [ (1, 2); (2, 1) ] (get_corner_coords 1 1) );
+         ( "get_corner_coords top right corner" >:: fun _ ->
+           assert_equal [ (1, 9); (2, 10) ] (get_corner_coords 1 10) );
+         ( "get_corner_coords bottom left corner" >:: fun _ ->
+           assert_equal [ (10, 2); (9, 1) ] (get_corner_coords 10 1) );
+         ( "get_corner_coords bottom right corner" >:: fun _ ->
+           assert_equal [ (10, 9); (9, 10) ] (get_corner_coords 10 10) );
+         ( "get_corner_coords not corner" >:: fun _ ->
+           assert_equal [] (get_corner_coords 5 5) );
+         ( "get_edge coordinates top border" >:: fun _ ->
+           assert_equal [ (1, 7); (1, 5); (2, 6) ] (get_edge_coords 1 6) );
+         ( "get_edge coordinates left border" >:: fun _ ->
+           assert_equal [ (7, 2); (8, 1); (6, 1) ] (get_edge_coords 7 1) );
+         ( "get_edge coordinates right border" >:: fun _ ->
+           assert_equal [ (5, 9); (6, 10); (4, 10) ] (get_edge_coords 5 10) );
+         ( "get_edge coordinates bottom border" >:: fun _ ->
+           assert_equal [ (10, 5); (10, 3); (9, 4) ] (get_edge_coords 10 4) );
+         ( "get_edge coordinates not on border" >:: fun _ ->
+           assert_equal [ (6, 5); (6, 3); (7, 4); (5, 4) ] (get_edge_coords 6 4)
+         );
+         (*( "get_rec_coordinates when one coordinate is not valid" >:: fun _ ->
+           assert_equal [ (1,3); (1,1);(2,2) ] (get_rec_coords 1 2) );
+           ("get_rec_coordinates when no coordinates are valid" >:: fun _ ->
+           assert_raises (Failure "No recommended coordinates available") (fun
+           () -> get_rec_coords 10 10)); *)
+         ( "get_rec_coords when all coordinates are valid" >:: fun _ ->
+           assert_equal [ (5, 7); (5, 5); (6, 6); (4, 6) ] (get_rec_coords 5 6)
+         );
+       ]
+
+let _ =
+  let rec print lst =
+    match lst with
+    | [] -> () (* If the list is empty, do nothing *)
+    | (x, y) :: tail ->
+        Printf.printf "(%d, %d)\n" x y;
+        (* Print the current pair *)
+        print tail (* Recursively print the rest of the list *)
+  in
+  print (get_edge_coords 5 6)
 
 (*Computer Tests*)
 
@@ -365,6 +424,13 @@ let test_valid_placement =
            assert_equal false (valid_placement 10 3 1 []) );
          ( "invalid 18 3 3" >:: fun _ ->
            assert_equal false (valid_placement 18 3 3 []) );
+         ("valid 0" >:: fun _ -> assert_equal true (valid_placement 1 0 2 [ 2 ]));
+         ( "valid 1" >:: fun _ ->
+           assert_equal true (valid_placement 50 1 3 [ 49 ]) );
+         ( "valid 2" >:: fun _ ->
+           assert_equal true (valid_placement 24 2 3 [ 20 ]) );
+         ( "valid 3" >:: fun _ ->
+           assert_equal true (valid_placement 15 3 3 [ 12 ]) );
        ]
 
 let test_random_coord _ =
@@ -376,9 +442,11 @@ let test_random_coord _ =
   add_ship_to_lst 2 1 0 3 []; assert_equal [ (2, 1); (2, 2); (2, 3) ]
   !comp_ship_coords; assert_equal [ 1; 11; 21 ] !occupied_coords
 
-  let test_new_ship_coord _ = occupied_coords := []; comp_ship_coords := [];
+  let test_get_comp_lst_size _ = assert_equal 0 (get_comp_lst_size ()) *)
+
+(*let test_new_ship_coord _ = occupied_coords := []; comp_ship_coords := [];
   new_ship_coord 1 0 2 2; assert_equal [ (2, 1); (2, 2) ] !comp_ship_coords;
-  assert_equal [ 1; 11 ] !occupied_coords
+  assert_equal [ 1; 11 ] !occupied_coords 
 
   let test_add_coords _ = occupied_coords := []; comp_ship_coords := [];
   add_coords; assert_equal 5 (List.length !comp_ship_coords); assert_equal 15
@@ -404,7 +472,6 @@ let test_generate_random_guess _ =
 let suite =
   "Computer Test Suite"
   >::: [
-         (*"test_match_ship" >:: test_match_ship; (**) *)
          ("test_match_ship a" >:: fun _ -> assert_equal " a " (ship_match 2));
          ("test_match_ship b" >:: fun _ -> assert_equal " b " (ship_match 3));
          ("test_match_ship c" >:: fun _ -> assert_equal " c " (ship_match 31));
@@ -435,3 +502,4 @@ let _ = run_test_tt_main test_ships
 let _ = run_test_tt_main test_logic
 let _ = run_test_tt_main suite
 let _ = run_test_tt_main test_valid_placement
+let _ = run_test_tt_main test_computer_logic
