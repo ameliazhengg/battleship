@@ -67,7 +67,7 @@ let comp_ship_coords = ref []
 let occupied_coords = ref []
 
 (* icon representing the different ships on our board*)
-let match_ship n =
+let ship_match n =
   match n with
   | 2 -> " a "
   | 3 -> " b "
@@ -181,7 +181,7 @@ let random_board board =
     (fun (name, coord) ->
       let row = if coord = 100 then 9 else coord / 10 in
       let col = (coord - 1) mod 10 in
-      let icon = match_ship name in
+      let icon = ship_match name in
       board.(row).(col) <- icon)
     !comp_ship_coords;
   board

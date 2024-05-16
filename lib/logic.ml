@@ -72,9 +72,10 @@ let get_rec_coords row col =
     failwith "No recommended coordinates available"
   else potential_coords
 
-let is_valid_row_input input =
+let is_valid_row_input input = try
   let row_num = int_of_string input in
   if row_num >= 1 && row_num <= 10 then true else false
+with Failure _ -> false
 
 (** [is_valid_col_input] requires [input] to be None or Some. Returns: true if
     input is a string between A-J case insensitive, and false otherwise. *)
