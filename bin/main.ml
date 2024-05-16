@@ -7,11 +7,19 @@ let instructions () =
   print_endline "How to play battleship:";
   print_endline
     "You have five ships consisting of lengths 2,3,3,4 and 5. These will be \
-     represented on your board as 'a', 'b', 'c', 'd', and 'e', respectively";
+     represented on your board as 'a', 'b', 'c', 'd', and 'e', respectively. \
+     The battleship board is 10x10, with the columns being labeled A-J and the \
+     rows 1-10.";
   print_endline
     "To initiate your board, you will be prompted to enter a coordinate for \
-     your ship and an orientation."
-(* FINISH LATER*)
+     your ship and an orientation. You can must first enter the row number, \
+     and then the column letter, case insensitive. You can place your ships \
+     horizontally or vertically, but not diagonally. You cannot place your \
+     ships in a manner that overlaps with any other ships or beyond the grid. \
+     You and the computer will alternate turns guesssing. If you have hit one \
+     of the computer's ships, the terminal will display the board and hit \
+     square will be shown with an 'X'. If you have missed, it will be shown as \
+     an 'O'. The first player to hit all 5 shapes wins the game."
 
 let welcome () =
   print_newline ();
@@ -167,15 +175,6 @@ let if_user_hit computer_board row_input col_input =
     print_endline (ship_to_string ship);
     mark_on_board computer_board (row_input, col_input) " X ";
     ship
-  end
-
-let user_sunk_ship computer_board ship =
-  begin
-    print_grid computer_board;
-    (* print_endline "is_sunk ran"; *)
-    print_endline
-      ("You sank the computers ship of length " ^ get_length ship ^ "!");
-    if check_all_hit computer_ships then print_endline "Congrats, you won!"
   end
 
 let rec user_turn computer_board user_board =
