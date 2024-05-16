@@ -64,56 +64,56 @@ let themes_list =
 
 let checker =
   [|
-    (0, 2);
-    (0, 4);
-    (0, 6);
-    (0, 8);
-    (0, 10);
-    (1, 1);
-    (1, 3);
-    (1, 5);
-    (1, 7);
-    (1, 9);
-    (2, 2);
-    (2, 4);
-    (2, 6);
-    (2, 8);
-    (2, 10);
-    (3, 1);
-    (3, 3);
-    (3, 5);
-    (3, 7);
-    (3, 9);
-    (4, 2);
-    (4, 4);
-    (4, 6);
-    (4, 8);
-    (4, 10);
-    (5, 1);
-    (5, 3);
-    (5, 5);
-    (5, 7);
-    (5, 9);
-    (6, 2);
-    (6, 4);
-    (6, 6);
-    (6, 8);
-    (6, 10);
-    (7, 1);
-    (7, 3);
-    (7, 5);
-    (7, 7);
-    (7, 9);
-    (8, 2);
-    (8, 4);
-    (8, 6);
-    (8, 8);
-    (8, 10);
-    (9, 1);
-    (9, 3);
-    (9, 5);
-    (9, 7);
-    (9, 9);
+    (1, 2);
+    (1, 4);
+    (1, 6);
+    (1, 8);
+    (1, 10);
+    (2, 1);
+    (2, 3);
+    (2, 5);
+    (2, 7);
+    (2, 9);
+    (3, 2);
+    (3, 4);
+    (3, 6);
+    (3, 8);
+    (3, 10);
+    (4, 1);
+    (4, 3);
+    (4, 5);
+    (4, 7);
+    (4, 9);
+    (5, 2);
+    (5, 4);
+    (5, 6);
+    (5, 8);
+    (5, 10);
+    (6, 1);
+    (6, 3);
+    (6, 5);
+    (6, 7);
+    (6, 9);
+    (7, 2);
+    (7, 4);
+    (7, 6);
+    (7, 8);
+    (7, 10);
+    (8, 1);
+    (8, 3);
+    (8, 5);
+    (8, 7);
+    (8, 9);
+    (9, 2);
+    (9, 4);
+    (9, 6);
+    (9, 8);
+    (10, 10);
+    (10, 1);
+    (10, 3);
+    (10, 5);
+    (10, 7);
+    (10, 9);
   |]
 
 let comp_ship_coords = ref []
@@ -305,11 +305,10 @@ let generate_random_guess mode =
 let create_concealed_board () = Array.make_matrix 10 10 "   "
 
 let populate_concealed_board board =
-  (* Retrieve the lists of correct and incorrect guesses *)
   let correct_coords = get_correct_user_guess () in
-  let incorrect_coords = get_incorrect_user_guess () in
   let mark_hit (row, col) = board.(row - 1).(col - 1) <- " X " in
-  let mark_miss (row, col) = board.(row - 1).(col - 1) <- " O " in
   List.iter mark_hit correct_coords;
+  let incorrect_coords = get_incorrect_user_guess () in
+  let mark_miss (row, col) = board.(row - 1).(col - 1) <- " O " in
   List.iter mark_miss incorrect_coords;
   board

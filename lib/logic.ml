@@ -31,7 +31,7 @@ let incorrect_user_guess : (int * int) list ref = ref []
 
 (* [add_user_incorrect_guess] is [incorrect_user_guess] with [guess] appended *)
 let add_user_incorrect_guess guess =
-  correct_user_guess := guess :: !correct_user_guess
+  incorrect_user_guess := guess :: !incorrect_user_guess
 
 let get_incorrect_user_guess () = !incorrect_user_guess
 

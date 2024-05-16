@@ -5,8 +5,71 @@ open Final_proj_3110.Ships
 
 (* ADDING COLORS *)
 let reset_color = "\027[0m"
-let hit_color = "\x1b[38;5;196m"
-let miss_color = "\x1b[38;5;32m"
+let move_color = "\x1b[38;5;196m"
+let user_theme = ref 0
+
+let themes_list =
+  [
+    [
+      "\x1b[38;5;215m";
+      "\x1b[38;5;216m";
+      "\x1b[38;5;217m";
+      "\x1b[38;5218m";
+      "\x1b[38;5;219m";
+    ];
+    (* Peach Vibe*)
+    [
+      "\x1b[38;5;118m";
+      "\x1b[38;5;154m";
+      "\x1b[38;5;226m";
+      "\x1b[38;5;228m";
+      "\x1b[38;5;230m";
+    ];
+    (* Tropical Vibe *)
+    [
+      "\x1b[38;5;27m";
+      "\x1b[38;5;33m";
+      "\x1b[38;5;75m";
+      "\x1b[38;5;141m";
+      "\x1b[38;5;135m";
+    ];
+    (* Arctic Vibe *)
+    [
+      "\x1b[38;5;45m";
+      "\x1b[38;5;42m";
+      "\x1b[38;5;148m";
+      "\x1b[38;5;190m";
+      "\x1b[38;5;226m";
+    ];
+    (* Oasis Vibe *)
+    [
+      "\x1b[38;5;126m";
+      "\x1b[38;5;168m";
+      "\x1b[38;5;210m";
+      "\x1b[38;5;204m";
+      "\x1b[38;5;202m";
+    ];
+    (* Cosmic Vibe *)
+    [
+      "\x1b[38;5;214m";
+      "\x1b[38;5;220m";
+      "\x1b[38;5;202m";
+      "\x1b[38;5;226m";
+      "\x1b[38;5;209m";
+    ];
+    (* Fantasy Vibe *)
+  ]
+
+let get_theme = List.nth themes_list !user_theme
+
+let get_color elt =
+  match elt with
+  | " a " -> List.nth get_theme 0
+  | " b " -> List.nth get_theme 1
+  | " c " -> List.nth get_theme 2
+  | " d " -> List.nth get_theme 3
+  | " e " -> List.nth get_theme 4
+  | _ -> ""
 
 let print_battle () =
   let banner =
@@ -59,12 +122,12 @@ let rec pick_theme () =
   print_endline "Theme 5 : Cosmic Vibe";
   print_endline "Theme 6 : Fantasy Vibe";
   print_string "Enter a theme number : ";
-  let user_theme = read_line () in
+  let input = read_line () in
   try
-    let theme_number = int_of_string user_theme in
-    if theme_number > 0 && theme_number < 7 then (
-      print_endline ("You picked theme " ^ user_theme ^ "!\n");
-      user_theme)
+    let input_int = int_of_string input in
+    if input_int > 0 && input_int < 7 then (
+      print_endline ("You picked theme " ^ input ^ "!\n");
+      user_theme := input_int)
     else (
       print_endline "Invalid input. Try again!\n";
       pick_theme ())
@@ -106,7 +169,16 @@ let instructions () =
      is when the computer's guesses are completely randomized. In Medium mode \
      the computer has a more strategic aproach, guessing every other square. \
      In Hard mode, the computer takes into account if it has hit a ship and \
-     takes the surrounding spots of the hit ship into consideration."
+     takes the surrounding spots of the hit ship into consideration.";
+  print_newline ();
+
+  print_endline
+    "Cheat mode: Our game enables cheat mode and non-cheat mode. You will be \
+     prompted to choose either to enter cheat mode or non-cheat mode. Enabling \
+     cheat mode allows you to view the computers board and all of the \
+     computer's ships. This way, you can cheat and win easily! If you decide \
+     to take the hard way out, then you select N when prompted whether to \
+     enter cheat mode or not. This will conceal all of the computer's ships. "
 
 let welcome () =
   print_newline ();
@@ -132,7 +204,8 @@ let print_row board i =
   print_string "  ";
   for x = 0 to 9 do
     print_string "|";
-    print_string (get_board_element board i x)
+    let elt = get_board_element board i x in
+    print_string (get_color elt ^ elt ^ reset_color)
   done;
   print_string "|\n";
   print_endline "      -----------------------------------------"
@@ -253,19 +326,20 @@ let rec get_coords name_ship board =
       print_endline "Cannot add coordinates due to overlap";
       get_coords name_ship board
 
-let if_user_missed computer_board row_input col_input =
+let if_user_missed computer_board row_input col_input conceal =
   begin
-    add_user_incorrect_guess (row_input, col_input);
     print_endline "You missed";
     mark_on_board computer_board (row_input, col_input)
-      (miss_color ^ " O " ^ reset_color);
-    print_grid computer_board;
-    print_grid (populate_concealed_board (create_concealed_board ()))
+      (move_color ^ " O " ^ reset_color);
+    add_user_incorrect_guess (row_input, col_input);
+    if conceal = "y" then print_grid computer_board
+    else print_grid (populate_concealed_board (create_concealed_board ()))
   end
 
 let if_user_hit computer_board row_input col_input =
   begin
-    add_user_correct_guess (row_input, col_input);
+    print_endline
+      (get_comp_board_element computer_board (row_input - 1) (col_input - 1));
     print_endline "Hit!";
     print_endline (string_of_int (get_comp_hits ()));
     let rec_coords = get_rec_coords_user row_input col_input in
@@ -277,11 +351,12 @@ let if_user_hit computer_board row_input col_input =
     let ship = get_ship_update ship_rep computer_ships in
     print_endline (ship_to_string ship);
     mark_on_board computer_board (row_input, col_input)
-      (hit_color ^ " X " ^ reset_color);
+      (move_color ^ " X " ^ reset_color);
+    add_user_correct_guess (row_input, col_input);
     ship
   end
 
-let rec user_turn computer_board user_board mode =
+let rec user_turn computer_board user_board mode conceal =
   let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
   let row_input = get_guess_row_coord () in
@@ -290,39 +365,39 @@ let rec user_turn computer_board user_board mode =
   in
   if not (valid_guess_user row_input col_input) then begin
     print_endline "You have already guessed this spot. Try again.";
-    user_turn computer_board user_board mode
+    user_turn computer_board user_board mode conceal
   end
   else begin
     add_user_guess (row_input, col_input);
     if not (in_comp_shi_coords row_input col_input) then begin
-      if_user_missed computer_board row_input col_input;
-      computer_turn user_board computer_board mode
+      if_user_missed computer_board row_input col_input conceal;
+      computer_turn user_board computer_board mode conceal
     end
     else begin
       let ship = if_user_hit computer_board row_input col_input in
       (* Update the hits on the ship *)
       if is_sunk ship then begin
-        print_grid computer_board;
-        print_grid (populate_concealed_board (create_concealed_board ()));
+        if conceal = "y" then print_grid computer_board
+        else print_grid (populate_concealed_board (create_concealed_board ()));
         (* print_endline "is_sunk ran"; *)
         print_endline
           ("You sank the computers ship of length " ^ get_length ship ^ "!");
         if check_all_hit computer_ships then print_endline "Congrats, you won!"
         else begin
-          print_grid computer_board;
-          print_grid (populate_concealed_board (create_concealed_board ()));
-          computer_turn user_board computer_board mode
+          if conceal = "y" then print_grid computer_board
+          else print_grid (populate_concealed_board (create_concealed_board ()));
+          computer_turn user_board computer_board mode conceal
         end
       end
       else begin
-        print_grid computer_board;
-        print_grid (populate_concealed_board (create_concealed_board ()));
-        computer_turn user_board computer_board mode
+        if conceal = "y" then print_grid computer_board
+        else print_grid (populate_concealed_board (create_concealed_board ()));
+        computer_turn user_board computer_board mode conceal
       end
     end
   end
 
-and computer_turn user_board computer_board mode =
+and computer_turn user_board computer_board mode conceal =
   let user_ships = get_user_ships () in
   print_endline "Now the computer will take a guess!";
   Unix.sleepf 1.;
@@ -340,7 +415,8 @@ and computer_turn user_board computer_board mode =
       mark_on_board (user_board_array user_board) guess " O ";
       (* Mark miss on the board *)
       print_grid user_board;
-      user_turn computer_board user_board mode (* Print the updated board *)
+      user_turn computer_board user_board mode
+        conceal (* Print the updated board *)
     end
     else begin
       Printf.printf "The computer guessed %s%s and hit!\n" row_str col_str;
@@ -359,16 +435,16 @@ and computer_turn user_board computer_board mode =
         end
         else begin
           print_grid user_board;
-          user_turn computer_board user_board mode
+          user_turn computer_board user_board mode conceal
         end
       end
       else begin
         print_grid user_board;
-        user_turn computer_board user_board mode
+        user_turn computer_board user_board mode conceal
       end
     end
   end
-  else computer_turn user_board computer_board mode
+  else computer_turn user_board computer_board mode conceal
 (* Retry the turn if the guess was not valid *)
 
 (* Start the game with initial calls to user_turn and computer_turn as needed *)
@@ -385,14 +461,27 @@ let pick_mode () =
   in
   get_valid_mode ()
 
+let pick_conceal () =
+  print_string "Do you want to cheat? (Y/N): ";
+  let rec get_valid_conceal () =
+    let input = read_line () |> String.trim |> String.lowercase_ascii in
+    match input with
+    | "y" | "n" -> input
+    | _ ->
+        print_string "Invalid response. Please choose between Y and N: ";
+        get_valid_conceal ()
+  in
+  get_valid_conceal ()
+
 (** Starts game and asks for name *)
 let () =
   print_battle ();
   print_of ();
   print_ships ();
   welcome ();
-  let theme = pick_theme () in
+  pick_theme ();
   let mode = pick_mode () in
+  let conceal = pick_conceal () in
   print_endline "Computer Board";
   print_endline string_comp_ships;
   print_endline string_occ_coord;
@@ -400,8 +489,7 @@ let () =
   let computer_board = create_computer_board () in
   print_grid (random_board computer_board);
   print_endline "Your Battleship Board";
-
-  let user_board = create_board (int_of_string theme) in
+  let user_board = create_board () in
   print_endline "";
   print_endline "Now please choose the coordinates of your ships ";
   print_newline ();
@@ -412,4 +500,4 @@ let () =
   get_coords 5 user_board;
   print_grid (user_board_array user_board);
   print_newline ();
-  user_turn computer_board user_board mode
+  user_turn computer_board user_board mode conceal

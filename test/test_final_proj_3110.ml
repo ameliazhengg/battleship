@@ -51,7 +51,7 @@ let test_orientation =
 
 (*check ships coords and add_coords tests*)
 
-let new_board = create_board 1
+let new_board = create_board ()
 let lst_exist = [ (1, 2); (8, 8) ] (*list for checking existing coords*)
 let lst_nexist = [ (4, 5); (7, 7) ] (*list for checking not existing coords*)
 let lst_a = [ (8, 8); (8, 9) ] (*list of existing coords*)
@@ -362,13 +362,14 @@ let test_computer_logic =
            assert_equal [ (6, 5); (6, 3); (7, 4); (5, 4) ] (get_edge_coords 6 4)
          );
          (*( "get_rec_coordinates when one coordinate is not valid" >:: fun _ ->
-           assert_equal [ (1,3); (1,1);(2,2) ] (get_rec_coords 1 2) );
+           assert_equal [ (1,3); (1,1);(2,2) ] (get_rec_coords_user 1 2) );
            ("get_rec_coordinates when no coordinates are valid" >:: fun _ ->
            assert_raises (Failure "No recommended coordinates available") (fun
-           () -> get_rec_coords 10 10)); *)
+           () -> get_rec_coords_user 10 10)); *)
          ( "get_rec_coords when all coordinates are valid" >:: fun _ ->
-           assert_equal [ (5, 7); (5, 5); (6, 6); (4, 6) ] (get_rec_coords 5 6)
-         );
+           assert_equal
+             [ (5, 7); (5, 5); (6, 6); (4, 6) ]
+             (get_rec_coords_user 5 6) );
        ]
 
 let _ =
@@ -388,12 +389,50 @@ let test_create_computer_board _ =
   let board = create_computer_board () in
   assert_equal 10 (Array.length board);
   assert_equal 10 (Array.length board.(0));
-  assert_equal "   " board.(0).(0)
+  assert_equal "   " board.(0).(0);
+  assert_equal false (0 = Array.length board);
+  assert_equal false (0 = Array.length board.(0));
+  assert_equal false ("  " = board.(0).(0));
+  assert_equal false (11 = Array.length board);
+  assert_equal false (11 = Array.length board.(0));
+  assert_equal false ("  a  " = board.(0).(0));
+  assert_equal false (2 = Array.length board);
+  assert_equal false (2 = Array.length board.(0));
+  assert_equal false ("  3  " = board.(0).(0))
 
 let test_get_comp_board_element _ =
   let board = create_computer_board () in
   board.(0).(0) <- " a ";
-  assert_equal " a " (get_comp_board_element board 0 0)
+  assert_equal " a " (get_comp_board_element board 0 0);
+  let board1 = create_computer_board () in
+  board1.(0).(0) <- " b ";
+  assert_equal " b " (get_comp_board_element board 0 0);
+  let board2 = create_computer_board () in
+  board2.(9).(9) <- " b ";
+  assert_equal " b " (get_comp_board_element board 9 9);
+  let board3 = create_computer_board () in
+  board3.(0).(9) <- " a ";
+  assert_equal " a " (get_comp_board_element board 0 9);
+  let board4 = create_computer_board () in
+  board4.(9).(0) <- " b ";
+  assert_equal " b " (get_comp_board_element board 9 0);
+  let board5 = create_computer_board () in
+  board5.(4).(5) <- " b ";
+  board5.(0).(0) <- " b ";
+  board5.(0).(1) <- " b ";
+  board5.(0).(9) <- " b ";
+  board5.(1).(9) <- " b ";
+  board5.(9).(0) <- " b ";
+  board5.(9).(9) <- " b ";
+  board5.(2).(7) <- " b ";
+  assert_equal " b " (get_comp_board_element board 4 5);
+  assert_equal " b " (get_comp_board_element board 0 0);
+  assert_equal " b " (get_comp_board_element board 0 1);
+  assert_equal " b " (get_comp_board_element board 0 9);
+  assert_equal " b " (get_comp_board_element board 1 9);
+  assert_equal " b " (get_comp_board_element board 9 0);
+  assert_equal " b " (get_comp_board_element board 9 9);
+  assert_equal " b " (get_comp_board_element board 2 7)
 
 let test_check_contains _ =
   assert_equal false (check_contains 1 0 3 [ 11 ]);
@@ -403,7 +442,27 @@ let test_check_contains _ =
   assert_equal false (check_contains 11 2 3 [ 10 ]);
   assert_equal true (check_contains 5 2 3 [ 6 ]);
   assert_equal false (check_contains 1 3 3 [ 3 ]);
-  assert_equal true (check_contains 10 3 3 [ 1 ])
+  assert_equal true (check_contains 10 3 3 [ 1 ]);
+  assert_equal true (check_contains 10 3 3 [ 1; 2; 3 ]);
+  assert_equal false (check_contains 2 3 3 [ 1; 2; 3 ]);
+  assert_equal true (check_contains 2 3 3 []);
+  assert_equal true (check_contains 2 2 3 []);
+  assert_equal true (check_contains 2 1 3 []);
+  assert_equal true (check_contains 2 0 3 []);
+  assert_equal false (check_contains 100 2 3 [ 99; 98 ]);
+  assert_equal false (check_contains 1 3 5 [ 1; 2; 3 ]);
+  assert_equal false
+    (check_contains 1 3 3
+       [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17 ]);
+  assert_equal false
+    (check_contains 2 0 3
+       [ 2; 3; 4; 5; 6; 7; 8; 9; 10; 12; 13; 14; 15; 16; 17 ]);
+  assert_equal true
+    (check_contains 91 1 3
+       [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17 ]);
+  assert_equal true
+    (check_contains 50 0 3
+       [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17 ])
 
 let test_valid_placement =
   "valid_placement tests"
@@ -446,7 +505,7 @@ let test_random_coord _ =
 
 (*let test_new_ship_coord _ = occupied_coords := []; comp_ship_coords := [];
   new_ship_coord 1 0 2 2; assert_equal [ (2, 1); (2, 2) ] !comp_ship_coords;
-  assert_equal [ 1; 11 ] !occupied_coords 
+  assert_equal [ 1; 11 ] !occupied_coords
 
   let test_add_coords _ = occupied_coords := []; comp_ship_coords := [];
   add_coords; assert_equal 5 (List.length !comp_ship_coords); assert_equal 15
