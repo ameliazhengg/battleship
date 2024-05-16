@@ -22,6 +22,13 @@ val valid_guess_computer : int * int -> bool
     specified coordinates. Returns [true] if the coordinates have not been
     guessed; [false] otherwise. *)
 
+val correct_user_guess : (int * int) list ref
+val add_user_correct_guess : int * int -> unit
+val get_correct_user_guess : unit -> (int * int) list
+val incorrect_user_guess : (int * int) list ref
+val add_user_incorrect_guess : int * int -> unit
+val get_incorrect_user_guess : unit -> (int * int) list
+
 val mark_on_board : string array array -> int * int -> string -> unit
 (** [mark_on_board board (row, col) symbol] marks the board at the specified
     position with the given symbol. *)
@@ -56,9 +63,15 @@ val get_corner_coords : int -> int -> (int * int) list
 (** [get_corner_coords]Determines the specific corner-related coordinates based
     on the board position. Handles special cases for corners of a 10x10 grid. *)
 
-val get_rec_coords : int -> int -> (int * int) list
-(** [get_rec_coords]Computes recommended coordinates for a given position on a
-    10x10 grid considering whether the position is on the edge or a corner. *)
+val get_rec_coords_user : int -> int -> (int * int) list
+(** [get_rec_coords_user]Computes recommended coordinates for a given position
+    on a 10x10 grid considering whether the position is on the edge or a corner. *)
+
+val rec_guesses : (int * int) list ref
+val get_rec_1 : unit -> int * int
+val add_recommended : int * int -> unit
+val remove_recommended : unit -> unit
+val size_of_recommended : unit -> int
 
 val is_valid_row_input : string -> bool
 (** [is_valid_row_input input] checks if the input is a valid row number between

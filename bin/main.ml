@@ -6,6 +6,7 @@ open Final_proj_3110.Ships
 (* ADDING COLORS *)
 let reset_color = "\027[0m"
 let hit_color = "\x1b[38;5;196m"
+let miss_color = "\x1b[38;5;32m"
 
 let print_battle () =
   let banner =
@@ -24,10 +25,10 @@ let print_of () =
   let banner =
     [
       "  ______    _______ ";
-      " /  __  \\  |   ____|";
-      "|  |  |  | |  |__   ";
-      "|  |  |  | |   __|  ";
-      "|  `--'  | |  |     ";
+      " /  __  \\  |   ____|    ₊✧⋆⭒˚｡₊✧⋆⭒˚｡⋆";
+      "|  |  |  | |  |__    ₊✧⋆⭒˚｡⋆      ₊✧⋆⭒˚｡⋆";
+      "|  |  |  | |   __|       ₊✧⋆⭒˚｡⋆ ₊✧⋆⭒˚｡⋆";
+      "|  `--'  | |  |   ₊✧⋆⭒˚｡⋆  ₊✧⋆⭒˚｡⋆";
       " \\______/  |__|     ";
       "                    ";
     ]
@@ -48,7 +49,7 @@ let print_ships () =
   in
   List.iter print_endline banner
 
-let pick_theme () =
+let rec pick_theme () =
   print_newline ();
   print_endline "List of themes : ";
   print_endline "Theme 1 : Peach Vibe";
@@ -59,36 +60,72 @@ let pick_theme () =
   print_endline "Theme 6 : Fantasy Vibe";
   print_string "Enter a theme number : ";
   let user_theme = read_line () in
-  print_endline ("You picked " ^ user_theme ^ "!\n");
-  user_theme
+  try
+    let theme_number = int_of_string user_theme in
+    if theme_number > 0 && theme_number < 7 then (
+      print_endline ("You picked theme " ^ user_theme ^ "!\n");
+      user_theme)
+    else (
+      print_endline "Invalid input. Try again!\n";
+      pick_theme ())
+  with Failure _ ->
+    print_endline "Invalid input. Try again!\n";
+    pick_theme ()
 
 let instructions () =
-  print_endline "How to play battleship:";
   print_endline
     "You have five ships consisting of lengths 2,3,3,4 and 5. These will be \
      represented on your board as 'a', 'b', 'c', 'd', and 'e', respectively. \
      The battleship board is 10x10, with the columns being labeled A-J and the \
      rows 1-10.";
+  print_newline ();
+
   print_endline
-    "To initiate your board, you will be prompted to enter a coordinate for \
-     your ship and an orientation. You can must first enter the row number, \
-     and then the column letter, case insensitive. You can place your ships \
-     horizontally or vertically, but not diagonally. You cannot place your \
-     ships in a manner that overlaps with any other ships or beyond the grid. \
-     You and the computer will alternate turns guesssing. If you have hit one \
-     of the computer's ships, the terminal will display the board and hit \
-     square will be shown with an 'X'. If you have missed, it will be shown as \
-     an 'O'. The first player to hit all 5 shapes wins the game."
+    "Directions: To initiate your board, you will be prompted to enter a \
+     coordinate for your ship and an orientation. You can must first enter the \
+     row number, and then the column letter, case insensitive. You can place \
+     your ships horizontally or vertically, but not diagonally. You cannot \
+     place your ships in a manner that overlaps with any other ships or beyond \
+     the grid. You and the computer will alternate turns guesssing. If you \
+     have hit one of the computer's ships, the terminal will display the board \
+     and hit square will be shown with an 'X'. If you have missed, it will be \
+     shown as an 'O'. The first player to hit all 5 shapes wins the game.";
+  print_newline ();
+
+  print_endline
+    "Themes: To utilize the available color theme presets, select the desired \
+     palette when prompted by the terminal to do so. The available themes are \
+     named Peach Vibe, Tropical Vibe, Arctic Vibe, Oasis Vibe, Cosmic Vibe, \
+     and Fantasy Vibe. Running the main.exe file will automatically prompt the \
+     user to choose a theme.";
+  print_newline ();
+
+  print_endline
+    "Modes: Our game enables three different modes. Easy, medium or hard. You \
+     will be prompted to chose one of these before the game starts. Easy mode \
+     is when the computer's guesses are completely randomized. In Medium mode \
+     the computer has a more strategic aproach, guessing every other square. \
+     In Hard mode, the computer takes into account if it has hit a ship and \
+     takes the surrounding spots of the hit ship into consideration."
 
 let welcome () =
   print_newline ();
   print_string "Please enter your name: ";
   let player_name = read_line () in
   print_endline ("Welcome to Battleship, " ^ player_name ^ "!");
-  print_string "\nWould you like to read how to play battleship? (yes or no): ";
-  let input = read_line () in
-  if String.uppercase_ascii input = "YES" then instructions ()
-  else print_endline "The game begins now."
+
+  let rec ask_instructions () =
+    print_string
+      "\nWould you like to read how to play battleship? (yes or no): ";
+    let input = String.uppercase_ascii (read_line ()) in
+    match input with
+    | "YES" -> instructions ()
+    | "NO" -> print_endline "The game begins now."
+    | _ ->
+        print_endline "Invalid input. Please type 'yes' or 'no'.";
+        ask_instructions ()
+  in
+  ask_instructions ()
 
 (** prints row with the battleships *)
 let print_row board i =
@@ -218,16 +255,20 @@ let rec get_coords name_ship board =
 
 let if_user_missed computer_board row_input col_input =
   begin
+    add_user_incorrect_guess (row_input, col_input);
     print_endline "You missed";
-    mark_on_board computer_board (row_input, col_input) " O ";
-    print_grid computer_board
+    mark_on_board computer_board (row_input, col_input)
+      (miss_color ^ " O " ^ reset_color);
+    print_grid computer_board;
+    print_grid (populate_concealed_board (create_concealed_board ()))
   end
 
 let if_user_hit computer_board row_input col_input =
   begin
+    add_user_correct_guess (row_input, col_input);
     print_endline "Hit!";
     print_endline (string_of_int (get_comp_hits ()));
-    let rec_coords = get_rec_coords row_input col_input in
+    let rec_coords = get_rec_coords_user row_input col_input in
     print_endline
       ("Recommended next guesses: " ^ string_of_list_coords rec_coords);
     let ship_rep =
@@ -262,23 +303,28 @@ let rec user_turn computer_board user_board mode =
       (* Update the hits on the ship *)
       if is_sunk ship then begin
         print_grid computer_board;
+        print_grid (populate_concealed_board (create_concealed_board ()));
         (* print_endline "is_sunk ran"; *)
         print_endline
           ("You sank the computers ship of length " ^ get_length ship ^ "!");
         if check_all_hit computer_ships then print_endline "Congrats, you won!"
         else begin
           print_grid computer_board;
+          print_grid (populate_concealed_board (create_concealed_board ()));
           computer_turn user_board computer_board mode
         end
       end
-      else print_grid computer_board;
-      computer_turn user_board computer_board mode
+      else begin
+        print_grid computer_board;
+        print_grid (populate_concealed_board (create_concealed_board ()));
+        computer_turn user_board computer_board mode
+      end
     end
   end
 
 and computer_turn user_board computer_board mode =
   let user_ships = get_user_ships () in
-  print_endline "Now the computer will take\n   a guess!";
+  print_endline "Now the computer will take a guess!";
   Unix.sleepf 1.;
   let guess = generate_random_guess mode in
   if valid_guess_computer guess then begin
@@ -298,6 +344,7 @@ and computer_turn user_board computer_board mode =
     end
     else begin
       Printf.printf "The computer guessed %s%s and hit!\n" row_str col_str;
+      add_recommended guess;
       (* Mark hit on the board *)
       let ship_rep = get_user_board_element user_board row col in
       mark_on_board (user_board_array user_board) guess " X ";
@@ -325,6 +372,18 @@ and computer_turn user_board computer_board mode =
 (* Retry the turn if the guess was not valid *)
 
 (* Start the game with initial calls to user_turn and computer_turn as needed *)
+let pick_mode () =
+  print_string "What mode do you want to play? (easy, medium, hard): ";
+  let rec get_valid_mode () =
+    let input = read_line () |> String.trim |> String.lowercase_ascii in
+    match input with
+    | "easy" | "medium" | "hard" -> input
+    | _ ->
+        print_string
+          "Invalid mode selected. Please choose from easy, medium, or hard: ";
+        get_valid_mode ()
+  in
+  get_valid_mode ()
 
 (** Starts game and asks for name *)
 let () =
@@ -333,8 +392,7 @@ let () =
   print_ships ();
   welcome ();
   let theme = pick_theme () in
-  print_string "What mode do you want to play? (easy, medium, hard): ";
-  let mode = read_line () in
+  let mode = pick_mode () in
   print_endline "Computer Board";
   print_endline string_comp_ships;
   print_endline string_occ_coord;
@@ -345,16 +403,13 @@ let () =
 
   let user_board = create_board (int_of_string theme) in
   print_endline "";
-  (* user_board; *)
   print_endline "Now please choose the coordinates of your ships ";
   print_newline ();
   get_coords 2 user_board;
   get_coords 3 user_board;
   get_coords 31 user_board;
-  (* had to do this because there are two ships of length 3 *)
   get_coords 4 user_board;
   get_coords 5 user_board;
   print_grid (user_board_array user_board);
   print_newline ();
-  user_turn computer_board user_board mode;
-  print_endline "Thanks for playing. Goodbye!"
+  user_turn computer_board user_board mode

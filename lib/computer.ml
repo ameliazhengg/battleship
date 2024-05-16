@@ -1,4 +1,5 @@
 open Ships
+open Logic
 
 let () = Random.self_init ()
 
@@ -8,6 +9,58 @@ let columns = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 
 let rows =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
+
+let themes_list =
+  [
+    [
+      "\x1b[38;5;210m";
+      "\x1b[38;5;216m";
+      "\x1b[38;5;217m";
+      "\x1b[38;5;218m";
+      "\x1b[38;5;219m";
+    ];
+    (* Ultra Rosa *)
+    [
+      "\x1b[38;5;4m";
+      "\x1b[38;5;6m";
+      "\x1b[38;5;30m";
+      "\x1b[38;5;183m";
+      "\x1b[38;5;226m";
+    ];
+    (* Mango Loco *)
+    [
+      "\x1b[38;5;168m";
+      "\x1b[38;5;169m";
+      "\x1b[38;5;170m";
+      "\x1b[38;5;171m";
+      "\x1b[38;5;129m";
+    ];
+    (* Pipeline Punch *)
+    [
+      "\x1b[38;5;21m";
+      "\x1b[38;5;26m";
+      "\x1b[38;5;25m";
+      "\x1b[38;5;24m";
+      "\x1b[38;5;184m";
+    ];
+    (* Aussie Lemonade *)
+    [
+      "\x1b[38;5;172m";
+      "\x1b[38;5;215m";
+      "\x1b[38;5;216m";
+      "\x1b[38;5;214m";
+      "\x1b[38;5;218m";
+    ];
+    (* Papillon *)
+    [
+      "\x1b[38;5;214m";
+      "\x1b[38;5;216m";
+      "\x1b[38;5;31m";
+      "\x1b[38;5;32m";
+      "\x1b[38;5;220m";
+    ];
+    (* Khaotic *)
+  ]
 
 let checker =
   [|
@@ -65,15 +118,16 @@ let checker =
 
 let comp_ship_coords = ref []
 let occupied_coords = ref []
+let theme = List.nth themes_list (Random.int 5)
 
 (* icon representing the different ships on our board*)
 let ship_match n =
   match n with
-  | 2 -> " a "
-  | 3 -> " b "
-  | 31 -> " c "
-  | 4 -> " d "
-  | 5 -> " e "
+  | 2 -> List.nth theme 0 ^ " a " ^ "\x1b[0m"
+  | 3 -> List.nth theme 1 ^ " b " ^ "\x1b[0m"
+  | 31 -> List.nth theme 2 ^ " c " ^ "\x1b[0m"
+  | 4 -> List.nth theme 3 ^ " d " ^ "\x1b[0m"
+  | 5 -> List.nth theme 4 ^ " e " ^ "\x1b[0m"
   | _ -> "  "
 
 (*let computer_ship_coords = ref []*)
@@ -223,6 +277,21 @@ let in_comp_shi_coords row col =
   if List.mem (((row - 1) * 10) + col) !occupied_coords then true else false
 
 (* generates random guess *)
+
+(* get the guesses if its in hard mode*)
+let get_hard_guesses () =
+  if size_of_recommended () = 0 then begin
+    let random_row = 1 + Random.int (Array.length rows) in
+    let random_col = 1 + Random.int (Array.length columns - 1) in
+    (random_row, random_col)
+  end
+  else begin
+    let guess = get_rec_1 () in
+    remove_recommended ();
+    guess
+  end
+
+(* generates random guess *)
 let generate_random_guess mode =
   match mode with
   | "easy" -> begin
@@ -231,5 +300,16 @@ let generate_random_guess mode =
       (random_row, random_col)
     end
   | "medium" -> checker.(Random.int 49)
-  | "hard" -> (1, 1)
-  | _ -> (1, 1)
+  | _ -> get_hard_guesses ()
+
+let create_concealed_board () = Array.make_matrix 10 10 "   "
+
+let populate_concealed_board board =
+  (* Retrieve the lists of correct and incorrect guesses *)
+  let correct_coords = get_correct_user_guess () in
+  let incorrect_coords = get_incorrect_user_guess () in
+  let mark_hit (row, col) = board.(row - 1).(col - 1) <- " X " in
+  let mark_miss (row, col) = board.(row - 1).(col - 1) <- " O " in
+  List.iter mark_hit correct_coords;
+  List.iter mark_miss incorrect_coords;
+  board

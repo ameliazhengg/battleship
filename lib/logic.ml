@@ -15,6 +15,26 @@ let valid_guess_user row col = not (List.mem (row, col) !user_guesses)
 (* check if computer has already guessed this coord before*)
 let valid_guess_computer guess = not (List.mem guess !computer_guesses)
 
+(* [correct_user_guess] is the list of coordinates that the user guessed
+   correctly *)
+let correct_user_guess : (int * int) list ref = ref []
+
+(* [add_user_correct_guess] is [correct_user_guess] with [guess] appended *)
+let add_user_correct_guess guess =
+  correct_user_guess := guess :: !correct_user_guess
+
+let get_correct_user_guess () = !correct_user_guess
+
+(* [incorrect_user_guess] is the list of coordinates that the user guessed
+   correctly *)
+let incorrect_user_guess : (int * int) list ref = ref []
+
+(* [add_user_incorrect_guess] is [incorrect_user_guess] with [guess] appended *)
+let add_user_incorrect_guess guess =
+  correct_user_guess := guess :: !correct_user_guess
+
+let get_incorrect_user_guess () = !incorrect_user_guess
+
 (* marks the board with the symbol for hit or not hit*)
 let mark_on_board board (row, col) symbol = board.(row - 1).(col - 1) <- symbol
 let string_of_coord (row, col) = Printf.sprintf "%d,%c" row col
@@ -59,12 +79,12 @@ let get_corner_coords row col =
   | 10, 1 -> [ (10, 2); (9, 1) ]
   | _ -> []
 
-let get_rec_coords row col =
+let get_rec_coords_user row col =
   let potential_coords =
     if is_on_board_edge row col then
       let corners = [ (1, 1); (10, 10); (1, 10); (10, 1) ] in
       if List.mem (row, col) corners then get_corner_coords row col
-      else get_edge_coords row col
+      else get_edge_coords row col |> filter_valid_coords
     else get_edge_coords row col |> filter_valid_coords
   in
   if List.length potential_coords = 0 then
@@ -72,10 +92,26 @@ let get_rec_coords row col =
     failwith "No recommended coordinates available"
   else potential_coords
 
-let is_valid_row_input input = try
-  let row_num = int_of_string input in
-  if row_num >= 1 && row_num <= 10 then true else false
-with Failure _ -> false
+let rec_guesses : (int * int) list ref = ref []
+let get_rec_1 () = List.hd !rec_guesses
+
+let add_recommended guess =
+  let row, col = (fst guess, snd guess) in
+  let rec_coords = get_rec_coords_user row col in
+  rec_guesses := List.append !rec_guesses rec_coords
+
+let remove_recommended () =
+  match !rec_guesses with
+  | [] -> () (* If the list is empty, do nothing *)
+  | _ :: tail -> rec_guesses := tail
+
+let size_of_recommended () = List.length !rec_guesses
+
+let is_valid_row_input input =
+  try
+    let row_num = int_of_string input in
+    if row_num >= 1 && row_num <= 10 then true else false
+  with Failure _ -> false
 
 (** [is_valid_col_input] requires [input] to be None or Some. Returns: true if
     input is a string between A-J case insensitive, and false otherwise. *)
