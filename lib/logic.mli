@@ -31,9 +31,18 @@ val add_user_correct_guess : int * int -> unit
     [correct_user_guess]*)
 
 val get_correct_user_guess : unit -> (int * int) list
+(** [get_correct_user_guess] is the list of all correct user guesses *)
+
 val incorrect_user_guess : (int * int) list ref
+(** [incorrect_user_guess] is the list of the guesses that the users guessed
+    incorrectly *)
+
 val add_user_incorrect_guess : int * int -> unit
+(** [add_user_incorrect_guess] adds a new guess to the list of
+    [incorrect_user_guess]*)
+
 val get_incorrect_user_guess : unit -> (int * int) list
+(** [get_incorrect_user_guess] is the list of all incorrect user guesses *)
 
 val mark_on_board : string array array -> int * int -> string -> unit
 (** [mark_on_board board (row, col) symbol] marks the board at the specified
@@ -74,10 +83,20 @@ val get_rec_coords_user : int -> int -> (int * int) list
     on a 10x10 grid considering whether the position is on the edge or a corner. *)
 
 val rec_guesses : (int * int) list ref
+(** [rec_guesses] recommended guesses for user *)
+
 val get_rec_1 : unit -> int * int
+(** [get_rec_1] is the first recommended coordinate in [rec_guesses] *)
+
 val add_recommended : int * int -> unit
+(** [add_recommended] adds a new recommended coordinate to the existing list *)
+
 val remove_recommended : unit -> unit
+(** [remove_recommended] removes a new recommended coordinate to the existing
+    list *)
+
 val size_of_recommended : unit -> int
+(** [size_of_recommended] is the size of the list of recommended coordinates *)
 
 val is_valid_row_input : string -> bool
 (** [is_valid_row_input input] checks if the input is a valid row number between
