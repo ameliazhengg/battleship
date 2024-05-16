@@ -332,16 +332,16 @@ let if_user_missed computer_board row_input col_input conceal =
     mark_on_board computer_board (row_input, col_input)
       (move_color ^ " O " ^ reset_color);
     add_user_incorrect_guess (row_input, col_input);
-    if conceal = "y" then print_grid computer_board
+    print_endline "Computer Board";
+    if conceal = "y" then begin
+      print_grid computer_board
+    end
     else print_grid (populate_concealed_board (create_concealed_board ()))
   end
 
 let if_user_hit computer_board row_input col_input =
   begin
-    print_endline
-      (get_comp_board_element computer_board (row_input - 1) (col_input - 1));
     print_endline "Hit!";
-    print_endline (string_of_int (get_comp_hits ()));
     let rec_coords = get_rec_coords_user row_input col_input in
     print_endline
       ("Recommended next guesses: " ^ string_of_list_coords rec_coords);
@@ -349,7 +349,6 @@ let if_user_hit computer_board row_input col_input =
       get_comp_board_element computer_board (row_input - 1) (col_input - 1)
     in
     let ship = get_ship_update ship_rep computer_ships in
-    print_endline (ship_to_string ship);
     mark_on_board computer_board (row_input, col_input)
       (move_color ^ " X " ^ reset_color);
     add_user_correct_guess (row_input, col_input);
@@ -375,11 +374,10 @@ let rec user_turn computer_board user_board mode conceal =
     end
     else begin
       let ship = if_user_hit computer_board row_input col_input in
+      print_newline ();
+      print_endline "Computer Board";
       (* Update the hits on the ship *)
       if is_sunk ship then begin
-        if conceal = "y" then print_grid computer_board
-        else print_grid (populate_concealed_board (create_concealed_board ()));
-        (* print_endline "is_sunk ran"; *)
         print_endline
           ("You sank the computers ship of length " ^ get_length ship ^ "!");
         if check_all_hit computer_ships then print_endline "Congrats, you won!"
@@ -390,6 +388,7 @@ let rec user_turn computer_board user_board mode conceal =
         end
       end
       else begin
+        print_endline "Computer Board";
         if conceal = "y" then print_grid computer_board
         else print_grid (populate_concealed_board (create_concealed_board ()));
         computer_turn user_board computer_board mode conceal
@@ -411,6 +410,8 @@ and computer_turn user_board computer_board mode conceal =
       Printf.printf "The computer guessed %s%s and missed :(\n" row_str col_str;
       mark_on_board (user_board_array user_board) guess " O ";
       (* Mark miss on the board *)
+      print_newline ();
+      print_endline "Your Board";
       print_grid user_board;
       user_turn computer_board user_board mode
         conceal (* Print the updated board *)
@@ -431,11 +432,15 @@ and computer_turn user_board computer_board mode conceal =
           print_grid user_board
         end
         else begin
+          print_newline ();
+          print_endline "Your Board";
           print_grid user_board;
           user_turn computer_board user_board mode conceal
         end
       end
       else begin
+        print_newline ();
+        print_endline "Your Board";
         print_grid user_board;
         user_turn computer_board user_board mode conceal
       end
@@ -492,6 +497,7 @@ let () =
   get_coords 31 user_board;
   get_coords 4 user_board;
   get_coords 5 user_board;
+  print_newline ();
   print_endline "Your Battleship Board";
 
   print_grid (user_board_array user_board);

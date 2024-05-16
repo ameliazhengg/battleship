@@ -296,7 +296,7 @@ let generate_random_guess mode =
   match mode with
   | "easy" -> begin
       let random_row = 1 + Random.int (Array.length rows) in
-      let random_col = 1 + Random.int (Array.length columns - 1) in
+      let random_col = 1 + Random.int (Array.length columns) in
       (random_row, random_col)
     end
   | "medium" -> checker.(Random.int 49)
