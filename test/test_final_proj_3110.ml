@@ -336,19 +336,36 @@ let test_get_comp_board_element _ =
   board.(0).(0) <- " a ";
   assert_equal " a " (get_comp_board_element board 0 0)
 
-let test_check_contains _ = assert_equal true (check_contains 1 0 3 []);
-  assert_equal false (check_contains 1 0 3 [ 11 ]); assert_equal true
-  (check_contains 1 1 3 []); assert_equal false (check_contains 11 1 3 [ 1 ]);
-  assert_equal true (check_contains 1 2 3 []); assert_equal false
-  (check_contains 11 2 3 [ 10 ]); assert_equal true (check_contains 1 3 3 []);
-  assert_equal false (check_contains 10 3 3 [ 1 ])
+let test_check_contains _ =
+  assert_equal false (check_contains 1 0 3 [ 11 ]);
+  assert_equal true (check_contains 1 0 2 [ 2 ]);
+  assert_equal false (check_contains 20 1 3 [ 10 ]);
+  assert_equal true (check_contains 12 1 3 [ 1 ]);
+  assert_equal false (check_contains 11 2 3 [ 10 ]);
+  assert_equal true (check_contains 5 2 3 [ 6 ]);
+  assert_equal false (check_contains 1 3 3 [ 3 ]);
+  assert_equal true (check_contains 10 3 3 [ 1 ])
 
-  (*let test_valid_placement _ = assert_equal true (valid_placement 1 0 3 []);
-  assert_equal false (valid_placement 91 0 3 []); assert_equal true
-  (valid_placement 1 1 3 []); assert_equal false (valid_placement 10 1 3 []);
-  assert_equal true (valid_placement 2 2 3 []); assert_equal false
-  (valid_placement 1 2 3 []); assert_equal true (valid_placement 2 3 3 []);
-  assert_equal false (valid_placement 9 3 3 []) *)
+let test_valid_placement =
+  "valid_placement tests"
+  >::: [
+         ( "invalid >=91 0" >:: fun _ ->
+           assert_equal false (valid_placement 91 0 3 []) );
+         ( "invalid 80 0 3" >:: fun _ ->
+           assert_equal false (valid_placement 80 0 3 []) );
+         ( "invalid <=10 1" >:: fun _ ->
+           assert_equal false (valid_placement 9 1 3 []) );
+         ( "invalid 10 1 1" >:: fun _ ->
+           assert_equal false (valid_placement 10 1 1 []) );
+         ( "invalid mod 10 2" >:: fun _ ->
+           assert_equal false (valid_placement 21 2 1 []) );
+         ( "invalid 11 2 2" >:: fun _ ->
+           assert_equal false (valid_placement 11 2 2 []) );
+         ( "invalid mod 10 3" >:: fun _ ->
+           assert_equal false (valid_placement 10 3 1 []) );
+         ( "invalid 18 3 3" >:: fun _ ->
+           assert_equal false (valid_placement 18 3 3 []) );
+       ]
 
 let test_random_coord _ =
   let coord = random_coord () in
@@ -397,8 +414,7 @@ let suite =
            assert_equal "  " (ship_match 0) );
          "test_create_computer_board" >:: test_create_computer_board;
          "test_get_comp_board_element" >:: test_get_comp_board_element;
-         (*"test_check_contains" >:: test_check_contains; (**) *)
-         (*"test_valid_placement" >:: test_valid_placement; (**) *)
+         "test_check_contains" >:: test_check_contains;
          "test_random_coord" >:: test_random_coord;
          (*"test_add_ship_to_lst" >:: test_add_ship_to_lst; (**) *)
          (*"test_new_ship_coord" >:: test_new_ship_coord; (**) *)
@@ -418,3 +434,4 @@ let _ = run_test_tt_main test_create_coord_array
 let _ = run_test_tt_main test_ships
 let _ = run_test_tt_main test_logic
 let _ = run_test_tt_main suite
+let _ = run_test_tt_main test_valid_placement
