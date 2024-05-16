@@ -21,11 +21,10 @@ let mark_on_board board (row, col) symbol = board.(row - 1).(col - 1) <- symbol
 
 (** [is_valid_row_input] requires [input] to be None or Some. Returns: true if
     input is an integer within 1-10, and false otherwise. *)
+
 let is_valid_row_input input =
-  let row_num = int_of_string_opt input in
-  match row_num with
-  | Some num -> num >= 1 && num <= 10
-  | None -> false
+  let row_num = int_of_string input in
+  if row_num > 1 && row_num <= 10 then true else false
 
 (** [is_valid_col_input] requires [input] to be None or Some. Returns: true if
     input is a string between A-J case insensitive, and false otherwise. *)

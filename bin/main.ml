@@ -149,6 +149,35 @@ let rec get_coords name_ship board =
       print_endline "Cannot add coordinates due to overlap";
       get_coords name_ship board
 
+let if_user_missed computer_board row_input col_input =
+  begin
+    print_endline "You missed";
+    mark_on_board computer_board (row_input, col_input) " O ";
+    print_grid computer_board
+  end
+
+let if_user_hit computer_board row_input col_input =
+  begin
+    print_endline "Hit!";
+    print_endline (string_of_int (get_comp_hits ()));
+    let ship_rep =
+      get_comp_board_element computer_board (row_input - 1) (col_input - 1)
+    in
+    let ship = get_ship_update ship_rep computer_ships in
+    print_endline (ship_to_string ship);
+    mark_on_board computer_board (row_input, col_input) " X ";
+    ship
+  end
+
+let user_sunk_ship =
+  begin
+    print_grid computer_board;
+    (* print_endline "is_sunk ran"; *)
+    print_endline
+      ("You sank the computers ship of length " ^ get_length ship ^ "!");
+    if check_all_hit computer_ships then print_endline "Congrats, you won!"
+  end
+
 let rec user_turn computer_board user_board =
   let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
@@ -163,24 +192,15 @@ let rec user_turn computer_board user_board =
   else begin
     add_user_guess (row_input, col_input);
     if not (in_comp_shi_coords row_input col_input) then begin
-      print_endline "You missed";
-      mark_on_board computer_board (row_input, col_input) " O ";
-      print_grid computer_board;
+      if_user_missed computer_board row_input col_input;
       computer_turn user_board computer_board
     end
     else begin
-      print_endline "Hit!";
-      print_endline (string_of_int (get_comp_hits ()));
-      let ship_rep =
-        get_comp_board_element computer_board (row_input - 1) (col_input - 1)
-      in
-      let ship = get_ship_update ship_rep computer_ships in
-      print_endline (ship_to_string ship);
-      mark_on_board computer_board (row_input, col_input) " X ";
+      let ship = if_user_hit computer_board row_input col_input in
       (* Update the hits on the ship *)
       if is_sunk ship then begin
         print_grid computer_board;
-        print_endline "is_sunk ran";
+        (* print_endline "is_sunk ran"; *)
         print_endline
           ("You sank the computers ship of length " ^ get_length ship ^ "!");
         if check_all_hit computer_ships then print_endline "Congrats, you won!"
@@ -189,10 +209,8 @@ let rec user_turn computer_board user_board =
           computer_turn user_board computer_board
         end
       end
-      else begin
-        print_grid computer_board;
-        computer_turn user_board computer_board
-      end
+      else print_grid computer_board;
+      computer_turn user_board computer_board
     end
   end
 
