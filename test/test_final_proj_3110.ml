@@ -1,7 +1,7 @@
 open OUnit2
 
 (*open QCheck2 *)
-(*open Final_proj_3110.Computer *)
+open Final_proj_3110.Computer
 open Final_proj_3110.Ships
 open Final_proj_3110.Board
 open Final_proj_3110.Logic
@@ -97,29 +97,48 @@ let test_set_board =
   "tests set_board and match ship"
   >::: [
          ( "check that coords are set on the board for ship type a beginning"
-         >:: fun _ -> assert_equal " a " (get_board_element new_board 7 7) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;215m a \x1b[0m"
+             (get_board_element new_board 7 7) );
          ( "check that coords are set on the board for ship type a end"
-         >:: fun _ -> assert_equal " a " (get_board_element new_board 7 8) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;215m a \x1b[0m"
+             (get_board_element new_board 7 8) );
          ( "check that coords are set on the board for ship type b beginning"
-         >:: fun _ -> assert_equal " b " (get_board_element new_board 3 3) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;216m b \x1b[0m"
+             (get_board_element new_board 3 3) );
          ( "check that coords are set on the board for ship type b end"
-         >:: fun _ -> assert_equal " b " (get_board_element new_board 5 3) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;216m b \x1b[0m"
+             (get_board_element new_board 5 3) );
          ( "check that coords are set on the board for ship type c beginning"
-         >:: fun _ -> assert_equal " c " (get_board_element new_board 0 0) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;217m c \x1b[0m"
+             (get_board_element new_board 0 0) );
          ( "check that coords are set on the board for ship type c end"
-         >:: fun _ -> assert_equal " c " (get_board_element new_board 0 2) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;217m c \x1b[0m"
+             (get_board_element new_board 0 2) );
          ( "check that coords are set on the board for ship type d beginning"
-         >:: fun _ -> assert_equal " d " (get_board_element new_board 0 6) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;218m d \x1b[0m"
+             (get_board_element new_board 0 6) );
          ( "check that coords are set on the board for ship type d end"
-         >:: fun _ -> assert_equal " d " (get_board_element new_board 3 6) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;218m d \x1b[0m"
+             (get_board_element new_board 3 6) );
          ( "check that coords are set on the board for ship type e beginning"
-         >:: fun _ -> assert_equal " e " (get_board_element new_board 7 1) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;219m e \x1b[0m"
+             (get_board_element new_board 7 1) );
          ( "check that coords are set on the board for ship type e end"
-         >:: fun _ -> assert_equal " e " (get_board_element new_board 7 5) );
+         >:: fun _ ->
+           assert_equal "\x1b[38;5;219m e \x1b[0m"
+             (get_board_element new_board 7 5) );
          ( "check that other oords are set on the board are empty" >:: fun _ ->
            assert_equal "   " (get_board_element new_board 5 5) );
        ]
-
 (*generate_coords tests*)
 
 let pair_generator = QCheck2.Gen.(pair (1 -- 10) (3 -- 8))
@@ -245,6 +264,8 @@ let test_ships =
 
 (*Logic Tests*)
 let _ = add_user_guess (1, 1)
+let _ = add_user_guess (9, 10)
+let _ = add_user_guess (10, 9)
 let _ = add_computer_guess (2, 2)
 let _ = mark_on_board new_board (10, 10) " O "
 
@@ -285,11 +306,324 @@ let test_logic =
            assert_equal false (is_valid_col_input "z") );
        ]
 
+let test_computer_logic =
+  "test Logic for computer logic functions"
+  >::: [
+         ( "convert_coords_to_game_format" >:: fun _ ->
+           assert_equal
+             [ (1, 'A'); (4, 'E') ]
+             (convert_coords_to_game_format [ (1, 1); (4, 5) ]) );
+         ( "string_of_list_coords" >:: fun _ ->
+           assert_equal "1,A; 4,E" (string_of_list_coords [ (1, 1); (4, 5) ]) );
+         ( "is_on_board_edge first row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 1 8) );
+         ( "is_on_board_edge first row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 1 10) );
+         ( "is_on_board_edge last row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 10 8) );
+         ( "is_on_board_edge last row" >:: fun _ ->
+           assert_equal true (is_on_board_edge 10 1) );
+         ( "is_on_board_edge first column" >:: fun _ ->
+           assert_equal true (is_on_board_edge 5 1) );
+         ( "is_on_board_edge first square" >:: fun _ ->
+           assert_equal true (is_on_board_edge 1 1) );
+         ( "is_on_board_edge last column" >:: fun _ ->
+           assert_equal true (is_on_board_edge 5 10) );
+         ( "is_on_board_edge last square" >:: fun _ ->
+           assert_equal true (is_on_board_edge 10 10) );
+         ( "is_on_board_edge false" >:: fun _ ->
+           assert_equal false (is_on_board_edge 5 5) );
+         ( "filter_valid_coords" >:: fun _ ->
+           assert_equal
+             [ (1, 2); (2, 2) ]
+             (filter_valid_coords [ (1, 2); (2, 2); (1, 1) ]) );
+         ( "get_corner_coords top left corner" >:: fun _ ->
+           assert_equal [ (1, 2); (2, 1) ] (get_corner_coords 1 1) );
+         ( "get_corner_coords top right corner" >:: fun _ ->
+           assert_equal [ (1, 9); (2, 10) ] (get_corner_coords 1 10) );
+         ( "get_corner_coords bottom left corner" >:: fun _ ->
+           assert_equal [ (10, 2); (9, 1) ] (get_corner_coords 10 1) );
+         ( "get_corner_coords bottom right corner" >:: fun _ ->
+           assert_equal [ (10, 9); (9, 10) ] (get_corner_coords 10 10) );
+         ( "get_corner_coords not corner" >:: fun _ ->
+           assert_equal [] (get_corner_coords 5 5) );
+         ( "get_edge coordinates top border" >:: fun _ ->
+           assert_equal [ (1, 7); (1, 5); (2, 6) ] (get_edge_coords 1 6) );
+         ( "get_edge coordinates left border" >:: fun _ ->
+           assert_equal [ (7, 2); (8, 1); (6, 1) ] (get_edge_coords 7 1) );
+         ( "get_edge coordinates right border" >:: fun _ ->
+           assert_equal [ (5, 9); (6, 10); (4, 10) ] (get_edge_coords 5 10) );
+         ( "get_edge coordinates bottom border" >:: fun _ ->
+           assert_equal [ (10, 5); (10, 3); (9, 4) ] (get_edge_coords 10 4) );
+         ( "get_edge coordinates not on border" >:: fun _ ->
+           assert_equal [ (6, 5); (6, 3); (7, 4); (5, 4) ] (get_edge_coords 6 4)
+         );
+         ( "get_rec_coordinates when one coordinate is not valid" >:: fun _ ->
+           assert_equal [ (1, 3); (1, 1); (2, 2) ] (get_rec_coords_user 1 2) );
+         ( "get_rec_coordinates when no coordinates are valid" >:: fun _ ->
+           assert_raises (Failure "No recommended coordinates available")
+             (fun () -> get_rec_coords_user 10 10) );
+         ( "get_rec_coords when all coordinates are valid" >:: fun _ ->
+           assert_equal
+             [ (5, 7); (5, 5); (6, 6); (4, 6) ]
+             (get_rec_coords_user 5 6) );
+       ]
+
+let _ =
+  let rec print lst =
+    match lst with
+    | [] -> () (* If the list is empty, do nothing *)
+    | (x, y) :: tail ->
+        Printf.printf "(%d, %d)\n" x y;
+        (* Print the current pair *)
+        print tail (* Recursively print the rest of the list *)
+  in
+  print (get_edge_coords 5 6)
+
+(*Computer Tests*)
+
+let test_create_computer_board _ =
+  let board = create_computer_board () in
+  assert_equal 10 (Array.length board);
+  assert_equal 10 (Array.length board.(0));
+  assert_equal "   " board.(0).(0);
+  assert_equal false (0 = Array.length board);
+  assert_equal false (0 = Array.length board.(0));
+  assert_equal false ("  " = board.(0).(0));
+  assert_equal false (11 = Array.length board);
+  assert_equal false (11 = Array.length board.(0));
+  assert_equal false ("  a  " = board.(0).(0));
+  assert_equal false (2 = Array.length board);
+  assert_equal false (2 = Array.length board.(0));
+  assert_equal false ("  3  " = board.(0).(0))
+
+let test_get_comp_board_element _ =
+  let board = create_computer_board () in
+  board.(0).(0) <- " a ";
+  assert_equal " a " (get_comp_board_element board 0 0);
+  let board1 = create_computer_board () in
+  board1.(0).(0) <- " b ";
+  assert_equal " b " (get_comp_board_element board 0 0);
+  let board2 = create_computer_board () in
+  board2.(9).(9) <- " b ";
+  assert_equal " b " (get_comp_board_element board 9 9);
+  let board3 = create_computer_board () in
+  board3.(0).(9) <- " a ";
+  assert_equal " a " (get_comp_board_element board 0 9);
+  let board4 = create_computer_board () in
+  board4.(9).(0) <- " b ";
+  assert_equal " b " (get_comp_board_element board 9 0);
+  let board5 = create_computer_board () in
+  board5.(4).(5) <- " b ";
+  board5.(0).(0) <- " b ";
+  board5.(0).(1) <- " b ";
+  board5.(0).(9) <- " b ";
+  board5.(1).(9) <- " b ";
+  board5.(9).(0) <- " b ";
+  board5.(9).(9) <- " b ";
+  board5.(2).(7) <- " b ";
+  assert_equal " b " (get_comp_board_element board 4 5);
+  assert_equal " b " (get_comp_board_element board 0 0);
+  assert_equal " b " (get_comp_board_element board 0 1);
+  assert_equal " b " (get_comp_board_element board 0 9);
+  assert_equal " b " (get_comp_board_element board 1 9);
+  assert_equal " b " (get_comp_board_element board 9 0);
+  assert_equal " b " (get_comp_board_element board 9 9);
+  assert_equal " b " (get_comp_board_element board 2 7)
+
+let test_check_contains _ =
+  assert_equal false (check_contains 1 0 3 [ 11 ]);
+  assert_equal true (check_contains 1 0 2 [ 2 ]);
+  assert_equal false (check_contains 20 1 3 [ 10 ]);
+  assert_equal true (check_contains 12 1 3 [ 1 ]);
+  assert_equal false (check_contains 11 2 3 [ 10 ]);
+  assert_equal true (check_contains 5 2 3 [ 6 ]);
+  assert_equal false (check_contains 1 3 3 [ 3 ]);
+  assert_equal true (check_contains 10 3 3 [ 1 ]);
+  assert_equal true (check_contains 10 3 3 [ 1; 2; 3 ]);
+  assert_equal false (check_contains 2 3 3 [ 1; 2; 3 ]);
+  assert_equal true (check_contains 2 3 3 []);
+  assert_equal true (check_contains 2 2 3 []);
+  assert_equal true (check_contains 2 1 3 []);
+  assert_equal true (check_contains 2 0 3 []);
+  assert_equal false (check_contains 100 2 3 [ 99; 98 ]);
+  assert_equal false (check_contains 1 3 5 [ 1; 2; 3 ]);
+  assert_equal false
+    (check_contains 1 3 3
+       [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17 ]);
+  assert_equal false
+    (check_contains 2 0 3
+       [ 2; 3; 4; 5; 6; 7; 8; 9; 10; 12; 13; 14; 15; 16; 17 ]);
+  assert_equal true
+    (check_contains 91 1 3
+       [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17 ]);
+  assert_equal true
+    (check_contains 50 0 3
+       [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17 ])
+
+let test_valid_placement =
+  "valid_placement tests"
+  >::: [
+         ( "invalid >=91 0" >:: fun _ ->
+           assert_equal false (valid_placement 91 0 3 []) );
+         ( "invalid 80 0 3" >:: fun _ ->
+           assert_equal false (valid_placement 80 0 3 []) );
+         ( "invalid <=10 1" >:: fun _ ->
+           assert_equal false (valid_placement 9 1 3 []) );
+         ( "invalid 10 1 1" >:: fun _ ->
+           assert_equal false (valid_placement 10 1 1 []) );
+         ( "invalid mod 10 2" >:: fun _ ->
+           assert_equal false (valid_placement 21 2 1 []) );
+         ( "invalid 11 2 2" >:: fun _ ->
+           assert_equal false (valid_placement 11 2 2 []) );
+         ( "invalid mod 10 3" >:: fun _ ->
+           assert_equal false (valid_placement 10 3 1 []) );
+         ( "invalid 18 3 3" >:: fun _ ->
+           assert_equal false (valid_placement 18 3 3 []) );
+         ("valid 0" >:: fun _ -> assert_equal true (valid_placement 1 0 2 [ 2 ]));
+         ( "valid 1" >:: fun _ ->
+           assert_equal true (valid_placement 50 1 3 [ 49 ]) );
+         ( "valid 2" >:: fun _ ->
+           assert_equal true (valid_placement 24 2 3 [ 20 ]) );
+         ( "valid 3" >:: fun _ ->
+           assert_equal true (valid_placement 15 3 3 [ 12 ]) );
+       ]
+
+let test_random_coord _ =
+  let coord = random_coord () in
+  assert_bool "Coordinate should be between 1 and 100"
+    (coord >= 1 && coord <= 100)
+
+let test_add_ship_to_lst _ =
+  occupied_coords := [];
+  comp_ship_coords := [];
+  add_ship_to_lst 2 1 0 3 [];
+  assert_equal [ (2, 1); (2, 2); (2, 3) ] !comp_ship_coords;
+  assert_equal [ 1; 11; 21 ] !occupied_coords
+
+let test_get_comp_lst_size _ = assert_equal 0 (get_comp_lst_size ())
+
+let test_in_comp_shi_coords _ =
+  occupied_coords := [ 1; 11; 21 ];
+  assert_equal true (in_comp_shi_coords 1 1);
+  assert_equal false (in_comp_shi_coords 2 2)
+
+let test_generate_random_guess _ =
+  let row, col = generate_random_guess "easy" in
+  assert_bool "Row should be between 1 and 10" (row >= 1 && row <= 10);
+  assert_bool "Column should be between 1 and 10" (col >= 1 && col <= 10)
+
+let suite =
+  "Computer Test Suite"
+  >::: [
+         ("test_match_ship a" >:: fun _ -> assert_equal " a " (ship_match 2));
+         ("test_match_ship b" >:: fun _ -> assert_equal " b " (ship_match 3));
+         ("test_match_ship c" >:: fun _ -> assert_equal " c " (ship_match 31));
+         ("test_match_ship d" >:: fun _ -> assert_equal " d " (ship_match 4));
+         ("test_match_ship e" >:: fun _ -> assert_equal " e " (ship_match 5));
+         ( "test_match_ship anything else" >:: fun _ ->
+           assert_equal "  " (ship_match 0) );
+         "test_create_computer_board" >:: test_create_computer_board;
+         "test_get_comp_board_element" >:: test_get_comp_board_element;
+         "test_check_contains" >:: test_check_contains;
+         "test_random_coord" >:: test_random_coord;
+         "test_add_ship_to_lst" >:: test_add_ship_to_lst;
+         "test_get_comp_lst_size" >:: test_get_comp_lst_size;
+         "test_in_comp_shi_coords" >:: test_in_comp_shi_coords;
+         "test_generate_random_guess" >:: test_generate_random_guess;
+       ]
+
+let _ = run_test_tt_main test_set_board
 let _ = run_test_tt_main test_orientation
 let _ = run_test_tt_main test_check_ship_coord
 let _ = run_test_tt_main test_add_user_ship
-let _ = run_test_tt_main test_set_board
-let _ = run_test_tt_main test_generate_coords
 let _ = run_test_tt_main test_create_coord_array
 let _ = run_test_tt_main test_ships
 let _ = run_test_tt_main test_logic
+let _ = run_test_tt_main suite
+let _ = run_test_tt_main test_valid_placement
+let _ = run_test_tt_main test_computer_logic
+let _ = run_test_tt_main test_generate_coords
+
+(* tests generate hard guess *)
+let rows = [| 1; 2; 3; 4 |]
+let columns = [| 1; 3; 4; 2 |]
+let recommended = ref [ (2, 2); (3, 3) ]
+
+let test_easy_mode _ =
+  recommended := [];
+  let row, col = generate_random_guess "easy" in
+  assert_bool "Invalid row" (row >= 1 && row <= Array.length rows);
+  assert_bool "Invalid column" (col >= 1 && col <= Array.length columns)
+
+let test_hard_no_recommendations _ =
+  recommended := [];
+  let row, col = generate_random_guess "hard" in
+  assert_bool "Invalid row" (row >= 1 && row <= Array.length rows);
+  assert_bool "Invalid column" (col >= 1 && col <= Array.length columns)
+
+let hard_test_with_recommendations _ =
+  recommended := [ (2, 2); (3, 3) ];
+  let expected = List.hd !recommended in
+  let result = generate_random_guess "hard" in
+  assert_equal expected result ~printer:(fun (r, c) ->
+      Printf.sprintf "(%d, %d)" r c);
+  assert_bool "Recommendation not removed"
+    (not (List.mem expected !recommended))
+
+let test_medium_with_recommendations _ =
+  recommended := [ (1, 1); (4, 4) ];
+  (* Assume these are strategic spots for medium mode *)
+  let result = generate_random_guess "medium" in
+  assert_bool "Invalid selection for medium mode with recommendations"
+    (List.mem result !recommended)
+
+let test_medium_no_recommendations _ =
+  recommended := [];
+  (* No recommendations available *)
+  let row, col = generate_random_guess "medium" in
+  assert_bool "Invalid row" (row >= 1 && row <= Array.length rows);
+  assert_bool "Invalid column" (col >= 1 && col <= Array.length columns)
+
+let suite =
+  "Test Suite for generate_random_guess across modes"
+  >::: [
+         "test_easy_no_recommendations" >:: test_easy_mode;
+         "test_hard_no_recommendations" >:: test_hard_no_recommendations;
+         "test_hard_with_recommendations" >:: hard_test_with_recommendations;
+         "test_medium_with_recommendations" >:: test_medium_with_recommendations;
+         "test_medium_no_recommendations" >:: test_medium_no_recommendations;
+       ]
+
+let () = run_test_tt_main suite
+
+(*test getting first and second function*)
+
+let sample_list = [ (1, 2); (3, 4); (5, 6) ]
+
+let test_first_element_valid _ =
+  assert_equal 1 (get_first_element sample_list 0);
+  assert_equal 3 (get_first_element sample_list 1);
+  assert_equal 5 (get_first_element sample_list 2)
+
+let test_first_element_invalid _ =
+  assert_raises (Failure "nth") (fun () -> get_first_element sample_list 3)
+
+let test_second_element_valid _ =
+  assert_equal 2 (get_second_element sample_list 0);
+  assert_equal 4 (get_second_element sample_list 1);
+  assert_equal 6 (get_second_element sample_list 2)
+
+let test_second_element_invalid _ =
+  assert_raises (Failure "nth") (fun () -> get_second_element sample_list 3)
+
+let suite =
+  "Test Suite for List Elements "
+  >::: [
+         "test_first_element_valid" >:: test_first_element_valid;
+         "test_first_element_invalid" >:: test_first_element_invalid;
+         "test_second_element_valid" >:: test_second_element_valid;
+         "test_second_element_invalid" >:: test_second_element_invalid;
+       ]
+
+let () = run_test_tt_main suite
