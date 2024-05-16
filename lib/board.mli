@@ -1,3 +1,4 @@
+(* Board.mli - Interface for Board module *)
 type board = string array array
 type coord_list = (int * int) list
 
