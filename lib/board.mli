@@ -15,4 +15,5 @@ val match_ship : int -> string
 val set_board : board -> coord_list -> int -> int -> unit
 val check_orientation : (int -> int -> int) -> int -> int -> bool
 val check_ships_coord : board -> coord_list -> int -> int -> bool
+val generate_coords : (int * int) list -> int -> string -> int -> int -> (int * int) list
 val create_coord_array : string -> int -> int -> int -> int -> board -> bool
