@@ -1,3 +1,9 @@
+val user_guesses : (int * int) list ref
+(** [user_guesses]: A list of the coordinates of the user's guesses *)
+
+val computer_guesses : (int * int) list ref
+(** [computer_guesses]: A list of the coordinates of the computer's guesses *)
+
 val add_user_guess : int * int -> unit
 (** [add_user_guess row col] adds the user's recent guess to the list of
     guesses. *)
