@@ -98,47 +98,48 @@ let test_set_board =
   >::: [
          ( "check that coords are set on the board for ship type a beginning"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;215m a \x1b[0m"
+           assert_equal "\x1b[38;5;215m a \027[0m"
              (get_board_element new_board 7 7) );
          ( "check that coords are set on the board for ship type a end"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;215m a \x1b[0m"
+           assert_equal "\x1b[38;5;215m a \027[0m"
              (get_board_element new_board 7 8) );
          ( "check that coords are set on the board for ship type b beginning"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;216m b \x1b[0m"
+           assert_equal "\x1b[38;5;216m b \027[0m"
              (get_board_element new_board 3 3) );
          ( "check that coords are set on the board for ship type b end"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;216m b \x1b[0m"
+           assert_equal "\x1b[38;5;216m b \027[0m"
              (get_board_element new_board 5 3) );
          ( "check that coords are set on the board for ship type c beginning"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;217m c \x1b[0m"
+           assert_equal "\x1b[38;5;219m c \027[0m"
              (get_board_element new_board 0 0) );
          ( "check that coords are set on the board for ship type c end"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;217m c \x1b[0m"
+           assert_equal "\x1b[38;5;219m c \027[0m"
              (get_board_element new_board 0 2) );
          ( "check that coords are set on the board for ship type d beginning"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;218m d \x1b[0m"
+           assert_equal "\x1b[38;5;217m d \027[0m"
              (get_board_element new_board 0 6) );
          ( "check that coords are set on the board for ship type d end"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;218m d \x1b[0m"
+           assert_equal "\x1b[38;5;217m d \027[0m"
              (get_board_element new_board 3 6) );
          ( "check that coords are set on the board for ship type e beginning"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;219m e \x1b[0m"
+           assert_equal "\x1b[38;5;218m e \027[0m"
              (get_board_element new_board 7 1) );
          ( "check that coords are set on the board for ship type e end"
          >:: fun _ ->
-           assert_equal "\x1b[38;5;219m e \x1b[0m"
+           assert_equal "\x1b[38;5;218m e \027[0m"
              (get_board_element new_board 7 5) );
          ( "check that other oords are set on the board are empty" >:: fun _ ->
            assert_equal "   " (get_board_element new_board 5 5) );
        ]
+let _ = print_endline (get_board_element new_board 3 6)
 (*generate_coords tests*)
 
 let pair_generator = QCheck2.Gen.(pair (1 -- 10) (3 -- 8))
