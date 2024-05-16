@@ -81,8 +81,8 @@ let create_computer_board () = Array.make_matrix 10 10 "   "
 let get_comp_board_element board row col = board.(row).(col)
 let random_dir _ = Random.int 4
 
-(* [check_contains] is true if the coordinates of a potential ship are already
-   occupied otherwise false *)
+(* [check_contains] is false if the coordinates of a potential ship are already
+   occupied otherwise true *)
 let rec check_contains start_cord dir len lst =
   match dir with
   | 0 ->
@@ -160,7 +160,7 @@ let rec new_ship_coord start dir len name =
     let new_start = random_coord occupied_coords in
     new_ship_coord new_start (random_dir new_start) len name
 
-let add_coords =
+let add_coords () =
   for i = 2 to 6 do
     let new_rand = random_coord occupied_coords in
     new_ship_coord new_rand (random_dir new_rand) i i
@@ -176,7 +176,7 @@ let rec row_col_to_string lst =
       ^ " | " ^ row_col_to_string t
 
 let random_board board =
-  add_coords;
+  add_coords ();
   List.iter
     (fun (name, coord) ->
       let row = if coord = 100 then 9 else coord / 10 in
@@ -224,9 +224,12 @@ let in_comp_shi_coords row col =
 
 (* generates random guess *)
 let generate_random_guess mode =
-  if mode = "easy" then begin
-    let random_row = 1 + Random.int (Array.length rows) in
-    let random_col = 1 + Random.int (Array.length columns - 1) in
-    (random_row, random_col)
-  end
-  else checker.(Random.int 49)
+  match mode with
+  | "easy" -> begin
+      let random_row = 1 + Random.int (Array.length rows) in
+      let random_col = 1 + Random.int (Array.length columns - 1) in
+      (random_row, random_col)
+    end
+  | "medium" -> checker.(Random.int 49)
+  | "hard" -> (1, 1)
+  | _ -> (1, 1)

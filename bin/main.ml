@@ -342,6 +342,7 @@ let () =
   let computer_board = create_computer_board () in
   print_grid (random_board computer_board);
   print_endline "Your Battleship Board";
+
   let user_board = create_board (int_of_string theme) in
   print_endline "";
   (* user_board; *)
