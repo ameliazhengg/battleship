@@ -343,8 +343,11 @@ let if_user_hit computer_board row_input col_input =
   begin
     print_endline "Hit!";
     let rec_coords = get_rec_coords_user row_input col_input in
-    print_endline
-      ("Recommended next guesses: " ^ string_of_list_coords rec_coords);
+    if rec_coords = [] then
+      print_endline "There are no recommended next guesses"
+    else
+      print_endline
+        ("Recommended next guesses: " ^ string_of_list_coords rec_coords);
     let ship_rep =
       get_comp_board_element computer_board (row_input - 1) (col_input - 1)
     in

@@ -358,16 +358,68 @@ let test_computer_logic =
          ( "get_edge coordinates not on border" >:: fun _ ->
            assert_equal [ (6, 5); (6, 3); (7, 4); (5, 4) ] (get_edge_coords 6 4)
          );
-         ( "get_rec_coordinates when one coordinate is not valid" >:: fun _ ->
-           assert_equal [ (1, 3); (1, 1); (2, 2) ] (get_rec_coords_user 1 2) );
-         ( "get_rec_coordinates when no coordinates are valid" >:: fun _ ->
-           assert_raises (Failure "No recommended coordinates available")
-             (fun () -> get_rec_coords_user 10 10) );
-         ( "get_rec_coords when all coordinates are valid" >:: fun _ ->
-           assert_equal
-             [ (5, 7); (5, 5); (6, 6); (4, 6) ]
-             (get_rec_coords_user 5 6) );
        ]
+
+let test_get_rec_coords_user _ =
+  let corners = [ (1, 1); (10, 10); (1, 10); (10, 1) ] in
+  List.iter
+    (fun (row, col) ->
+      assert_equal
+        ~printer:(fun coords -> string_of_list_coords coords)
+        (get_corner_coords row col)
+        (get_rec_coords_user row col))
+    corners;
+
+  let edges = [ (1, 2); (10, 9); (2, 1); (9, 10) ] in
+  List.iter
+    (fun (row, col) ->
+      assert_equal
+        ~printer:(fun coords -> string_of_list_coords coords)
+        (get_edge_coords row col |> filter_valid_coords)
+        (get_rec_coords_user row col))
+    edges;
+
+  let inside_board = [ (5, 5); (6, 7) ] in
+  List.iter
+    (fun (row, col) ->
+      assert_equal
+        ~printer:(fun coords -> string_of_list_coords coords)
+        (get_edge_coords row col |> filter_valid_coords)
+        (get_rec_coords_user row col))
+    inside_board
+
+let suite =
+  "Test for get recomended coordinates"
+  >::: [ "test_get_rec_coords_user" >:: test_get_rec_coords_user ]
+
+let () = run_test_tt_main suite
+
+let test_remove_recommended_empty _ =
+  rec_guesses := [];
+  remove_recommended ();
+  assert_equal [] !rec_guesses
+
+let test_remove_recommended_one_item _ =
+  rec_guesses := [];
+  rec_guesses := [ (1, 2) ];
+  remove_recommended ();
+  assert_equal [] !rec_guesses
+
+let test_remove_recommended_multiple_items _ =
+  rec_guesses := [];
+  rec_guesses := [ (1, 2); (3, 4); (5, 6) ];
+  remove_recommended ();
+  assert_equal [ (3, 4); (5, 6) ] !rec_guesses
+
+let suite =
+  "Test Suite for remove_recommended"
+  >::: [
+         "remove from empty" >:: test_remove_recommended_empty;
+         "remove one item" >:: test_remove_recommended_one_item;
+         "remove from multiple items" >:: test_remove_recommended_multiple_items;
+       ]
+
+let () = run_test_tt_main suite
 
 let _ =
   let rec print lst =

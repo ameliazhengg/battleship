@@ -80,17 +80,11 @@ let get_corner_coords row col =
   | _ -> []
 
 let get_rec_coords_user row col =
-  let potential_coords =
-    if is_on_board_edge row col then
-      let corners = [ (1, 1); (10, 10); (1, 10); (10, 1) ] in
-      if List.mem (row, col) corners then get_corner_coords row col
-      else get_edge_coords row col |> filter_valid_coords
+  if is_on_board_edge row col then
+    let corners = [ (1, 1); (10, 10); (1, 10); (10, 1) ] in
+    if List.mem (row, col) corners then get_corner_coords row col
     else get_edge_coords row col |> filter_valid_coords
-  in
-  if List.length potential_coords = 0 then
-    (* Handle the case where there are no valid moves *)
-    failwith "No recommended coordinates available"
-  else potential_coords
+  else get_edge_coords row col |> filter_valid_coords
 
 let rec_guesses : (int * int) list ref = ref []
 let get_rec_1 () = List.hd !rec_guesses
