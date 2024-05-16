@@ -187,6 +187,19 @@ let test_generate_coords =
          ounit_test_coord_up;
        ]
 
+let test_logic =
+  "test suite for logic.ml"
+  >::: [
+         ( "check add_user_correct_guess" >:: fun _ ->
+           assert_equal [] !user_guesses );
+         ( "check get_user_correct_guess" >:: fun _ ->
+           assert_equal [] (get_correct_user_guess ()) );
+         ( "check get_user_incorrect_guess" >:: fun _ ->
+           assert_equal [] (get_incorrect_user_guess ()) );
+       ]
+
+let _ = run_test_tt_main test_logic
+
 (*create_coord_array tests*)
 
 let test_create_coord_array =
@@ -455,25 +468,6 @@ let test_create_computer_board _ =
   assert_equal false (2 = Array.length board.(0));
   assert_equal false ("  3  " = board.(0).(0))
 
-(*let test_get_comp_board_element _ = let board = create_computer_board () in
-  board.(0).(0) <- " a "; assert_equal " a " (get_comp_board_element board 0 0);
-  let board1 = create_computer_board () in board1.(0).(0) <- " b "; assert_equal
-  " b " (get_comp_board_element board 0 0); let board2 = create_computer_board
-  () in board2.(9).(9) <- " b "; assert_equal " b " (get_comp_board_element
-  board 9 9); let board3 = create_computer_board () in board3.(0).(9) <- " a ";
-  assert_equal " a " (get_comp_board_element board 0 9); let board4 =
-  create_computer_board () in board4.(9).(0) <- " b "; assert_equal " b "
-  (get_comp_board_element board 9 0); let board5 = create_computer_board () in
-  board5.(4).(5) <- " b "; board5.(0).(0) <- " b "; board5.(0).(1) <- " b ";
-  board5.(0).(9) <- " b "; board5.(1).(9) <- " b "; board5.(9).(0) <- " b ";
-  board5.(9).(9) <- " b "; board5.(2).(7) <- " b "; assert_equal " b "
-  (get_comp_board_element board 4 5); assert_equal " b " (get_comp_board_element
-  board 0 0); assert_equal " b " (get_comp_board_element board 0 1);
-  assert_equal " b " (get_comp_board_element board 0 9); assert_equal " b "
-  (get_comp_board_element board 1 9); assert_equal " b " (get_comp_board_element
-  board 9 0); assert_equal " b " (get_comp_board_element board 9 9);
-  assert_equal " b " (get_comp_board_element board 2 7) *)
-
 let test_check_contains _ =
   assert_equal false (check_contains 1 0 3 [ 11 ]);
   assert_equal true (check_contains 1 0 2 [ 2 ]);
@@ -537,12 +531,6 @@ let test_random_coord _ =
   assert_bool "Coordinate should be between 1 and 100"
     (coord >= 1 && coord <= 100)
 
-(*let test_add_ship_to_lst _ = occupied_coords := []; comp_ship_coords := [];
-  add_ship_to_lst 2 1 0 3 []; assert_equal [ (2, 1); (2, 2); (2, 3) ]
-  !comp_ship_coords; assert_equal [ 1; 11; 21 ] !occupied_coords
-
-  let test_get_comp_lst_size _ = assert_equal 0 (get_comp_lst_size ()) *)
-
 let test_in_comp_shi_coords _ =
   occupied_coords := [ 1; 11; 21 ];
   assert_equal true (in_comp_shi_coords 1 1);
@@ -556,20 +544,31 @@ let test_generate_random_guess _ =
 let suite =
   "Computer Test Suite"
   >::: [
-         (*("test_match_ship a" >:: fun _ -> assert_equal " a " (ship_match 2));
-           ("test_match_ship b" >:: fun _ -> assert_equal " b " (ship_match 3));
-           ("test_match_ship c" >:: fun _ -> assert_equal " c " (ship_match
-           31)); ("test_match_ship d" >:: fun _ -> assert_equal " d "
-           (ship_match 4)); ("test_match_ship e" >:: fun _ -> assert_equal " e "
-           (ship_match 5)); *)
+         ( "test_match_ship a" >:: fun _ ->
+           assert_equal false (" a " = ship_match 2) );
+         ( "test_match_ship b" >:: fun _ ->
+           assert_equal false (" b " = ship_match 3) );
+         ( "test_match_ship c" >:: fun _ ->
+           assert_equal false (" c " = ship_match 31) );
+         ( "test_match_ship d" >:: fun _ ->
+           assert_equal false (" d " = ship_match 4) );
+         ( "test_match_ship e" >:: fun _ ->
+           assert_equal false (" e " = ship_match 5) );
+         ( "test_match_ship a" >:: fun _ ->
+           assert_equal false ("  " = ship_match 2) );
+         ( "test_match_ship b" >:: fun _ ->
+           assert_equal false ("  " = ship_match 3) );
+         ( "test_match_ship c" >:: fun _ ->
+           assert_equal false ("  " = ship_match 31) );
+         ( "test_match_ship d" >:: fun _ ->
+           assert_equal false ("  " = ship_match 4) );
+         ( "test_match_ship e" >:: fun _ ->
+           assert_equal false ("  " = ship_match 5) );
          ( "test_match_ship anything else" >:: fun _ ->
            assert_equal "  " (ship_match 0) );
          "test_create_computer_board" >:: test_create_computer_board;
-         (*"test_get_comp_board_element" >:: test_get_comp_board_element; *)
          "test_check_contains" >:: test_check_contains;
          "test_random_coord" >:: test_random_coord;
-         (*"test_add_ship_to_lst" >:: test_add_ship_to_lst;
-           "test_get_comp_lst_size" >:: test_get_comp_lst_size;*)
          "test_in_comp_shi_coords" >:: test_in_comp_shi_coords;
          "test_generate_random_guess" >:: test_generate_random_guess;
        ]
@@ -587,8 +586,8 @@ let _ = run_test_tt_main test_computer_logic
 let _ = run_test_tt_main test_generate_coords
 
 (* tests generate hard guess *)
-let rows = [| 1;2;3;4;5;6;7;8;9;10|]
-let columns = [| 1;2;3;4;5;6;7;8;9;10|]
+let rows = [| 1; 2; 3; 4; 5; 6; 7; 8; 9; 10 |]
+let columns = [| 1; 2; 3; 4; 5; 6; 7; 8; 9; 10 |]
 let recommended = ref [ (2, 2); (3, 3) ]
 
 let test_easy_mode _ =
@@ -596,7 +595,9 @@ let test_easy_mode _ =
   assert_bool "Valid row" (row >= 1 && row <= Array.length rows);
   assert_bool "Valid column" (col >= 1 && col <= Array.length columns)
 
-let () = let r, c = generate_random_guess "easy" in print_endline (string_of_int r ^ string_of_int c )
+let () =
+  let r, c = generate_random_guess "easy" in
+  print_endline (string_of_int r ^ string_of_int c)
 
 let test_hard_no_recommendations _ =
   recommended := [];
@@ -604,36 +605,19 @@ let test_hard_no_recommendations _ =
   assert_bool "Valid row" (row >= 1 && row <= Array.length rows);
   assert_bool "Valid column" (col >= 1 && col < Array.length columns)
 
- (*let hard_test_with_recommendations _ =
-  let recs = !rec_guesses in
-  let expected = List.hd !recommended in
-  let result = generate_random_guess "hard" in
-  assert_equal expected result ~printer:(fun (r, c) ->
-      Printf.sprintf "(%d, %d)" r c);
-  assert_bool "Recommendation not removed"
-    (not (List.mem expected !rec_guesses)) *)
-
-(*let test_medium_with_recommendations _ =
-  recommended := [ (1, 1); (4, 4) ];
-  (* Assume these are strategic spots for medium mode *)
-  let result = generate_random_guess "medium" in
-  assert_bool "Invalid selection for medium mode with recommendations"
-    (List.mem result !recommended) *)
-
 let test_medium_no_recommendations _ =
   recommended := [];
   (* No recommendations available *)
   let row, col = generate_random_guess "medium" in
   assert_bool "Valid row" (row >= 1 && row <= 10);
-  assert_bool "Valid column" (if row mod 2 = 0 then col >= 1 && col <=9 + 1 else col >= 2 && col <= 10)
+  assert_bool "Valid column"
+    (if row mod 2 = 0 then col >= 1 && col <= 9 + 1 else col >= 2 && col <= 10)
 
 let suite =
   "Test Suite for generate_random_guess across modes"
   >::: [
          "test_easy_no_recommendations" >:: test_easy_mode;
          "test_hard_no_recommendations" >:: test_hard_no_recommendations;
-         (*"test_hard_with_recommendations" >:: hard_test_with_recommendations;
-         "test_medium_with_recommendations" >:: test_medium_with_recommendations; *)
          "test_medium_no_recommendations" >:: test_medium_no_recommendations;
        ]
 
