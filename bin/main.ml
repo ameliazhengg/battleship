@@ -8,6 +8,7 @@ let reset_color = "\027[0m"
 let move_color = "\x1b[38;5;196m"
 let user_theme = ref 0
 
+(*[themes_list] is the set of all themes *)
 let themes_list =
   [
     [
@@ -60,8 +61,10 @@ let themes_list =
     (* Fantasy Vibe *)
   ]
 
+(* [get_theme] prompts user for theme *)
 let get_theme = List.nth themes_list !user_theme
 
+(* [get_color] returns color based on letter *)
 let get_color elt =
   match elt with
   | " a " -> List.nth get_theme 0
@@ -71,6 +74,7 @@ let get_color elt =
   | " e " -> List.nth get_theme 4
   | _ -> ""
 
+(*[print_battle] prints battle in ascii art *)
 let print_battle () =
   let banner =
     [
@@ -84,6 +88,7 @@ let print_battle () =
   in
   List.iter print_endline banner
 
+(*[print_of] prints of in ascii art *)
 let print_of () =
   let banner =
     [
@@ -98,6 +103,7 @@ let print_of () =
   in
   List.iter print_endline banner
 
+(* [print_ships] prints ships in ascii *)
 let print_ships () =
   let banner =
     [
@@ -112,6 +118,7 @@ let print_ships () =
   in
   List.iter print_endline banner
 
+(*[pick_theme] propmts user to pick them *)
 let rec pick_theme () =
   print_newline ();
   print_endline "List of themes : ";
@@ -135,6 +142,7 @@ let rec pick_theme () =
     print_endline "Invalid input. Try again!\n";
     pick_theme ()
 
+(*[instructions] is the instructions on how to play the game *)
 let instructions () =
   print_endline
     "You have five ships consisting of lengths 2,3,3,4 and 5. These will be \
@@ -180,6 +188,7 @@ let instructions () =
      to take the hard way out, then you select N when prompted whether to \
      enter cheat mode or not. This will conceal all of the computer's ships. "
 
+(*[welcome] is the welcome message *)
 let welcome () =
   print_newline ();
   print_string "Please enter your name: ";
@@ -227,6 +236,7 @@ let print_grid board =
     print_row board i
   done
 
+(* gets the row coordinate that user gueses *)
 let rec get_guess_row_coord () =
   print_string "Enter the row number for your guess (1-10): ";
   let row_input = read_line () in
@@ -260,6 +270,7 @@ let rec get_col_coord length_ship =
     get_col_coord length_ship
   end
 
+(* guess column coord that user guesses *)
 let rec get_guess_col_coord () =
   print_string "Enter the column letter for your guess (A-J): ";
   let col_input = String.uppercase_ascii (read_line ()) in
@@ -326,6 +337,7 @@ let rec get_coords name_ship board =
       print_endline "Cannot add coordinates due to overlap";
       get_coords name_ship board
 
+(* actions called if user misses *)
 let if_user_missed computer_board row_input col_input conceal =
   begin
     print_endline "You missed";
@@ -339,6 +351,7 @@ let if_user_missed computer_board row_input col_input conceal =
     else print_grid (populate_concealed_board (create_concealed_board ()))
   end
 
+(* actions called if user hits *)
 let if_user_hit computer_board row_input col_input =
   begin
     print_endline "Hit!";
@@ -358,6 +371,8 @@ let if_user_hit computer_board row_input col_input =
     ship
   end
 
+(* users turn. allows user to choose a column and row and tells user if their
+   guess is correct *)
 let rec user_turn computer_board user_board mode conceal =
   let computer_ships = get_comp_ships () in
   print_endline "Your turn!";
@@ -378,7 +393,6 @@ let rec user_turn computer_board user_board mode conceal =
     else begin
       let ship = if_user_hit computer_board row_input col_input in
       print_newline ();
-      print_endline "Computer Board";
       (* Update the hits on the ship *)
       if is_sunk ship then begin
         print_endline
@@ -399,6 +413,7 @@ let rec user_turn computer_board user_board mode conceal =
     end
   end
 
+(* prompts computer to guess randomly based on selected difficulty *)
 and computer_turn user_board computer_board mode conceal =
   let user_ships = get_user_ships () in
   print_endline "Now the computer will take a guess!";
@@ -466,6 +481,7 @@ let pick_mode () =
   in
   get_valid_mode ()
 
+(* propmts user to indicate whether or not they want to cheat *)
 let pick_conceal () =
   print_string "Do you want to cheat? (Y/N): ";
   let rec get_valid_conceal () =
@@ -502,7 +518,6 @@ let () =
   get_coords 5 user_board;
   print_newline ();
   print_endline "Your Battleship Board";
-
   print_grid (user_board_array user_board);
   print_newline ();
   user_turn computer_board user_board mode conceal
