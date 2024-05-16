@@ -5,7 +5,6 @@ open OUnit2
 open Final_proj_3110.Ships
 open Final_proj_3110.Board
 
-
 (*Board tests*)
 
 (*check orientation tests*)
@@ -25,7 +24,7 @@ let test_orientation_up row =
   check_orientation ( - ) row 2 && check_orientation ( - ) 1 2 = false
 
 let test_left =
-  QCheck2.Test.make ~count:100 ~name:"randomly generated let orientations"
+  QCheck2.Test.make ~count:100 ~name:"randomly generated left orientations"
     generator2 test_orientation_left
 
 let test_right =
@@ -60,9 +59,7 @@ let test_orientation =
   new_random_board; new_random_board; new_random_board; new_random_board;
   new_random_board; new_random_board; new_random_board; new_random_board;
   new_random_board; new_random_board; new_random_board; new_random_board;
-  new_random_board; new_random_board; ]
-
-*)
+  new_random_board; new_random_board; ] *)
 
 (*check ships coords and add_coords tests*)
 
@@ -86,7 +83,9 @@ let test_check_ship_coord =
 (*add_user_ship tests*)
 let a_ship =
   { name = 2; length = 2; coordinates = [ (8, 8); (8, 9) ]; hits = 0 }
-let b_ship = { name = 3; length = 3; coordinates = [ (4, 4); (5, 4); (6, 4) ]; hits = 0 }
+
+let b_ship =
+  { name = 3; length = 3; coordinates = [ (4, 4); (5, 4); (6, 4) ]; hits = 0 }
 
 let test_add_user_ship =
   "test add_user_ship"
@@ -94,7 +93,7 @@ let test_add_user_ship =
          ( "a ship is in the list" >:: fun _ ->
            assert_equal true (List.mem a_ship !user_ships) );
          ( "a ship is not in the list" >:: fun _ ->
-            assert_equal false (List.mem b_ship !user_ships) );
+           assert_equal false (List.mem b_ship !user_ships) );
        ]
 
 (*set board and match ship tests*)
@@ -135,12 +134,74 @@ let test_set_board =
            assert_equal "   " (get_board_element new_board 5 5) );
        ]
 
+(*generate_coords tests*)
+
+let pair_generator = QCheck2.Gen.(pair (1 -- 10) (3 -- 8))
+let pair_generator2 = QCheck2.Gen.(pair (3 -- 8) (1 -- 10))
+
+let test_coord_left (r, c) =
+  [ (r, c); (r, c - 1); (r, c - 2) ] = generate_coords [] 3 "left" r c
+
+let test_coord_right (r, c) =
+  [ (r, c); (r, c + 1); (r, c + 2) ] = generate_coords [] 3 "right" r c
+
+let test_coord_down (r, c) =
+  [ (r, c); (r + 1, c); (r + 2, c) ] = generate_coords [] 3 "down" r c
+
+let test_coord_up (r, c) =
+  [ (r, c); (r - 1, c); (r - 2, c) ] = generate_coords [] 3 "up" r c
+
+let test_generate_left =
+  QCheck2.Test.make ~count:20 ~name:"randomly generated left coordinates"
+    pair_generator test_coord_left
+
+let test_generate_right =
+  QCheck2.Test.make ~count:20 ~name:"randomly generated right coordinates"
+    pair_generator test_coord_right
+
+let test_generate_down =
+  QCheck2.Test.make ~count:20 ~name:"randomly generated down coordinates"
+    pair_generator2 test_coord_down
+
+let test_generate_up =
+  QCheck2.Test.make ~count:20 ~name:"randomly generated up coordinates"
+    pair_generator2 test_coord_up
+
+let ounit_test_coord_left = QCheck_runner.to_ounit2_test test_generate_left
+let ounit_test_coord_right = QCheck_runner.to_ounit2_test test_generate_right
+let ounit_test_coord_down = QCheck_runner.to_ounit2_test test_generate_down
+let ounit_test_coord_up = QCheck_runner.to_ounit2_test test_generate_up
+
+let test_generate_coords =
+  "test suite for orientation"
+  >::: [
+         ounit_test_coord_left;
+         ounit_test_coord_right;
+         ounit_test_coord_down;
+         ounit_test_coord_up;
+       ]
+
 (*create_coord_array tests*)
 
+let test_create_coord_array =
+  "tests create_coord_array"
+  >::: [
+         ( "check valid ship" >:: fun _ ->
+           assert_equal true (create_coord_array "right" 6 7 3 3 new_board) );
+         ( "check invalid ship" >:: fun _ ->
+           assert_equal false (create_coord_array "down" 7 8 3 3 new_board) );
+       ] 
 
+(*let () = let rec print = function
+       | [] -> ()
+       | (a,b) :: tl ->
+           print_endline (string_of_int a ^ string_of_int b);
+           print tl
+   in print !user_ship_coords *)
 
 let _ = run_test_tt_main test_orientation
 let _ = run_test_tt_main test_check_ship_coord
 let _ = run_test_tt_main test_add_user_ship
 let _ = run_test_tt_main test_set_board
-
+let _ = run_test_tt_main test_generate_coords
+let _ = run_test_tt_main test_create_coord_array 
