@@ -1,37 +1,42 @@
 type board = string array array
+(** [board] represents the type of a board*)
 
 val themes_list : string list list
 (** [themese_list] is the list of all themes *)
 
 val create_computer_board : unit -> board
-(* Initializes a new game board for the computer *)
+(** [create_computer_board] Initializes a new game board for the computer *)
 
 val get_comp_board_element : board -> int -> int -> string
-(* Gets the element at the specified row and column of the board *)
+(** [get_comp_board_element] Gets the element at the specified row and column of
+    the board *)
 
 val random_board : board -> board
-(* Generates a random board with ships placed *)
+(** [random_board] Generates a random board with ships placed *)
 
 val get_comp_lst_size : unit -> int
-(* Returns the size of the computer's ship list *)
+(** [get_comp_lst_size] Returns the size of the computer's ship list *)
 
 val string_comp_ships : string
-(* Returns a string representation of the computer's ships *)
+(** [string_comp_ships] Returns a string representation of the computer's ships *)
 
 val string_occ_coord : string
-(* Returns a string representation of the occupied coordinates *)
+(** [string_occ_coord] Returns a string representation of the occupied
+    coordinates *)
 
 val string_row_col : string
-(* Returns a string representation of the ship coordinates as row and column *)
+(** [string_row_col] Returns a string representation of the ship coordinates as
+    row and column *)
 
 val get_occupied_coords : unit -> (int * int) list
-(* Generates a list of occupied coordinates from a list of integers *)
+(** [get_occupied_coords ] Generates a list of occupied coordinates from a list
+    of integers *)
 
 val in_comp_shi_coords : int -> int -> bool
-(* Checks if a guessed coordinate is occupied by a ship *)
+(** [in_comp_shi_coords] Checks if a guessed coordinate is occupied by a ship *)
 
 val generate_random_guess : string -> int * int
-(* Generates a random guess for a row and column *)
+(** [generate_random_guess] Generates a random guess for a row and column *)
 
 val check_contains : int -> int -> int -> int list -> bool
 (** [check_contains] is true if the coordinates of a potential ship are already
@@ -46,7 +51,11 @@ val random_coord : 'a -> int
     the coordinate in a 10x10 grid *)
 
 val comp_ship_coords : (int * int) list ref
+(** [comp_ship_coords] represnets a list of coordinates from the computer*)
+
 val occupied_coords : int list ref
+(** [occupied_coords] represents a list of coordinates representing the occupied
+    spots on the board *)
 
 val add_ship_to_lst : int -> int -> int -> int -> (int * int) list -> unit
 (** [add_ship_to_lst] takes a new ship and adds it to [occupied_coords] and
@@ -63,7 +72,7 @@ val ship_match : int -> string
 (** [ship_match] pattern matches ship name to ship color printed on board *)
 
 val create_concealed_board : unit -> string array array
-(** [create_concealed_board] is a an empty matrix *)
+(** [create_concealed_board] creates a concealed board *)
 
 val populate_concealed_board : board -> board
 (** [populate_concealed_board] only shows the coordinates that the user already

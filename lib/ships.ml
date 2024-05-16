@@ -15,15 +15,12 @@ let add_computer_ship name length coordinates =
 let add_user_ship name length coordinates =
   user_ships := { name; length; coordinates; hits = 0 } :: !user_ships
 
-(* check if ship is sunk *)
 let is_sunk ship = ship.hits >= ship.length - 1
 
-(* check if all ships are hit and thus game ends*)
 let check_all_hit ships =
   if List.fold_left (fun acc x -> acc + x.hits) 0 !ships >= 16 then true
   else false
 
-(* Update the hit count of a ship and return updated list of ships *)
 let update_ship_hit ships name =
   let updated =
     List.map
@@ -71,8 +68,6 @@ let ship_to_string ship =
   "name: " ^ string_of_int ship.name ^ " | " ^ "length: "
   ^ string_of_int ship.length ^ " | " ^ "hits: " ^ string_of_int ship.hits
   ^ " | "
-
-(* find the ship that was hit and increase the hit count by 1*)
 
 let get_ship_update ship_rep ships =
   let ship_name = find_ship_name ship_rep in

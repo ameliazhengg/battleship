@@ -120,7 +120,6 @@ let comp_ship_coords = ref []
 let occupied_coords = ref []
 let theme = List.nth themes_list (Random.int 5)
 
-(* icon representing the different ships on our board*)
 let ship_match n =
   match n with
   | 2 -> List.nth theme 0 ^ " a " ^ "\x1b[0m"
@@ -130,13 +129,10 @@ let ship_match n =
   | 5 -> List.nth theme 4 ^ " e " ^ "\x1b[0m"
   | _ -> "  "
 
-(*let computer_ship_coords = ref []*)
 let create_computer_board () = Array.make_matrix 10 10 "   "
 let get_comp_board_element board row col = board.(row).(col)
 let random_dir _ = Random.int 4
 
-(* [check_contains] is false if the coordinates of a potential ship are already
-   occupied otherwise true *)
 let rec check_contains start_cord dir len lst =
   match dir with
   | 0 ->
@@ -161,8 +157,6 @@ let rec check_contains start_cord dir len lst =
         && check_contains (start_cord + 1) dir (len - 1) lst
   | _ -> true
 
-(* [valid_placement] is true if a ship with [start_coord] [dir] and [len] can be
-   placed there otherwise false *)
 let valid_placement start_cord dir len lst =
   match dir with
   | 0 ->
@@ -183,20 +177,15 @@ let valid_placement start_cord dir len lst =
       else check_contains start_cord dir len lst
   | _ -> false
 
-(* [random_coord] is a random number between 1 and 100 inclusive representing
-   the coordinate in a 10x10 grid *)
 let random_coord _ =
   let coord = 1 + Random.int 100 in
   coord
 
-(* [add_ship_to_lst] takes a new ship and adds it to [occupied_coords] and
-   [comp_ship_coords] and creates a new [ship] *)
 let rec add_ship_to_lst name start dir len lst =
   if len = 0 then add_computer_ship name (List.length lst) lst
   else begin
     occupied_coords := !occupied_coords @ [ start ];
     comp_ship_coords := !comp_ship_coords @ [ (name, start) ];
-    (* if List.mem start !occupied_coords then () else *)
     let lst = lst @ [ (start / 10, start mod 10) ] in
     match dir with
     | 0 -> add_ship_to_lst name (start + 10) 0 (len - 1) lst
@@ -240,7 +229,6 @@ let random_board board =
     !comp_ship_coords;
   board
 
-(* let random_board board = board *)
 let get_comp_lst_size () = List.length !comp_ship_coords
 
 let rec com_lst_to_string lst =
@@ -272,13 +260,9 @@ let rec make_occupied_coords coord_lst lst =
 
 let get_occupied_coords _ = make_occupied_coords [] !occupied_coords
 
-(* checks if the guessed (row, col) is occupied by a ship from the computer*)
 let in_comp_shi_coords row col =
   if List.mem (((row - 1) * 10) + col) !occupied_coords then true else false
 
-(* generates random guess *)
-
-(* get the guesses if its in hard mode*)
 let get_hard_guesses () =
   if size_of_recommended () = 0 then begin
     let random_row = 1 + Random.int (Array.length rows) in
@@ -291,7 +275,6 @@ let get_hard_guesses () =
     guess
   end
 
-(* generates random guess *)
 let generate_random_guess mode =
   match mode with
   | "easy" -> begin

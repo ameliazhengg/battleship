@@ -1,5 +1,3 @@
-(** Types and Functions for Battleship Game Management *)
-
 type ship = {
   name : int;
   length : int;
