@@ -63,7 +63,7 @@ let test_orientation =
 
 (*check ships coords and add_coords tests*)
 
-let new_board = create_board ()
+let new_board = create_board 1
 let lst_exist = [ (1, 2); (8, 8) ] (*list for checking existing coords*)
 let lst_nexist = [ (4, 4); (7, 7) ] (*list for checking not existing coords*)
 let lst_a = [ (8, 8); (8, 9) ] (*list of existing coords*)
@@ -190,18 +190,14 @@ let test_create_coord_array =
            assert_equal true (create_coord_array "right" 6 7 3 3 new_board) );
          ( "check invalid ship" >:: fun _ ->
            assert_equal false (create_coord_array "down" 7 8 3 3 new_board) );
-       ] 
+       ]
 
-(*let () = let rec print = function
-       | [] -> ()
-       | (a,b) :: tl ->
-           print_endline (string_of_int a ^ string_of_int b);
-           print tl
-   in print !user_ship_coords *)
+(*let () = let rec print = function | [] -> () | (a,b) :: tl -> print_endline
+  (string_of_int a ^ string_of_int b); print tl in print !user_ship_coords *)
 
 let _ = run_test_tt_main test_orientation
 let _ = run_test_tt_main test_check_ship_coord
 let _ = run_test_tt_main test_add_user_ship
 let _ = run_test_tt_main test_set_board
 let _ = run_test_tt_main test_generate_coords
-let _ = run_test_tt_main test_create_coord_array 
+let _ = run_test_tt_main test_create_coord_array

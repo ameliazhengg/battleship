@@ -3,6 +3,65 @@ open Final_proj_3110.Logic
 open Final_proj_3110.Computer
 open Final_proj_3110.Ships
 
+(* ADDING COLORS *)
+let reset_color = "\027[0m"
+let hit_color = "\x1b[38;5;196m"
+
+let print_battle () =
+  let banner =
+    [
+      ".______        ___   .___________.___________. __       _______ ";
+      "|   _  \\      /   \\  |           |           ||  |     |   ____|";
+      "|  |_)  |    /  ^  \\ `---|  |----`---|  |----`|  |     |  |__   ";
+      "|   _  <    /  /_\\  \\    |  |        |  |     |  |     |   __|  ";
+      "|  |_)  |  /  _____  \\   |  |        |  |     |  `----.|  |____ ";
+      "|______/  /__/     \\__\\  |__|        |__|     |_______||_______|";
+    ]
+  in
+  List.iter print_endline banner
+
+let print_of () =
+  let banner =
+    [
+      "  ______    _______ ";
+      " /  __  \\  |   ____|";
+      "|  |  |  | |  |__   ";
+      "|  |  |  | |   __|  ";
+      "|  `--'  | |  |     ";
+      " \\______/  |__|     ";
+      "                    ";
+    ]
+  in
+  List.iter print_endline banner
+
+let print_ships () =
+  let banner =
+    [
+      "     _______. __    __   __  .______     _______.";
+      "    /       ||  |  |  | |  | |   _  \\   /       |";
+      "   |   (----`|  |__|  | |  | |  |_)  | |   (----`";
+      "    \\   \\    |   __   | |  | |   ___/   \\   \\    ";
+      ".----)   |   |  |  |  | |  | |  |   .----)   |   ";
+      "|_______/    |__|  |__| |__| | _|   |_______/    ";
+      "                                                 ";
+    ]
+  in
+  List.iter print_endline banner
+
+let pick_theme () =
+  print_newline ();
+  print_endline "List of themes : ";
+  print_endline "Theme 1 : Peach Vibe";
+  print_endline "Theme 2 : Tropical Vibe";
+  print_endline "Theme 3 : Arctic Vibe";
+  print_endline "Theme 4 : Oasis Vibe";
+  print_endline "Theme 5 : Cosmic Vibe";
+  print_endline "Theme 6 : Fantasy Vibe";
+  print_string "Enter a theme number : ";
+  let user_theme = read_line () in
+  print_endline ("You picked " ^ user_theme ^ "!\n");
+  user_theme
+
 let instructions () =
   print_endline "How to play battleship:";
   print_endline
@@ -171,7 +230,8 @@ let rec user_turn computer_board user_board =
     else begin
       print_endline "Hit!";
       print_endline (string_of_int (get_comp_hits ()));
-      mark_on_board computer_board (row_input, col_input) " X ";
+      mark_on_board computer_board (row_input, col_input)
+        (hit_color ^ " X " ^ reset_color);
       let ship_rep =
         get_comp_board_element computer_board (row_input - 1) (col_input - 1)
       in
@@ -244,7 +304,11 @@ and computer_turn user_board computer_board =
 
 (** Starts game and asks for name *)
 let () =
+  print_battle ();
+  print_of ();
+  print_ships ();
   welcome ();
+  let theme = pick_theme () in
 
   print_endline "Computer Board";
   print_endline string_comp_ships;
@@ -253,7 +317,7 @@ let () =
   let computer_board = create_computer_board () in
   print_grid (random_board computer_board);
   print_endline "Your Battleship Board";
-  let user_board = create_board () in
+  let user_board = create_board (int_of_string theme) in
   print_endline "";
   (* user_board; *)
   print_endline "Now please choose the coordinates of your ships ";
