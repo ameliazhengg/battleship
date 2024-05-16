@@ -20,6 +20,11 @@ let add_user_ship name length (coordinates : coord_list) =
 (* check if ship is sunk *)
 let is_sunk ship = ship.hits >= ship.length - 1
 
+(* check if all ships are hit and thus game ends*)
+let check_all_hit ships =
+  if List.fold_left (fun acc x -> acc + x.hits) 0 !ships >= 17 then true
+  else false
+
 (* Update the hit count of a ship and return updated list of ships *)
 let update_ship_hit ships name =
   let updated =
@@ -42,9 +47,6 @@ let find_ship_in_list ships name =
   List.find (fun ship -> ship.name = name) ships
 
 let get_comp_ships () = computer_ships
-
-let get_comp_hits () =
-  List.fold_left (fun acc x -> acc + x.hits) 0 !computer_ships
 
 let ship_to_string ship =
   "name: " ^ string_of_int ship.name ^ " | " ^ "length: "

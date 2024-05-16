@@ -170,5 +170,12 @@ let rec make_occupied_coords coord_lst lst =
 
 let get_occupied_coords _ = make_occupied_coords [] !occupied_coords
 
-let check_in_comp_shi_coords row col =
+(* checks if the guessed (row, col) is occupied by a ship from the computer*)
+let in_comp_shi_coords row col =
   if List.mem (((row - 1) * 10) + col) !occupied_coords then true else false
+
+(* generates random guess *)
+let generate_random_guess () =
+  let random_row = Random.int (Array.length rows) in
+  let random_col = Random.int (Array.length columns - 1) in
+  (random_row, random_col)
