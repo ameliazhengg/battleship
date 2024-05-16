@@ -26,6 +26,40 @@ val mark_on_board : string array array -> int * int -> string -> unit
 (** [mark_on_board board (row, col) symbol] marks the board at the specified
     position with the given symbol. *)
 
+val string_of_coord : int * char -> string
+(** [string_of_coord] Converts a coordinate pair from (int, int) to a formatted
+    string "row,column" where column is a char. *)
+
+val convert_coords_to_game_format : (int * int) list -> (int * char) list
+(** [convert_coords_game_format] Converts the integer representation of column
+    to character representation *)
+
+val string_of_list_coords : (int * int) list -> string
+(** [string_of_list_coords] Converts a list of coordinates from (int, int)
+    format to (int, char) format and returns the formatted string of these
+    coordinates. *)
+
+val is_on_board_edge : int -> int -> bool
+(** [is_on_board_edge] Checks if a given row and column coordinate is on the
+    edge of a 10x10 game board. *)
+
+val filter_valid_coords : (int * int) list -> (int * int) list
+(** [filter_valid_coords]Filters a list of coordinates, removing those that have
+    been guessed by the computer. Assumes a function valid_guess_computer is
+    defined elsewhere. *)
+
+val get_edge_coords : int -> int -> (int * int) list
+(** [get_edge_coords] Gets the surrounding edge coordinates for a given
+    coordinate on the board, excluding out-of-bounds coordinates. *)
+
+val get_corner_coords : int -> int -> (int * int) list
+(** [get_corner_coords]Determines the specific corner-related coordinates based
+    on the board position. Handles special cases for corners of a 10x10 grid. *)
+
+val get_rec_coords : int -> int -> (int * int) list
+(** [get_rec_coords]Computes recommended coordinates for a given position on a
+    10x10 grid considering whether the position is on the edge or a corner. *)
+
 val is_valid_row_input : string -> bool
 (** [is_valid_row_input input] checks if the input is a valid row number between
     1 and 10. Returns [true] if valid; [false] otherwise. *)

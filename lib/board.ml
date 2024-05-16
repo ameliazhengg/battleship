@@ -3,6 +3,7 @@ open Ships
 type board = string array array
 type coord_list = (int * int) list
 
+let theme = ref 0
 let column_labels = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 
 let row_labels =
@@ -14,7 +15,62 @@ let in_user_ship_coords guess =
   if List.mem guess !user_ship_coords then true else false
 
 (* create the board size *)
-let create_board _ = Array.make_matrix 10 10 "   "
+let create_board t =
+  theme := t - 1;
+  Array.make_matrix 10 10 "   "
+
+let themes_list =
+  [
+    [
+      "\x1b[38;5;215m";
+      "\x1b[38;5;216m";
+      "\x1b[38;5;217m";
+      "\x1b[38;5218m";
+      "\x1b[38;5;219m";
+    ];
+    (* Peach Vibe*)
+    [
+      "\x1b[38;5;118m";
+      "\x1b[38;5;154m";
+      "\x1b[38;5;226m";
+      "\x1b[38;5;228m";
+      "\x1b[38;5;230m";
+    ];
+    (* Tropical Vibe *)
+    [
+      "\x1b[38;5;27m";
+      "\x1b[38;5;33m";
+      "\x1b[38;5;75m";
+      "\x1b[38;5;141m";
+      "\x1b[38;5;135m";
+    ];
+    (* Arctic Vibe *)
+    [
+      "\x1b[38;5;45m";
+      "\x1b[38;5;42m";
+      "\x1b[38;5;148m";
+      "\x1b[38;5;190m";
+      "\x1b[38;5;226m";
+    ];
+    (* Oasis Vibe *)
+    [
+      "\x1b[38;5;126m";
+      "\x1b[38;5;168m";
+      "\x1b[38;5;210m";
+      "\x1b[38;5;204m";
+      "\x1b[38;5;202m";
+    ];
+    (* Cosmic Vibe *)
+    [
+      "\x1b[38;5;214m";
+      "\x1b[38;5;220m";
+      "\x1b[38;5;202m";
+      "\x1b[38;5;226m";
+      "\x1b[38;5;209m";
+    ];
+    (* Fantasy Vibe *)
+  ]
+
 let user_board_array board = board
 
 (* gets the element at the specific row and col in our board*)
@@ -39,15 +95,16 @@ let add_coords coords = user_ship_coords := coords @ !user_ship_coords
 (* Check if a guess is valid meaning check if the guess is in the ship
    coordinates *)
 let valid_guess row col = not (List.mem (row, col) !user_ship_coords)
+let get_color n = List.nth (List.nth themes_list !theme) n
 
 (* icon representing the different ships on our board*)
 let match_ship n =
   match n with
-  | 2 -> " a "
-  | 3 -> " b "
-  | 6 -> " c "
-  | 4 -> " d "
-  | 5 -> " e "
+  | 2 -> get_color 0 ^ " a " ^ "\x1b[0m"
+  | 3 -> get_color 1 ^ " b " ^ "\x1b[0m"
+  | 6 -> get_color 2 ^ " c " ^ "\x1b[0m"
+  | 4 -> get_color 3 ^ " d " ^ "\x1b[0m"
+  | 5 -> get_color 4 ^ " e " ^ "\x1b[0m"
   | _ -> "   "
 
 (* sets the positions of the user ships*)

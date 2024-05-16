@@ -64,7 +64,7 @@ let test_orientation =
 
 (*check ships coords and add_coords tests*)
 
-let new_board = create_board ()
+let new_board = create_board 1
 let lst_exist = [ (1, 2); (8, 8) ] (*list for checking existing coords*)
 let lst_nexist = [ (4, 5); (7, 7) ] (*list for checking not existing coords*)
 let lst_a = [ (8, 8); (8, 9) ] (*list of existing coords*)

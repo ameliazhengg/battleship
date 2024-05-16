@@ -9,6 +9,60 @@ let columns = [| 'A'; 'B'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'J' |]
 let rows =
   [| "  1"; "  2"; "  3"; "  4"; "  5"; "  6"; "  7"; "  8"; "  9"; " 10" |]
 
+let checker =
+  [|
+    (0, 2);
+    (0, 4);
+    (0, 6);
+    (0, 8);
+    (0, 10);
+    (1, 1);
+    (1, 3);
+    (1, 5);
+    (1, 7);
+    (1, 9);
+    (2, 2);
+    (2, 4);
+    (2, 6);
+    (2, 8);
+    (2, 10);
+    (3, 1);
+    (3, 3);
+    (3, 5);
+    (3, 7);
+    (3, 9);
+    (4, 2);
+    (4, 4);
+    (4, 6);
+    (4, 8);
+    (4, 10);
+    (5, 1);
+    (5, 3);
+    (5, 5);
+    (5, 7);
+    (5, 9);
+    (6, 2);
+    (6, 4);
+    (6, 6);
+    (6, 8);
+    (6, 10);
+    (7, 1);
+    (7, 3);
+    (7, 5);
+    (7, 7);
+    (7, 9);
+    (8, 2);
+    (8, 4);
+    (8, 6);
+    (8, 8);
+    (8, 10);
+    (9, 1);
+    (9, 3);
+    (9, 5);
+    (9, 7);
+    (9, 9);
+  |]
+
 let comp_ship_coords = ref []
 let occupied_coords = ref []
 
@@ -169,7 +223,10 @@ let in_comp_shi_coords row col =
   if List.mem (((row - 1) * 10) + col) !occupied_coords then true else false
 
 (* generates random guess *)
-let generate_random_guess () =
-  let random_row = 1 + Random.int (Array.length rows) in
-  let random_col = 1 + Random.int (Array.length columns - 1) in
-  (random_row, random_col)
+let generate_random_guess mode =
+  if mode = "easy" then begin
+    let random_row = 1 + Random.int (Array.length rows) in
+    let random_col = 1 + Random.int (Array.length columns - 1) in
+    (random_row, random_col)
+  end
+  else checker.(Random.int 49)

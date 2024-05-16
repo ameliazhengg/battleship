@@ -30,4 +30,4 @@ val get_occupied_coords : unit -> (int * int) list
 val in_comp_shi_coords : int -> int -> bool
 
 (* Generates a random guess for a row and column *)
-val generate_random_guess : unit -> int * int
+val generate_random_guess : string -> int * int

@@ -22,7 +22,7 @@ val in_user_ship_coords : int * int -> bool
 (** [in_user_ship_coords]: Checks if a given pair of coordinates is in the
     user's ship coordinates. *)
 
-val create_board : unit -> board
+val create_board : int -> board
 (** [create_board]: Creates a new game board initialized with a board of size 10
     x 10. *)
 
