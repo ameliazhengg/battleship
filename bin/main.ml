@@ -504,9 +504,8 @@ let () =
   let mode = pick_mode () in
   let conceal = pick_conceal () in
   print_newline ();
-  print_endline "Computer Board";
   let computer_board = create_computer_board () in
-  print_grid (random_board computer_board);
+  if conceal = "y" then print_endline "Computer Board"; print_grid (random_board computer_board);
   let user_board = create_board () in
   print_endline "";
   print_endline "Now please choose the coordinates of your ships ";
